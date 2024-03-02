@@ -1,3 +1,3 @@
-# COMP3900 -- aabananaa
+# COMP3900 -- aabanana
 
 ## EzOrder
