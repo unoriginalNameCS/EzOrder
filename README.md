@@ -8,7 +8,7 @@ To setup the backend, enter the command in the root directory
 
 `npm install`
 
-Next, to setup the frontend. Change into the frontend directory and run the same command.
+To setup the frontend. Change into the frontend directory and run the same command.
 
 `cd frontend`
 
@@ -17,10 +17,22 @@ Next, to setup the frontend. Change into the frontend directory and run the same
 Now you're all setup.
 
 ### Running the application
+You will need two terminals opened up.
+
+#### Running the backend
+
 To run the backend, run the below command from the root directory.
 
 `npm run backend`
 
-To run the frontend, run the below command from the root directory.
+The terminal should appear with the following:
+
+![Backend server running](/assets/images/backend_running.png)
+
+#### Running the frontend
+
+To run the frontend, run the below command from the root directory in a separate terminal.
 
 `npm run frontend`
+
+![Frontend running](/assets/images/frontend_running.png)
