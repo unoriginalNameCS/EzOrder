@@ -1,6 +1,7 @@
 import asyncHandler from 'express-async-handler';
 import User from '../models/userModel.js';
 import generateToken from '../utils/generateToken.js';
+import Menu from '../models/menuModel.js';
 
 // @desc    Auth user & get token
 // @route   POST /api/users/auth
@@ -118,10 +119,44 @@ const updateUserProfile = asyncHandler(async (req, res) => {
   }
 })
 
+// @desc  Update user profile
+// @route  PUT /create/menu
+// @access Private
+const createMenu = asyncHandler(async (req, res) => {
+    // Assuming you receive menu data in req.body.menuItems
+    const menu = await Menu.create({
+        name,
+        price,
+    });
+    // if given valid user form details
+    if (menu) {
+        generateToken(res, menu._id);
+        
+        res.status(201).json({
+        _id: menu._id,
+        name: menu.name,
+        price: menu.price,
+        });
+    } else {
+        res.status(400);
+        throw new Error('Invalid menu data');
+    }
+      const { menuItems } = req.body;
+
+      // Save menu items to the database (you'll need to adapt this to your schema)
+      // Example: await MenuModel.create(menuItems);
+
+  //     res.status(201).json({ message: 'Menu created successfully' });
+  // } catch (error) {
+  //     res.status(500).json({ error: 'Error creating menu' });
+  // }
+})
+
 export {
     authUser,
     registerUser,
     logoutUser,
     getUserProfile,
     updateUserProfile,
+    createMenu,
 };
