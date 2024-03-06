@@ -200,7 +200,7 @@ const addCategory = asyncHandler(async (req, res) => {
 // @route  PUT /menu
 // @access Private
 const addItem = asyncHandler(async (req, res) => {
-  const { categoryName, name, price } = req.body;
+  const { name, price, category } = req.body;
 
   // search db for item by name
   const itemExists = await menuItem.findOne({ name });
@@ -210,22 +210,24 @@ const addItem = asyncHandler(async (req, res) => {
       throw new Error('Menu item already exists');
   }
 
-  const category = menuCategory.findOne({ name: categoryName  });
+  const Category = menuCategory.findOne({ name: category  });
 
   const item = await menuItem.create({
     name,
     price,
+    category,
   });
 
   // if category exist and item valid
-  if (category && item) {
+  if (Category && item) {
     // put the item in the category
-    category.items = category.items.push(item.name);
-    await category.save();
+    Category.items = Category.items.push(item.name);
+    await Category.save();
     res.status(201).json({
       _id: item._id,
       name: item.name,
       price: item.price,
+      category: item.category,
     });
   } else {
       res.status(400);

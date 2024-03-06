@@ -7,7 +7,10 @@ const menuCategorySchema = mongoose.Schema(
       required: true,
       unique: true,
     },
-    items: [String],
+    items: {
+        type: [String],
+        required: true,
+    }
   }
 );
   
