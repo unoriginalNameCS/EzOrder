@@ -2,6 +2,8 @@ import asyncHandler from 'express-async-handler';
 import User from '../models/userModel.js';
 import generateToken from '../utils/generateToken.js';
 import Menu from '../models/menuModel.js';
+import menuItem from '../models/itemModel.js';
+import menuCategory from '../models/categoryModel.js';
 
 // @desc    Auth user & get token
 // @route   POST /api/users/auth
@@ -152,6 +154,85 @@ const createMenu = asyncHandler(async (req, res) => {
   // }
 })
 
+// @desc  view menu
+// @route  PUT /menu
+// @access Private
+const getMenu = asyncHandler(async (req, res) => {
+  const categories = await menuCategory.find({});
+
+  res.status(201).json({categories});
+})
+
+// @desc  add category
+// @route  PUT /menu
+// @access Private
+const addCategory = asyncHandler(async (req, res) => {
+  const { name } = req.body;
+  const items = [];
+
+  // search db for category by name
+  const categoryExists = await menuCategory.findOne({ name });
+
+  if (categoryExists) {
+      res.status(400);
+      throw new Error('Category already exists');
+  }
+
+  const category = await menuCategory.create({
+      name,
+      items,
+  });
+
+  // if category name valid
+  if (category) {
+    res.status(201).json({
+      _id: category._id,
+      name: category.name,
+      items: category.items,
+    });
+  } else {
+      res.status(400);
+      throw new Error('Invalid menu data');
+  }
+})
+
+// @desc  add item
+// @route  PUT /menu
+// @access Private
+const addItem = asyncHandler(async (req, res) => {
+  const { categoryName, name, price } = req.body;
+
+  // search db for item by name
+  const itemExists = await menuItem.findOne({ name });
+
+  if (itemExists) {
+      res.status(400);
+      throw new Error('Menu item already exists');
+  }
+
+  const category = menuCategory.findOne({ name: categoryName  });
+
+  const item = await menuItem.create({
+    name,
+    price,
+  });
+
+  // if category exist and item valid
+  if (category && item) {
+    // put the item in the category
+    category.items = category.items.push(item.name);
+    await category.save();
+    res.status(201).json({
+      _id: item._id,
+      name: item.name,
+      price: item.price,
+    });
+  } else {
+      res.status(400);
+      throw new Error('Invalid menu data');
+  }
+})
+
 export {
     authUser,
     registerUser,
@@ -159,4 +240,7 @@ export {
     getUserProfile,
     updateUserProfile,
     createMenu,
+    getMenu,
+    addCategory,
+    addItem,
 };
