@@ -7,10 +7,16 @@ const menuCategorySchema = mongoose.Schema(
       required: true,
       unique: true,
     },
-    items: {
-        type: [String],
-        required: true,
-    }
+    position: {
+      type: Number,
+      default: 0,
+      required: true,
+      unique: true,
+    },
+    items: [{
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'MenuItem',
+    }]
   }
 );
   
