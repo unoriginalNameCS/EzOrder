@@ -7,12 +7,23 @@ const menuItemSchema = mongoose.Schema(
         required: true,
         unique: true,
       },
+      description: {
+        type: String,
+      },
       price: { 
         type: Number, 
         required: true,
       },
+      ingredients: [String],
+      imageUrl: String,
       category: {
-        type: String,
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'Category',
+        required: true,
+      },
+      position: {
+        type: Number,
+        default: 0,
         required: true,
       }
     }
