@@ -11,9 +11,8 @@ const menuCategorySchema = mongoose.Schema(
       type: Number,
       default: 0,
       required: true,
-      unique: true,
     },
-    items: [{
+    menuItems: [{
         type: mongoose.Schema.Types.ObjectId,
         ref: 'MenuItem',
     }]
@@ -29,6 +28,6 @@ menuCategorySchema.pre('save', async function (next) {
     next();
 });
 
-const menuCategory = mongoose.model('menuCategory', menuCategorySchema);
+const MenuCategory = mongoose.model('MenuCategory', menuCategorySchema);
   
-export default menuCategory;
+export default MenuCategory;

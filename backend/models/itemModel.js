@@ -18,7 +18,7 @@ const menuItemSchema = mongoose.Schema(
       imageUrl: String,
       category: {
         type: mongoose.Schema.Types.ObjectId,
-        ref: 'Category',
+        ref: 'MenuCategory',
         required: true,
       },
       position: {
@@ -38,6 +38,6 @@ menuItemSchema.pre('save', async function (next) {
     next();
 });
 
-const menuItem = mongoose.model('menuItem', menuItemSchema);
+const MenuItem = mongoose.model('MenuItem', menuItemSchema);
   
-export default menuItem;
+export default MenuItem;
