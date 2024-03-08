@@ -29,7 +29,7 @@ const authUser = asyncHandler(async (req, res) => {
 // @route   POST /api/users
 // @access  Public
 const registerUser = asyncHandler(async (req, res) => {
-    const { name, email, password } = req.body;
+    const { name, email, password, restaurant } = req.body;
 
     // search db for user by email
     const userExists = await User.findOne({ email });
@@ -41,18 +41,22 @@ const registerUser = asyncHandler(async (req, res) => {
 
     // create user
     const user = await User.create({
-        name,
-        email,
-        password,
+      name,
+      email,
+      password,
+      role: 'manager',
+      restaurant
     });
     // if given valid user form details
     if (user) {
         generateToken(res, user._id);
         
         res.status(201).json({
-        _id: user._id,
-        name: user.name,
-        email: user.email,
+          _id: user._id,
+          name: user.name,
+          email: user.email,
+          role: user.role,
+          restaurant: user.restaurant
         });
     } else {
         res.status(400);
@@ -118,7 +122,54 @@ const updateUserProfile = asyncHandler(async (req, res) => {
   }
 });
 
+// @desc    Register a new user (automatically a manager)
+// @route   POST /api/users/registerStaff
+// @access  Public
+const registerStaff = asyncHandler(async (req, res) => {
+  
+  const { name, email, password, role } = req.body;
+  const managerId = req.user._id; // Assuming manager's ID is in req.user._id
+
+  // Find the restaurant associated with the manager
+  const manager = await User.findById(managerId);
+  if (!manager || manager.role !== 'manager') {
+    res.status(401);
+    throw new Error('Not authorized as manager');
+  }
+
+  // search db for user by email
+  const userExists = await User.findOne({ email });
+
+  if (userExists) {
+    res.status(400);
+    throw new Error('User already exists');
+  }
+
+  // create staff user
+  const user = await User.create({
+    name,
+    email,
+    password,
+    role, // 'staff'
+    restaurant: manager.restaurant // Assign to the same restaurant as the manager
+  });
+
+  if (user) {
+    // Do not generate token for staff registration by manager
+    res.status(201).json({
+      _id: user._id,
+      name: user.name,
+      email: user.email,
+      role: user.role,
+      restaurant: user.restaurant
+    });
+  } else {
+    res.status(400);
+    throw new Error('Invalid user data');
+  }
+});
+
 export {
-  authUser, getUserProfile, logoutUser, registerUser, updateUserProfile
+  authUser, getUserProfile, logoutUser, registerStaff, registerUser, updateUserProfile
 };
 
