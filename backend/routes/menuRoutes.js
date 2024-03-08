@@ -4,11 +4,11 @@ import { protect } from '../middleware/authMiddleware.js';
 
 const router = express.Router();
 
-router.get('/menu', protect, getMenu);
-router.post('/menu/categories', protect, addCategory);
-router.post('/menu/categories/:categoryId/items', protect, addItem);
-router.put('/menu/categories/order', updateCategoriesOrder);
-router.put('/menu/categories/:categoryId/items/order', updateMenuItemsOrder);
-router.patch('/menu/categories/:categoryId/items/:itemId', updateMenuItemDetails);
+router.get('/:restaurantId/menu', protect, getMenu);
+router.post('/:restaurantId/menu/categories', protect, addCategory);
+router.post('/:restaurantId/menu/categories/:categoryId/items', protect, addItem);
+router.put('/:restaurantId/menu/categories/order', protect, updateCategoriesOrder);
+router.put('/:restaurantId/menu/categories/:categoryId/items/order', protect, updateMenuItemsOrder);
+router.patch('/:restaurantId/menu/categories/:categoryId/items/:itemId', protect, updateMenuItemDetails);
 
 export default router;

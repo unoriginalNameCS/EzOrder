@@ -15,7 +15,12 @@ const menuCategorySchema = mongoose.Schema(
     menuItems: [{
         type: mongoose.Schema.Types.ObjectId,
         ref: 'MenuItem',
-    }]
+    }],
+    restaurant: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: 'Restaurant',
+      required: true
+    }
   }
 );
   
