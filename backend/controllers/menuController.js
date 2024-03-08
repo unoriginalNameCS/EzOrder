@@ -59,10 +59,10 @@ const addItem = asyncHandler(async (req, res) => {
   const { itemName, description, price, ingredients, imageUrl } = req.body;
 
   // search db for category
-  const category = await MenuCategory.findOne({ _id: categoryId, restaurantId: restaurantId });
-  if (category) {
-      res.status(400);
-      throw new Error('Category already exists');
+  const category = await MenuCategory.findOne({ _id: categoryId, restaurant: restaurantId });
+  if (!category) {
+      res.status(404);
+      throw new Error('Category not found');
   }
 
   // search db for item
@@ -77,7 +77,7 @@ const addItem = asyncHandler(async (req, res) => {
   const position = lastItem ? lastItem.position + 1 : 1;
 
   const item = await MenuItem.create({
-    itemName,
+    name: itemName,
     description,
     price,
     ingredients,
@@ -118,8 +118,9 @@ const updateCategoriesOrder = asyncHandler(async (req, res) => {
   }
   
   const categories = await MenuCategory.find({ restaurant: restaurantId }).select('_id');
+  
   // Check if all categories are valid in the ordered categories
-  const categoryIds = categories.map(c => c.id_.toString());
+  const categoryIds = categories.map(c => c._id.toString());
   const isValidOrder = orderedCategories.every(category => categoryIds.includes(category._id));
   if (!isValidOrder) {
     res.status(400);
@@ -131,8 +132,10 @@ const updateCategoriesOrder = asyncHandler(async (req, res) => {
     await Promise.all(orderedCategories.map(async (category, index) => {
       
       const categoryToUpdate = await MenuCategory.findOne({_id: category._id, restaurant: restaurantId });
+      console.log(categoryToUpdate);
+      console.log(index);
       if (categoryToUpdate) {
-        await MenuCategory.findByIdAndUpdate(categoryToUpdate._id, { position: index });
+        await MenuCategory.findByIdAndUpdate(categoryToUpdate._id, { position: index + 1 });
       }     
     }));
 
@@ -181,7 +184,7 @@ const updateMenuItemsOrder = asyncHandler(async (req, res) => {
     // Rearrange the items
     try {
       await Promise.all(orderedItems.map(async (item, index) => {
-          await MenuItem.findByIdAndUpdate({_id: item._id, category: categoryId}, {position: index });
+          await MenuItem.findByIdAndUpdate({_id: item._id, category: categoryId}, {position: index + 1});
       }));
 
       res.status(200).json({ message: 'Menu items order updated'})   

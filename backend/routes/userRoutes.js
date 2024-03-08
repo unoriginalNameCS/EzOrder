@@ -9,6 +9,6 @@ router.post('/auth', authUser);
 router.post('/logout', logoutUser);
 router.get('/profile', protect, getUserProfile);
 router.put('/profile', protect, updateUserProfile);
-router.put('/registerStaff', protect, registerStaff);
+router.post('/registerStaff', protect, registerStaff);
 
 export default router;
