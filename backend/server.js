@@ -3,6 +3,7 @@ import dotenv from 'dotenv';
 import cors from "cors";
 import connectDB from './config/db.js';
 import userRoutes from './routes/userRoutes.js';
+import menuRoutes from './routes/menuRoutes.js';
 import { notFound, errorHandler } from './middleware/errorMiddleware.js';
 import cookieParser from 'cookie-parser';
 
@@ -21,6 +22,7 @@ app.use(cookieParser());
 app.get('/', (req, res) => res.status(200).json({message: "Success"}))
 
 app.use('/api/users', userRoutes);
+app.use('/menus', menuRoutes);
 
 
 // errors
