@@ -10,6 +10,6 @@ router.post('/logout', logoutUser);
 router.get('/profile', protect, getUserProfile);
 router.put('/profile', protect, updateUserProfile);
 router.post('/registerStaff', protect, registerStaff);
-router.get('/profiles', getUserProfiles);
+router.get('/profiles', protect, getUserProfiles);
 
 export default router;
