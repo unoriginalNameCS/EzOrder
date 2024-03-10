@@ -19,9 +19,9 @@ app.use(cors());
 app.use(express.json())
 app.use(express.urlencoded({extended: true}));
 app.use(function (req, res, next) {
-    console.log(req.headers._id) // populated!
-    console.log(req.headers);
-    console.log(req.headers.authorization)
+    // console.log(req.headers._id) // populated!
+    // console.log(req.headers);
+    // console.log(req.headers.authorization)
     next()
 })
 
