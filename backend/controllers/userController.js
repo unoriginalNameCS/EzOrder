@@ -40,6 +40,14 @@ const registerUser = asyncHandler(async (req, res) => {
         throw new Error('User already exists');
     }
 
+    // search db for restaurant
+    const restaurantExists = await Restaurant.findOne({ name: restaurantName });
+
+    if (restaurantExists) {
+        res.status(400);
+        throw new Error(`Restaurant with the name '${restaurantName}' already exists.`);
+    }
+
     const restaurant = await Restaurant.create({
       name: restaurantName
     })
