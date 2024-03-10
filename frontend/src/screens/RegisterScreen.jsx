@@ -12,6 +12,7 @@ const RegisterScreen = () => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
+  const [restaurantName, setRestaurantName] = useState('')
 
   const dispatch = useDispatch();
   const navigate = useNavigate();
@@ -33,9 +34,10 @@ const RegisterScreen = () => {
       toast.error('Passwords do not match');
     } else {
       try {
-        const res = await register({ name, email, password }).unwrap();
+        const res = await register({ name, email, restaurantName, password }).unwrap();
         dispatch(setCredentials({ ...res }));
         navigate('/');
+        toast.success('Successfully registered an account')
       } catch (err) {
         toast.error(err?.data?.message || err.error);
       }
@@ -62,6 +64,16 @@ const RegisterScreen = () => {
             placeholder='Enter email'
             value={email}
             onChange={(e) => setEmail(e.target.value)}
+          ></Form.Control>
+        </Form.Group>
+
+        <Form.Group className='my-2' controlId='restaurantName'>
+          <Form.Label>Restaurant Name</Form.Label>
+          <Form.Control
+            type='text'
+            placeholder='Name of your restaurant'
+            value={restaurantName}
+            onChange={(e) => setRestaurantName(e.target.value)}
           ></Form.Control>
         </Form.Group>
 
