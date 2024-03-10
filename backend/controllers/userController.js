@@ -6,7 +6,7 @@ import Restaurant from '../models/restaurantModel.js';
 // @desc    Auth user & get token
 // @route   POST /api/users/auth
 // @access  Public
-const authUser = asyncHandler(async (req, res) => {
+const   authUser = asyncHandler(async (req, res) => {
   const { email, password } = req.body;
 
   const user = await User.findOne({ email });
@@ -19,6 +19,8 @@ const authUser = asyncHandler(async (req, res) => {
       _id: user._id,
       name: user.name,
       email: user.email,
+      role: user.role,
+      restaurant: user.restaurant
     });
   } else {
     res.status(401);
@@ -113,21 +115,28 @@ const getUserProfile = asyncHandler(async (req, res) => {
 // @access  Private
 // since @access is Private, req body contains restaurant._Id from protect method in userRoutes.js
 const getUserProfiles = asyncHandler(async (req, res) => {
-  const { restaurantId } = req.params;
-  const users = await User.find( {restaurant : restaurantId} );
-
-  if (users.length > 0) {
-    // Extract only the desired fields (_id, name, and email)
-    const extractedUsers = users.map((user) => ({
-      _id: user._id,
-      name: user.name,
-      email: user.email,
-    }));
-
-    res.status(200).json(extractedUsers);
-  } else {
-    res.status(404);
-    throw new Error('No users found');
+  console.log(req.headers);
+  // const restaurantId = req.params.restaurantId
+  const { restaurantid } = req.headers
+  console.log(restaurantid);
+  try {
+    const users = await User.find( {restaurant : restaurantid} );
+    console.log(users);
+    if (users.length > 0) {
+      // Extract only the desired fields (_id, name, and email)
+      const extractedUsers = users.map((user) => ({
+        id: user._id,
+        name: user.name,
+        email: user.email,
+      }));
+  
+      res.status(200).json(extractedUsers);
+    } else {
+      res.status(404);
+      throw new Error('No users found');
+    }
+  } catch (error) {
+    console.log(error);
   }
 });
 

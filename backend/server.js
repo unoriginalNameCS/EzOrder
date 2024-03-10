@@ -14,10 +14,16 @@ const port = process.env.PORT || 5000;
 connectDB();
 
 const app = express();
+app.use(cookieParser());
 app.use(cors());
 app.use(express.json())
 app.use(express.urlencoded({extended: true}));
-app.use(cookieParser());
+app.use(function (req, res, next) {
+    // console.log(req.headers._id) // populated!
+    // console.log(req.headers);
+    // console.log(req.headers.authorization)
+    next()
+})
 
 app.get('/', (req, res) => res.status(200).json({message: "Success"}))
 
