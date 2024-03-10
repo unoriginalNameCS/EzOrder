@@ -100,6 +100,29 @@ const getUserProfile = asyncHandler(async (req, res) => {
   }
 });
 
+// @desc    Get user details
+// @route   GET /api/users/profiles
+// @access  Private
+// since @access is Private, req body contains restaurant._Id from protect method in userRoutes.js
+const getUserProfiles = asyncHandler(async (req, res) => {
+  const { restaurantId } = req.params;
+  const users = await User.find( {restaurant : restaurantId} );
+
+  if (users.length > 0) {
+    // Extract only the desired fields (_id, name, and email)
+    const extractedUsers = users.map((user) => ({
+      _id: user._id,
+      name: user.name,
+      email: user.email,
+    }));
+
+    res.status(200).json(extractedUsers);
+  } else {
+    res.status(404);
+    throw new Error('No users found');
+  }
+});
+
 // @desc  Update user profile
 // @route  PUT /api/users/profile 
 // @access Private
@@ -175,6 +198,6 @@ const registerStaff = asyncHandler(async (req, res) => {
 });
 
 export {
-  authUser, getUserProfile, logoutUser, registerStaff, registerUser, updateUserProfile
+  authUser, getUserProfile, getUserProfiles, logoutUser, registerStaff, registerUser, updateUserProfile
 };
 
