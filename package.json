@@ -19,6 +19,7 @@
     "@mui/material": "^5.15.12",
     "@mui/x-data-grid": "^6.19.6",
     "bcryptjs": "^2.4.3",
+    "cdbreact": "^1.5.18",
     "cookie-parser": "^1.4.6",
     "cors": "^2.8.5",
     "dotenv": "^16.4.5",
