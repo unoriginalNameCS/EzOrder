@@ -3,7 +3,7 @@ import Hero from '../components/Hero'
 import Button from '@mui/material/Button';
 import { useNavigate } from 'react-router-dom';
 import SideNav from '../components/SideNav.jsx'
-
+import FormContainer from '../components/FormContainer.jsx'
 
 // just doing manager home screen for now, just basics
 const HomeScreen = () => {
@@ -16,6 +16,7 @@ const HomeScreen = () => {
     <>
       { userInfo ? <> <SideNav /> {/* make a manager/staff dashboard and import it here */} </> : 
       <> 
+      <FormContainer>
       <div>
         Welcome to EzOrder <br /> 
         Order quick, order easy
@@ -36,6 +37,7 @@ const HomeScreen = () => {
           Sign Up
         </Button>
         </div>
+        </FormContainer>
       </>
       }
     </>

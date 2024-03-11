@@ -3,7 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import { toast } from 'react-toastify'
 import TextField from '@mui/material/TextField';
 import Button from '@mui/material/Button';
-
+import FormContainer from '../components/FormContainer'
 
 const Login = () => {
 
@@ -44,17 +44,16 @@ const Login = () => {
 
   return (
     <>
-      <div>Login</div>
+    <FormContainer>
+      <h2>Login</h2>
       <br />
-      <br />
-
       <TextField
         required
         label='email'
         onChange={(e) => setEmail(e.target.value)}
         sx={{margin: 1}}
       />
-      <br /> <br />
+      <br />
       <TextField
         type='password'
         required
@@ -64,7 +63,7 @@ const Login = () => {
       >
         Password
       </TextField>
-      <br /><br />
+      <br />
       <Button
       variant='contained'
       color='primary'
@@ -72,15 +71,16 @@ const Login = () => {
       onClick={submitHandler}>
         Login
       </Button>
-      <br /> <br />
-      Don't have an account? 
-      <Button 
+      <br />
+      Don't have an account?
+      <Button
       variant='contained'
       color='primary'
       sx={{margin: 1}}
       onClick={() => {navigate('/register')}}>
         Register now
       </Button>
+      </FormContainer>
     </>
   )
 }
