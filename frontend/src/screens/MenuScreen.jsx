@@ -1,9 +1,9 @@
 import React from 'react'
-import Sidebar from '../components/Sidebar'
+import SideNav from '../components/SideNav'
 
 const MenuScreen = () => {
   return (
-    <Sidebar></Sidebar>
+    <SideNav></SideNav>
   )
 }
 

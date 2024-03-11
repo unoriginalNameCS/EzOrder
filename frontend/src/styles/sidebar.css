@@ -1,0 +1,55 @@
+.navbar {
+    position: fixed;
+    height: 100vh;
+    top: 8rem;
+    display: flex;
+    padding: 1.5rem;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.5rem;
+    background: #FDFDFD;
+}
+
+.navbar-box {
+    display: flex;
+    height: 48.75rem;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 0.75rem;
+    flex-shrink: 0;
+    align-self: stretch;
+}
+
+.navbar-item-container {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 0.75rem;
+    flex: 1 0 0;
+    align-self: stretch;
+}
+
+.navbar-item {
+    display: flex;
+    padding: 0.75rem;
+    align-items: center;
+    align-content: center;
+    gap: 1.75rem;
+    align-self: stretch;
+    flex-wrap: wrap;
+    border-radius: 0.5rem;
+}
+
+.icon {
+    width: 1.75rem;
+    height: 1.75rem;
+}
+
+.navbar-link {
+    flex: 1 0 0;
+    color: #000;
+    font-size: 0.75rem;
+    font-style: normal;
+    font-weight: 600;
+    line-height: normal;
+}
