@@ -6,7 +6,7 @@ import Restaurant from '../models/restaurantModel.js';
 // @desc    Auth user & get token
 // @route   POST /api/users/auth
 // @access  Public
-const   authUser = asyncHandler(async (req, res) => {
+const authUser = asyncHandler(async (req, res) => {
   const { email, password } = req.body;
 
   const user = await User.findOne({ email });
@@ -20,76 +20,77 @@ const   authUser = asyncHandler(async (req, res) => {
       name: user.name,
       email: user.email,
       role: user.role,
-      restaurant: user.restaurant
+      restaurant: user.restaurant,
     });
   } else {
     res.status(401);
     throw new Error('Invalid email or password');
   }
 });
-  
+
 // @desc    Register a new user
 // @route   POST /api/users
 // @access  Public
 const registerUser = asyncHandler(async (req, res) => {
-    const { name, email, password, restaurantName } = req.body;
+  const { name, email, password, restaurantName } = req.body;
 
-    // search db for user by email
-    const userExists = await User.findOne({ email });
+  // search db for user by email
+  const userExists = await User.findOne({ email });
 
-    if (userExists) {
-        res.status(400);
-        throw new Error('User already exists');
-    }
+  if (userExists) {
+    res.status(400);
+    throw new Error('User already exists');
+  }
 
-    // search db for restaurant
-    const restaurantExists = await Restaurant.findOne({ name: restaurantName });
+  // search db for restaurant
+  const restaurantExists = await Restaurant.findOne({ name: restaurantName });
 
-    if (restaurantExists) {
-        res.status(400);
-        throw new Error(`Restaurant with the name '${restaurantName}' already exists.`);
-    }
+  if (restaurantExists) {
+    res.status(400);
+    throw new Error(
+      `Restaurant with the name '${restaurantName}' already exists.`
+    );
+  }
 
-    const restaurant = await Restaurant.create({
-      name: restaurantName
-    })
+  const restaurant = await Restaurant.create({
+    name: restaurantName,
+  });
 
-    // create user
-    const user = await User.create({
-      name,
-      email,
-      password,
-      role: 'manager',
-      restaurant
+  // create user
+  const user = await User.create({
+    name,
+    email,
+    password,
+    role: 'manager',
+    restaurant,
+  });
+  // if given valid user form details
+  if (user) {
+    generateToken(res, user._id);
+
+    res.status(201).json({
+      _id: user._id,
+      name: user.name,
+      email: user.email,
+      role: user.role,
+      restaurant: user.restaurant,
     });
-    // if given valid user form details
-    if (user) {
-        generateToken(res, user._id);
-        
-        res.status(201).json({
-          _id: user._id,
-          name: user.name,
-          email: user.email,
-          role: user.role,
-          restaurant: user.restaurant
-        });
-    } else {
-        res.status(400);
-        throw new Error('Invalid user data');
-    }
+  } else {
+    res.status(400);
+    throw new Error('Invalid user data');
+  }
 });
-  
+
 // @desc    Logout user / clear cookie
 // @route   POST /api/users/logout
 // @access  Public
 const logoutUser = (req, res) => {
-    res.cookie('jwt', '', {
-      httpOnly: true,
-      expires: new Date(0),
-    });
-    res.status(200).json({ message: 'Logged out successfully' });
+  res.cookie('jwt', '', {
+    httpOnly: true,
+    expires: new Date(0),
+  });
+  res.status(200).json({ message: 'Logged out successfully' });
 };
-
 
 // @desc    Get user details
 // @route   GET /api/users/profile
@@ -117,10 +118,10 @@ const getUserProfile = asyncHandler(async (req, res) => {
 const getUserProfiles = asyncHandler(async (req, res) => {
   console.log(req.headers);
   // const restaurantId = req.params.restaurantId
-  const { restaurantid } = req.headers
+  const { restaurantid } = req.headers;
   console.log(restaurantid);
   try {
-    const users = await User.find( {restaurant : restaurantid} );
+    const users = await User.find({ restaurant: restaurantid });
     console.log(users);
     if (users.length > 0) {
       // Extract only the desired fields (_id, name, and email)
@@ -129,7 +130,7 @@ const getUserProfiles = asyncHandler(async (req, res) => {
         name: user.name,
         email: user.email,
       }));
-  
+
       res.status(200).json(extractedUsers);
     } else {
       res.status(404);
@@ -141,10 +142,10 @@ const getUserProfiles = asyncHandler(async (req, res) => {
 });
 
 // @desc  Update user profile
-// @route  PUT /api/users/profile 
+// @route  PUT /api/users/profile
 // @access Private
 const updateUserProfile = asyncHandler(async (req, res) => {
-  const user = await User.findById(req.user._id);
+  const user = await User.findById(req.body.id);
 
   if (user) {
     user.name = req.body.name || user.name;
@@ -171,50 +172,59 @@ const updateUserProfile = asyncHandler(async (req, res) => {
 // @route   POST /api/users/registerStaff
 // @access  Public
 const registerStaff = asyncHandler(async (req, res) => {
-  
   const { name, email, password, role } = req.body;
+  console.log(name, email, password, role);
   const managerId = req.user._id; // Assuming manager's ID is in req.user._id
-
+  console.log(managerId);
   // Find the restaurant associated with the manager
-  const manager = await User.findById(managerId);
-  if (!manager || manager.role !== 'manager') {
-    res.status(401);
-    throw new Error('Not authorized as manager');
-  }
+  try {
+    const manager = await User.findById(managerId);
+    if (!manager || manager.role !== 'manager') {
+      res.status(401);
+      throw new Error('Not authorized as manager');
+    }
 
-  // search db for user by email
-  const userExists = await User.findOne({ email });
+    // search db for user by email
+    const userExists = await User.findOne({ email });
 
-  if (userExists) {
-    res.status(400);
-    throw new Error('User already exists');
-  }
+    if (userExists) {
+      res.status(400);
+      throw new Error('User already exists');
+    }
 
-  // create staff user
-  const user = await User.create({
-    name,
-    email,
-    password,
-    role, // 'staff'
-    restaurant: manager.restaurant // Assign to the same restaurant as the manager
-  });
-
-  if (user) {
-    // Do not generate token for staff registration by manager
-    res.status(201).json({
-      _id: user._id,
-      name: user.name,
-      email: user.email,
-      role: user.role,
-      restaurant: user.restaurant
+    // create staff user
+    const user = await User.create({
+      name,
+      email,
+      password,
+      role, // 'staff'
+      restaurant: manager.restaurant, // Assign to the same restaurant as the manager
     });
-  } else {
-    res.status(400);
-    throw new Error('Invalid user data');
+
+    if (user) {
+      // Do not generate token for staff registration by manager
+      res.status(200).json({
+        _id: user._id,
+        name: user.name,
+        email: user.email,
+        role: user.role,
+        restaurant: user.restaurant,
+      });
+    } else {
+      res.status(400);
+      throw new Error('Invalid user data');
+    }
+  } catch (error) {
+    console.log(error);
   }
 });
 
 export {
-  authUser, getUserProfile, getUserProfiles, logoutUser, registerStaff, registerUser, updateUserProfile
+  authUser,
+  getUserProfile,
+  getUserProfiles,
+  logoutUser,
+  registerStaff,
+  registerUser,
+  updateUserProfile,
 };
-
