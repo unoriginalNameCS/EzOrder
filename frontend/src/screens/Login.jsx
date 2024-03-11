@@ -11,7 +11,6 @@ const Login = () => {
   const navigate = useNavigate();
 
   async function signin (email, password) {
-    console.log(`Email : ${email}, Password: ${password}`)
     const response = await fetch('http://localhost:5000/api/users/auth', {
       method: 'POST',
       headers: {
@@ -24,22 +23,24 @@ const Login = () => {
     })
     const data = await response.json();
     // store info in localStorage
-    localStorage.setItem('userInfo', JSON.stringify(data))
-    
+
     // if successful signIn then navigate to dashboard
     if (response.status === 200) {
+      localStorage.setItem('userInfo', JSON.stringify(data))
       toast.success('Successfully signed in')
       navigate('/')
+    } else {
+      toast.error(data?.message)
+      console.log(data?.message);
+
     }
-  
+
   }
 
   const submitHandler = () => {
-    //console.log(email, password)
     signin(email, password)
   }
 
-  
   return (
     <>
       <div>Login</div>
