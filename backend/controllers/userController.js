@@ -6,16 +6,24 @@ import Restaurant from '../models/restaurantModel.js';
 // @desc    Auth user & get token
 // @route   POST /api/users/auth
 // @access  Public
-const   authUser = asyncHandler(async (req, res) => {
+/* @Returns 
+  { token: JWT,
+    _id: user_id from mongodb,
+    email: email,
+    role: assigned role of user,
+    restaurant: restaurantId of user
+}
+*/
+const authUser = asyncHandler(async (req, res) => {
   const { email, password } = req.body;
 
   const user = await User.findOne({ email });
 
   // if user exists, then check if password matches
   if (user && (await user.matchPassword(password))) {
-    generateToken(res, user._id);
-
+    const jwt = await generateToken(res, user._id);
     res.status(200).json({
+      token: jwt,
       _id: user._id,
       name: user.name,
       email: user.email,
@@ -64,7 +72,7 @@ const registerUser = asyncHandler(async (req, res) => {
     });
     // if given valid user form details
     if (user) {
-        generateToken(res, user._id);
+        // generateToken(res, user._id);
         
         res.status(201).json({
           _id: user._id,
@@ -83,10 +91,11 @@ const registerUser = asyncHandler(async (req, res) => {
 // @route   POST /api/users/logout
 // @access  Public
 const logoutUser = (req, res) => {
-    res.cookie('jwt', '', {
+    /* res.cookie('jwt', '', {
       httpOnly: true,
       expires: new Date(0),
-    });
+    }); */
+    // Frontend should remove userInfo from localStorage
     res.status(200).json({ message: 'Logged out successfully' });
 };
 
