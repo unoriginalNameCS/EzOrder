@@ -6,17 +6,6 @@ import Restaurant from '../models/restaurantModel.js';
 // @desc    Auth user & get token
 // @route   POST /api/users/auth
 // @access  Public
-<<<<<<< HEAD
-=======
-/* @Returns 
-  { token: JWT,
-    _id: user_id from mongodb,
-    email: email,
-    role: assigned role of user,
-    restaurant: restaurantId of user
-}
-*/
->>>>>>> main
 const authUser = asyncHandler(async (req, res) => {
   const { email, password } = req.body;
 
@@ -86,28 +75,10 @@ const registerUser = asyncHandler(async (req, res) => {
       role: user.role,
       restaurant: user.restaurant,
     });
-<<<<<<< HEAD
   } else {
     res.status(400);
     throw new Error('Invalid user data');
   }
-=======
-    // if given valid user form details
-    if (user) {
-        // generateToken(res, user._id);
-        
-        res.status(201).json({
-          _id: user._id,
-          name: user.name,
-          email: user.email,
-          role: user.role,
-          restaurant: user.restaurant
-        });
-    } else {
-        res.status(400);
-        throw new Error('Invalid user data');
-    }
->>>>>>> main
 });
 
 // @desc    Logout user / clear cookie
