@@ -28,7 +28,7 @@ const Header = () => {
   }
   return (
     <header>
-      <Navbar bg='dark' variant='dark' expand='lg' collapseOnSelect>
+      <Navbar bg='light' variant='light' expand='lg' collapseOnSelect fixed='top' sticky='top'>
         <Container>
           <Navbar.Brand href='/'>EzOrder</Navbar.Brand>
           <Navbar.Toggle aria-controls='basic-navbar-nav' />

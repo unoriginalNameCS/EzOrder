@@ -9,6 +9,7 @@ import RegisterScreen from './screens/RegisterScreen';
 import ProfileScreen from './screens/ProfileScreen';
 import PrivateRoute from './components/PrivateRoute';
 import StaffScreen from './screens/StaffScreen';
+import MenuScreen from './screens/MenuScreen';
 import Login from './screens/Login';
 
 const router = createBrowserRouter(createRoutesFromElements(
@@ -20,6 +21,7 @@ const router = createBrowserRouter(createRoutesFromElements(
     { /* Private routes (user has to be logged in */}
     <Route path='' element={<PrivateRoute />}>
       <Route path='/profile' element={<ProfileScreen />} />
+      <Route path='/menu' element={<MenuScreen />} />
       {/* <Route path='/staff' element={<StaffScrren/>}/> */}
     </Route>
   </Route>
