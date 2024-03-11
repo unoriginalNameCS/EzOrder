@@ -3,6 +3,7 @@ import { Form, Button } from 'react-bootstrap';
 import FormContainer from '../components/FormContainer';
 import { Link, useNavigate } from 'react-router-dom';
 import { toast } from 'react-toastify';
+import getCookie from './StaffScreen.jsx'
 
 const ProfileScreen = () => {
   const [name, setName] = useState('');
@@ -13,16 +14,6 @@ const ProfileScreen = () => {
   const navigate = useNavigate();
 
   const userInfo = JSON.parse(localStorage.getItem('userInfo'))
-
-  //const cookie = getCookie('jwt')
-
-  // const [updateProfile] = useUpdateUserMutation();
-  
-  /* useEffect(() => {
-    setName(userInfo.name);
-    setEmail(userInfo.email);
-  }, [userInfo.setName, userInfo.setEmail]);
- */
 
   async function update (name, email, password) {
     const response = await fetch('http://localhost:5000/api/users/profile', {
@@ -42,7 +33,15 @@ const ProfileScreen = () => {
     // if successfully update
     if (response.status === 200) {
       toast.success('Successfully updated user profile details')
-    } 
+      let updatedUserInfo = JSON.parse(localStorage.getItem('userInfo'))
+      updatedUserInfo.name = name;
+      localStorage.setItem('userInfo', JSON.stringify(updatedUserInfo))
+      console.log(updatedUserInfo)
+
+      
+    } else {
+      toast.error(data.message)
+    }
   
   }
   const submitHandler = async (e) => {

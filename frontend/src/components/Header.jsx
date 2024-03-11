@@ -5,12 +5,8 @@ import { useNavigate } from 'react-router-dom';
 import { toast } from 'react-toastify';
 
 const Header = () => {
-  // const { userInfo } = useSelector((state) => state.auth);
   
-  //const dispatch = useDispatch();
   const navigate = useNavigate();
-  //const [logoutApiCall] = useLogoutMutation();
-
   const userInfo = JSON.parse(localStorage.getItem('userInfo'))
 
   const logoutHandler = async () => {
@@ -22,7 +18,6 @@ const Header = () => {
       })
 
       const data = await response.json();
-      console.log(data)
       if (response.status === 200) {
         localStorage.removeItem('userInfo')
         toast.success(data.message)
