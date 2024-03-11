@@ -7,11 +7,13 @@ import { logout } from '../slices/authSlice';
 import { useNavigate } from 'react-router-dom';
 
 const Header = () => {
-  const { userInfo } = useSelector((state) => state.auth);
+  // const { userInfo } = useSelector((state) => state.auth);
   
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const [logoutApiCall] = useLogoutMutation();
+
+  const userInfo = JSON.parse(localStorage.getItem('userInfo'))
 
   const logoutHandler = async () => {
     try {

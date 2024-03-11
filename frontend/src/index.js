@@ -12,11 +12,12 @@ import PrivateRoute from './components/PrivateRoute';
 import store from './store';
 import { Provider } from 'react-redux';
 import StaffScreen from './screens/StaffScreen';
+import Login from './screens/Login';
 
 const router = createBrowserRouter(createRoutesFromElements(
   <Route path='/' element={<App />}>
     <Route index={true} path='/' element={<HomeScreen />} />
-    <Route path='/login' element={<LoginScreen />} />
+    <Route path='/login' element={<Login />} />
     <Route path='/register' element={<RegisterScreen />} />
     <Route path='/staff' element={<StaffScreen/>}/>
     { /* Private routes (user has to be logged in */}

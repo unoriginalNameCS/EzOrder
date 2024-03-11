@@ -6,6 +6,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { setCredentials } from '../slices/authSlice';
 import { toast } from 'react-toastify';
 import { useUpdateUserMutation } from '../slices/usersApiSlice';
+import getCookie from './StaffScreen.jsx'
 
 const ProfileScreen = () => {
   const [name, setName] = useState('');
@@ -13,18 +14,42 @@ const ProfileScreen = () => {
   const [password, setPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
 
-  const dispatch = useDispatch();
   const navigate = useNavigate();
 
-  const { userInfo } = useSelector((state) => state.auth);
+  const userInfo = JSON.parse(localStorage.getItem('userInfo'))
 
-  const [updateProfile] = useUpdateUserMutation();
+  //const cookie = getCookie('jwt')
+
+  // const [updateProfile] = useUpdateUserMutation();
   
-  useEffect(() => {
+  /* useEffect(() => {
     setName(userInfo.name);
     setEmail(userInfo.email);
   }, [userInfo.setName, userInfo.setEmail]);
+ */
 
+  console.log('userInfo', userInfo.token)
+  async function update (name, email, password) {
+    const response = await fetch('http://localhost:5000/api/users/profile', {
+      method: 'PUT',
+      headers: {
+        'Content-type': 'application/json',
+        'Authorization': `${userInfo.token}`
+      },
+      body: JSON.stringify({
+        name,
+        email,
+        password,
+      })
+    })
+    const data = await response.json();
+    
+    // if successfully update
+    if (response.status === 200) {
+      toast.success('Successfully updated user profile details')
+    } 
+  
+  }
   const submitHandler = async (e) => {
     e.preventDefault();
 
@@ -32,9 +57,7 @@ const ProfileScreen = () => {
       toast.error('Passwords do not match');
     } else {
       try {
-        const res = await updateProfile({ _id: userInfo._id, name, email, password }).unwrap();
-        dispatch(setCredentials({ ...res }));
-        toast.success('Profile updated');
+        update(name, email, password)
       } catch (err) {
         toast.error(err?.data?.message || err.error);
       }
