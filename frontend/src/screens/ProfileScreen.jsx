@@ -26,6 +26,7 @@ const ProfileScreen = () => {
         name,
         email,
         password,
+        id: userInfo._id,
       })
     })
     const data = await response.json();
