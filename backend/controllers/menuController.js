@@ -25,7 +25,7 @@ const addCategory = asyncHandler(async (req, res) => {
   const { name } = req.body;
 
   // search db for category by name
-  const categoryExists = await MenuCategory.findOne({ name, restaurantId: restaurantId });
+  const categoryExists = await MenuCategory.findOne({ name, restaurant: restaurantId });
   if (categoryExists) {
       res.status(400);
       throw new Error('Category already exists');
