@@ -1,6 +1,8 @@
 import React from 'react'
 import { useNavigate } from 'react-router-dom';
 import { toast } from 'react-toastify'
+import TextField from '@mui/material/TextField';
+import Button from '@mui/material/Button';
 
 
 const Login = () => {
@@ -43,22 +45,42 @@ const Login = () => {
   return (
     <>
       <div>Login</div>
-      <input type="text"
-        placeholder='email'
-        aria-label='email'
-        value={email}
-        onChange={(e) => setEmail(e.target.value)}
-      />
+      <br />
+      <br />
 
-      <input type="password" 
-      placeholder='password'
-      value={password}
-      onChange={(e) => setPassword(e.target.value)}
+      <TextField
+        required
+        label='email'
+        onChange={(e) => setEmail(e.target.value)}
+        sx={{margin: 1}}
       />
       <br /> <br />
-      <button type='submit'
-              onClick={submitHandler}
-      >Submit</button>
+      <TextField
+        type='password'
+        required
+        label='password'
+        sx={{margin: 1}}
+        onChange={(e) => setPassword(e.target.value)}
+      >
+        Password
+      </TextField>
+      <br /><br />
+      <Button
+      variant='contained'
+      color='primary'
+      sx={{margin: 1}}
+      onClick={submitHandler}>
+        Login
+      </Button>
+      <br /> <br />
+      Don't have an account? 
+      <Button 
+      variant='contained'
+      color='primary'
+      sx={{margin: 1}}
+      onClick={() => {navigate('/register')}}>
+        Register now
+      </Button>
     </>
   )
 }

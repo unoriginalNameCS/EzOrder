@@ -21,7 +21,7 @@ const Header = () => {
       if (response.status === 200) {
         localStorage.removeItem('userInfo')
         toast.success(data.message)
-        navigate('/')
+        navigate('/login')
       } else {
         toast.error(data.message)
       }
@@ -30,7 +30,9 @@ const Header = () => {
     <header>
       <Navbar bg='light' variant='light' expand='lg' collapseOnSelect fixed='top' sticky='top'>
         <Container>
-          <Navbar.Brand href='/'>EzOrder</Navbar.Brand>
+          <LinkContainer to='/'>
+          <Navbar.Brand>EzOrder</Navbar.Brand>
+          </LinkContainer>
           <Navbar.Toggle aria-controls='basic-navbar-nav' />
           <Navbar.Collapse id='basic-navbar-nav'>
             <Nav className='ms-auto'>
