@@ -10,7 +10,7 @@ function App() {
   <>
     <Header />
     <ToastContainer/>
-    <Container className='mx-0'>
+    <Container>
       <Outlet />
     </Container>
   </>
