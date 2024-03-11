@@ -2,11 +2,7 @@ import { useState, useEffect } from 'react';
 import { Form, Button } from 'react-bootstrap';
 import FormContainer from '../components/FormContainer';
 import { Link, useNavigate } from 'react-router-dom';
-import { useDispatch, useSelector } from 'react-redux';
-import { setCredentials } from '../slices/authSlice';
 import { toast } from 'react-toastify';
-import { useUpdateUserMutation } from '../slices/usersApiSlice';
-import getCookie from './StaffScreen.jsx'
 
 const ProfileScreen = () => {
   const [name, setName] = useState('');
@@ -28,7 +24,6 @@ const ProfileScreen = () => {
   }, [userInfo.setName, userInfo.setEmail]);
  */
 
-  console.log('userInfo', userInfo.token)
   async function update (name, email, password) {
     const response = await fetch('http://localhost:5000/api/users/profile', {
       method: 'PUT',

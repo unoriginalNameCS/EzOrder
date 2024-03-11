@@ -1,28 +1,35 @@
 import { Navbar, Nav, Container, NavDropdown } from 'react-bootstrap';
 import { FaSignInAlt, FaSignOutAlt } from 'react-icons/fa';
 import { LinkContainer } from 'react-router-bootstrap';
-import { useSelector, useDispatch } from 'react-redux';
-import { useLogoutMutation } from '../slices/usersApiSlice';
-import { logout } from '../slices/authSlice';
 import { useNavigate } from 'react-router-dom';
+import { toast } from 'react-toastify';
 
 const Header = () => {
   // const { userInfo } = useSelector((state) => state.auth);
   
-  const dispatch = useDispatch();
+  //const dispatch = useDispatch();
   const navigate = useNavigate();
-  const [logoutApiCall] = useLogoutMutation();
+  //const [logoutApiCall] = useLogoutMutation();
 
   const userInfo = JSON.parse(localStorage.getItem('userInfo'))
 
   const logoutHandler = async () => {
-    try {
-      await logoutApiCall().unwrap();
-      dispatch(logout()); // clear localStorage
-      navigate('/')
-    } catch (err) {
-      console.log(err)
-    }
+      const response = await fetch('http://localhost:5000/api/users/logout', {
+        method: 'POST',
+        headers: {
+          'Content-type': 'application/json',
+        },
+      })
+
+      const data = await response.json();
+      console.log(data)
+      if (response.status === 200) {
+        localStorage.removeItem('userInfo')
+        toast.success(data.message)
+        navigate('/')
+      } else {
+        toast.error(data.message)
+      }
   }
   return (
     <header>

@@ -5,12 +5,12 @@ const generateToken = async (res, userId) => {
     expiresIn: '30d',
   });
 
-  res.cookie('jwt', token, {
+  /* res.cookie('jwt', token, {
     httpOnly: false,
     secure: process.env.NODE_ENV !== 'development',
     sameSite: 'strict', // Prevent CSRF attacks
     maxAge: 30 * 24 * 60 * 60 * 1000, // 30 days
-  });
+  }); */
 
   return token;
 };
