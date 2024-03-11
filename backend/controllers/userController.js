@@ -1,7 +1,7 @@
 import asyncHandler from 'express-async-handler';
+import Restaurant from '../models/restaurantModel.js';
 import User from '../models/userModel.js';
 import generateToken from '../utils/generateToken.js';
-import Restaurant from '../models/restaurantModel.js';
 
 // @desc    Auth user & get token
 // @route   POST /api/users/auth
@@ -227,5 +227,6 @@ export {
   logoutUser,
   registerStaff,
   registerUser,
-  updateUserProfile,
+  updateUserProfile
 };
+
