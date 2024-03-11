@@ -6,7 +6,7 @@ import MenuItem from '../models/itemModel.js';
 // @route  GET /:restaurantId/menu
 // @access Private
 const getMenu = asyncHandler(async (req, res) => {
-  const { restaurantId } = req.params
+  const { restaurantId } = req.params;
   const categories = await MenuCategory.find({ restaurant : restaurantId }).populate('menuItems').sort('position');
 
   if (categories.length > 0) {
@@ -17,8 +17,22 @@ const getMenu = asyncHandler(async (req, res) => {
   
 });
 
+// @desc  view categories
+// @route  GET /:restaurantId/menu/categories
+// @access Private
+const getCategories = asyncHandler(async (req, res) => {
+  const { restaurantId } = req.params;
+  const categories = await MenuCategory.find({ restaurant : restaurantId}).sort('position');
+
+  if (categories.length > 0) {
+    res.status(200).json(categories);
+  } else {
+    res.status(404).json({ message: 'No Categories' })
+  }
+});
+
 // @desc  add category
-// @route  POST /:restaurantId/menu/categories
+// @route  POST /:restaurantId/menu/categories/add
 // @access Private
 const addCategory = asyncHandler(async (req, res) => {
   const { restaurantId } = req.params;
@@ -51,8 +65,22 @@ const addCategory = asyncHandler(async (req, res) => {
   }
 });
 
+// @desc  view items
+// @route  GET /:restaurantId/menu/categories/:categoryId/items
+// @access Private
+const getMenuItems = asyncHandler(async (req, res) => {
+  const { restaurantId, categoryId } = req.params;
+  const menuItems = await MenuItem.find({ category : categoryId }).sort('position');
+
+  if (menuItems.length > 0) {
+    res.status(200).json(menuItems);
+  } else {
+    res.status(404).json({ message: 'No items within category' })
+  }
+})
+
 // @desc  add item
-// @route  POST /:restaurantId/menu/categories/:categoryId/items
+// @route  POST /:restaurantId/menu/categories/:categoryId/items/add
 // @access Private
 const addItem = asyncHandler(async (req, res) => {
   const { restaurantId, categoryId } = req.params;
@@ -194,7 +222,21 @@ const updateMenuItemsOrder = asyncHandler(async (req, res) => {
 });
 
 // @desc  update menu item details
-// @route  PATCH /:restaurantId/menu/categories/:categoryId/items/:itemId
+// @route  GET /:restaurantId/menu/categories/:categoryId/items/:itemId
+// @access Private
+const getMenuItemDetails = asyncHandler(async (req, res) => {
+  const { restaurantId, categoryId, itemId } = req.params;
+
+  const item = await MenuItem.findOne({_id: itemId, category: categoryId});
+  if (!item) {
+      res.status(404);
+      throw new Error('Menu item not found');
+  }
+  res.status(200).json(item);
+});
+
+// @desc  update menu item details
+// @route  PATCH /:restaurantId/menu/categories/:categoryId/items/:itemId/update
 // @access Private
 const updateMenuItemDetails = asyncHandler(async (req, res) => {
     const { restaurantId, categoryId, itemId } = req.params;
@@ -217,6 +259,6 @@ const updateMenuItemDetails = asyncHandler(async (req, res) => {
 });
 
 export {
-  addCategory, addItem, getMenu, updateCategoriesOrder, updateMenuItemDetails, updateMenuItemsOrder
+  addCategory, addItem, getCategories, getMenu, getMenuItemDetails, getMenuItems, updateCategoriesOrder, updateMenuItemDetails, updateMenuItemsOrder
 };
 
