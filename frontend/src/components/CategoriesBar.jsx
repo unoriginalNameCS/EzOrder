@@ -33,7 +33,7 @@ import ReorderIcon from '@mui/icons-material/Reorder';
     padding: theme.spacing(0.5), 
     textTransform: 'none',
     boxShadow: 'none', 
-    marginLeft: '1rem',
+    marginLeft: '0.75rem',
     '&:hover': {
       backgroundColor: '#83AE0B', 
       boxShadow: 'none',
@@ -45,14 +45,24 @@ import ReorderIcon from '@mui/icons-material/Reorder';
   const CategoriesBar = ({restaurantId, userInfo}) => {
     const theme = useTheme();
     const [menuCategories, setMenuCategories] = useState([]); 
-    const [modalOpen, setModalOpen] = useState(false); 
+    const [newCategoryModalOpen, setNewCategoryModalOpen] = useState(false);
+    const [editCategoryModalOpen, setEditCategoryModalOpen] = useState(false);
 
-    const handleOpenModal = () => {
-        setModalOpen(true);
+    const handleOpenNewCategoryModal = () => {
+        setNewCategoryModalOpen(true);
     };
     
-    const handleCloseModal = () => {
-      setModalOpen(false);
+    const handleCloseNewCategoryModal = () => {
+      setNewCategoryModalOpen(false);
+      refreshMenuCategories();
+    };
+
+    const handleOpenEditCategoryModal = () => {
+      setEditCategoryModalOpen(true);
+    };
+
+    const handleCloseEditCategoryModal = () => {
+      setEditCategoryModalOpen(false);
       refreshMenuCategories();
     };
   
@@ -99,27 +109,27 @@ import ReorderIcon from '@mui/icons-material/Reorder';
         <EditButton
           variant='outlined'
           theme={theme}
-          onClick={handleOpenModal}
+          onClick={handleOpenEditCategoryModal}
         >
           <ReorderIcon/>
         </EditButton>
         <EditButton
           variant='outlined'
           theme={theme}
-          onClick={handleOpenModal}
+          onClick={handleOpenNewCategoryModal}
         >
           <AddIcon/>
         </EditButton>
       </Box>
       <NewCategoryModal
-          open={modalOpen}
-          handleClose={handleCloseModal}
+          open={newCategoryModalOpen}
+          handleClose={handleCloseNewCategoryModal}
           refreshItems={refreshMenuCategories}
           restaurantId={restaurantId} 
       />
       <EditCategoryModal
-          open={modalOpen}
-          handleClose={handleCloseModal}
+          open={editCategoryModalOpen}
+          handleClose={handleCloseEditCategoryModal}
           refreshItems={refreshMenuCategories}
           restaurantId={restaurantId} 
           categories={menuCategories}
