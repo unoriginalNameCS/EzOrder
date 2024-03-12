@@ -11,6 +11,7 @@ import PrivateRoute from './components/PrivateRoute';
 import StaffScreen from './screens/StaffScreen';
 import MenuScreen from './screens/MenuScreen';
 import LoginScreen from './screens/LoginScreen';
+import TasksScreen from './screens/TasksScreen';
 
 const router = createBrowserRouter(createRoutesFromElements(
   <Route path='/' element={<App />}>
@@ -22,6 +23,7 @@ const router = createBrowserRouter(createRoutesFromElements(
     <Route path='' element={<PrivateRoute />}>
       <Route path='/profile' element={<ProfileScreen />} />
       <Route path='/menu' element={<MenuScreen />} />
+      <Route path='/tasks' element={<TasksScreen />}/>
       {/* <Route path='/staff' element={<StaffScrren/>}/> */}
     </Route>
   </Route>

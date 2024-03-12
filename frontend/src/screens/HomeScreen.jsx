@@ -4,6 +4,7 @@ import Button from '@mui/material/Button';
 import { useNavigate } from 'react-router-dom';
 import SideNav from '../components/SideNav.jsx'
 import FormContainer from '../components/FormContainer.jsx'
+import EmployeeHomeScreen from './EmployeeHomeScreen.jsx'
 
 // just doing manager home screen for now, just basics
 const HomeScreen = () => {
@@ -14,7 +15,7 @@ const HomeScreen = () => {
 
   return (
     <>
-      { userInfo ? <> <SideNav /> {/* make a manager/staff dashboard and import it here */} </> : 
+      { userInfo ? <> <EmployeeHomeScreen />{/* make a manager/staff dashboard and import it here */} </> : 
       <> 
       <FormContainer>
       <div>
