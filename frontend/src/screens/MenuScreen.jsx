@@ -6,6 +6,7 @@ import MenuCard from '../components/MenuCard';
 import { Button } from '@mui/material';
 import { styled, useTheme } from '@mui/material/styles';
 import NewItemModal from '../components/NewItemModal';
+import EditItemModal from '../components/EditItemModal';
 import CategoriesBar from '../components/CategoriesBar';
 
 const StyledButton = styled(Button)(({ theme }) => ({
@@ -24,20 +25,34 @@ const StyledButton = styled(Button)(({ theme }) => ({
 const MenuScreen = () => {
   const theme = useTheme();
   const [menuItems, setMenuItems] = useState([]); 
-  const [modalOpen, setModalOpen] = useState(false); // State for modal open/close
-
+  const [NewItemModalOpen, setNewItemModalOpen] = useState(false);
+  const [EditItemModalOpen, setEditItemModalOpen] = useState(false);
+  
   const userInfo = JSON.parse(localStorage.getItem('userInfo'));
   const restaurantId = userInfo.restaurant;
   const categoryId = '65ea97143da39234d8571e73';
 
-  const handleOpenModal = () => {
-    setModalOpen(true);
-  };
 
-  const handleCloseModal = () => {
-    setModalOpen(false);
+  const handleOpenNewItemModal = () => {
+      setNewItemModalOpen(true);
+  };
+  
+  const handleCloseNewItemModal = () => {
+    setNewItemModalOpen(false);
     refreshMenuItems();
   };
+
+  const handleOpenEditItemModal = () => {
+    setEditItemModalOpen(true);
+  };
+
+  const handleCloseEditItemModal = () => {
+    setEditItemModalOpen(false);
+    refreshMenuItems();
+  };
+
+
+
 
   const refreshMenuItems = () => {
     fetchMenuItems();
@@ -85,19 +100,34 @@ const MenuScreen = () => {
         <Grid item xs={12} style={{ padding: theme.spacing(1) }}>
           <StyledButton
             variant="contained"
-            onClick={handleOpenModal}
+            onClick={handleOpenNewItemModal}
+            sx={{marginRight: '0.75rem'}}
           >
             New Item
+          </StyledButton>
+          <StyledButton
+            variant="contained"
+            onClick={handleOpenEditItemModal}
+          >
+            Edit Item
           </StyledButton>
         </Grid>
       </Grid>
       <NewItemModal
-        open={modalOpen}
-        handleClose={handleCloseModal}
+        open={NewItemModalOpen}
+        handleClose={handleCloseNewItemModal}
         refreshItems={refreshMenuItems} 
         restaurantId={restaurantId}
         categoryId={categoryId}
       />
+      <EditItemModal
+        open={EditItemModalOpen}
+        handleClose={handleCloseEditItemModal}
+        refreshItems={refreshMenuItems} 
+        restaurantId={restaurantId}
+        categoryId={categoryId}
+        menuItems={menuItems}
+      />      
     </div>
   );
 };
