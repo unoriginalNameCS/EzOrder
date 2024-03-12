@@ -13,7 +13,7 @@ import TableContainer from '@mui/material/TableContainer';
 import TableHead from '@mui/material/TableHead';
 import TableRow from '@mui/material/TableRow';
 import Paper from '@mui/material/Paper';
-
+import EditButton from '../components/EditButton';
 const style = {
   position: 'absolute',
   top: '50%',
@@ -45,6 +45,7 @@ export default function StaffScrren() {
   const [rows, setRows] = useState([]);
   const [open1, setOpen1] = useState(false);
   const [open2, setOpen2] = useState(false);
+  const [id, setId] = useState("");
   const [name, setName] = useState('');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
@@ -68,7 +69,7 @@ export default function StaffScrren() {
         {
           headers: {
             _id: JSON.parse(localStorage.getItem('userInfo'))._id,
-            Authorization: `${getCookie('jwt')}`,
+            Authorization: JSON.parse(localStorage.getItem('userInfo')).token,
             restaurantId,
           },
         }
@@ -87,6 +88,7 @@ export default function StaffScrren() {
       });
   };
   const handleEdit = (id) => {
+    console.log(id)
     axios
       .put(
         'http://localhost:5000/api/users/profile',
@@ -99,7 +101,7 @@ export default function StaffScrren() {
         {
           headers: {
             _id: JSON.parse(localStorage.getItem('userInfo'))._id,
-            Authorization: `${getCookie('jwt')}`,
+            Authorization: JSON.parse(localStorage.getItem('userInfo')).token,
             restaurantId,
           },
         }
@@ -113,16 +115,16 @@ export default function StaffScrren() {
           setRole('');
           setPassword('');
           setOpen2(false);
-          navigate('/staff');
         }
       });
+      navigate(0);
   };
   useEffect(() => {
     axios
       .get(`http://localhost:5000/api/users/profiles`, {
         headers: {
           _id: JSON.parse(localStorage.getItem('userInfo'))._id,
-          Authorization: `${getCookie('jwt')}`,
+          Authorization: JSON.parse(localStorage.getItem('userInfo')).token,
           restaurantId,
         },
       })
@@ -155,61 +157,6 @@ export default function StaffScrren() {
                   <TableCell align='right'>{row.name}</TableCell>
                   <TableCell align='right'>{row.email}</TableCell>
                   <TableCell align='right'>
-                    <Button
-                      variant='text'
-                      color='primary'
-                      onClick={handleOpen2}
-                    >
-                      Edit
-                    </Button>{' '}
-                    <Modal
-                      open={open2}
-                      onClose={handleClose2}
-                      aria-labelledby='modal-modal-title'
-                      aria-describedby='modal-modal-description'
-                    >
-                      <Box sx={style}>
-                        <Typography
-                          variant='h6'
-                          color='initial'
-                          sx={{ margin: 1 }}
-                        >
-                          Edit Staff
-                        </Typography>
-                        <TextField
-                          required
-                          id='outlined-required'
-                          label='name'
-                          value={name}
-                          onChange={(e) => setName(e.target.value)}
-                          sx={{ margin: 1 }}
-                        />
-                        <TextField
-                          required
-                          id='outlined-required'
-                          label='email'
-                          value={email}
-                          onChange={(e) => setEmail(e.target.value)}
-                          sx={{ margin: 1 }}
-                        />
-                        <TextField
-                          required
-                          id='outlined-required'
-                          label='password'
-                          value={password}
-                          onChange={(e) => setPassword(e.target.value)}
-                          sx={{ margin: 1 }}
-                        />
-                        <Button
-                          variant='contained'
-                          color='primary'
-                          sx={{ margin: 1 }}
-                          onClick={()=>{handleEdit(row.id)}}
-                        >
-                          Edit
-                        </Button>
-                      </Box>
-                    </Modal>
                   </TableCell>
                 </TableRow>
               ))}
@@ -272,6 +219,62 @@ export default function StaffScrren() {
             </Button>
           </Box>
         </Modal>
+        <Button
+                      variant='text'
+                      color='primary'
+                      onClick={handleOpen2}
+                    >
+                      Edit
+                    </Button>{' '}
+                    <Modal
+                      open={open2}
+                      onClose={handleClose2}
+                      aria-labelledby='modal-modal-title'
+                      aria-describedby='modal-modal-description'
+                    >
+                      <Box sx={style}>
+                        <Typography
+                          variant='h6'
+                          color='initial'
+                          sx={{ margin: 1 }}
+                        >
+                          Edit Staff 
+                        </Typography>
+                        <TextField
+                          required
+                          id='outlined-required'
+                          label='id'
+                          value={id}
+                          onChange={(e) => setId(e.target.value)}
+                          sx={{ margin: 1 }}
+                        />
+                        <TextField
+                          required
+                          id='outlined-required'
+                          label='name'
+                          value={name}
+                          onChange={(e) => setName(e.target.value)}
+                          sx={{ margin: 1 }}
+                        />
+                        <TextField
+                          required
+                          id='outlined-required'
+                          label='email'
+                          value={email}
+                          onChange={(e) => setEmail(e.target.value)}
+                          sx={{ margin: 1 }}
+                        />
+                        <TextField
+                          required
+                          id='outlined-required'
+                          label='password'
+                          value={password}
+                          onChange={(e) => setPassword(e.target.value)}
+                          sx={{ margin: 1 }}
+                        />
+                        <EditButton handleEdit={handleEdit} id={id}></EditButton>
+                      </Box>
+                    </Modal>
       </div>
     </>
   );
