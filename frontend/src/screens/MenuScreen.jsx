@@ -3,18 +3,48 @@ import axios from 'axios';
 import Grid from '@mui/material/Grid';
 import SideNav from '../components/SideNav';
 import MenuCard from '../components/MenuCard';
-import { useTheme } from '@mui/material/styles';
+import { Button } from '@mui/material';
+import AddIcon from '@mui/icons-material/Add';
+import { styled, useTheme } from '@mui/material/styles';
+import NewItemModal from '../components/NewItemModal';
+
+const StyledButton = styled(Button)(({ theme }) => ({
+  backgroundColor: '#F19413',
+  color: theme.palette.common.white,
+  borderRadius: '0.5rem',
+  padding: theme.spacing(1.25, 3.25), 
+  textTransform: 'none',
+  boxShadow: 'none', 
+  '&:hover': {
+    backgroundColor: '#FFAD3C', 
+    boxShadow: 'none',
+  },
+}));
 
 const MenuScreen = () => {
   const theme = useTheme();
-  const [menuItems, setMenuItems] = useState([]); // State to store menu items for the selected category
+  const [menuItems, setMenuItems] = useState([]); 
+  const [modalOpen, setModalOpen] = useState(false); // State for modal open/close
+
+  const userInfo = JSON.parse(localStorage.getItem('userInfo'));
+  const restaurantId = userInfo.restaurant;
+  const categoryId = '65ea97143da39234d8571e73';
+
+  const handleOpenModal = () => {
+    setModalOpen(true);
+  };
+
+  const handleCloseModal = () => {
+    setModalOpen(false);
+    refreshMenuItems();
+  };
+
+  const refreshMenuItems = () => {
+    fetchMenuItems();
+  };
 
   const fetchMenuItems = async () => {
     try {
-      const userInfo = JSON.parse(localStorage.getItem('userInfo'));
-      const restaurantId = userInfo.restaurant;
-      const categoryId = '65ea97143da39234d8571e73';
-
       const url = `http://localhost:5000/menus/${restaurantId}/menu/categories/${categoryId}/items`;
 
       const { data } = await axios.get(url, {
@@ -48,7 +78,22 @@ const MenuScreen = () => {
             />
           </Grid>
         ))}
+        <Grid item xs={12} style={{ padding: theme.spacing(1) }}>
+          <StyledButton
+            variant="contained"
+            onClick={handleOpenModal}
+          >
+            New Item
+          </StyledButton>
+        </Grid>
       </Grid>
+      <NewItemModal
+        open={modalOpen}
+        handleClose={handleCloseModal}
+        refreshItems={refreshMenuItems} 
+        restaurantId={restaurantId}
+        categoryId={categoryId}
+      />
     </div>
   );
 };
