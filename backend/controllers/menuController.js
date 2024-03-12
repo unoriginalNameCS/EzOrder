@@ -7,14 +7,14 @@ import MenuItem from '../models/itemModel.js';
 // @access Private
 const getMenu = asyncHandler(async (req, res) => {
   const { restaurantId } = req.params;
-  const categories = await MenuCategory.find({ restaurant : restaurantId }).populate('menuItems').sort('position');
+  const categories = await MenuCategory.find({ restaurant : restaurantId }).sort('position');
+  const populatedCategories = await MenuCategory.populate(categories, {path: 'menuItems', options: { sort: { position: 1}}});
 
-  if (categories.length > 0) {
+  if (populatedCategories.length > 0) {
     res.status(200).json(categories);
   } else {
-    res.status(404).json({ message: 'Menu not found' })
+    res.status(404).json({ populatedCategories: 'Menu not found' })
   }
-  
 });
 
 // @desc  view categories
