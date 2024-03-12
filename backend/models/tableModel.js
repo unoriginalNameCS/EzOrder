@@ -20,7 +20,7 @@ const tableSchema = mongoose.Schema(
 );
   
 // Pre-save middleware: Hash the password (similar to what you did for users)
-menuCategorySchema.pre('save', async function (next) {
+tableSchema.pre('save', async function (next) {
     
     next();
 });

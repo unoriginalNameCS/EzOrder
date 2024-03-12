@@ -1,10 +1,11 @@
 import express from 'express';
-import { tableSelect, getTableNumbers } from '../controllers/tableController.js';
+import { tableSelect, getTableNumbers, addTable } from '../controllers/tableController.js';
 
 
 const router = express.Router();
 
-router.post('/table', tableSelect)
-router.get('/table/numbers', getTableNumbers)
+router.post('/:restaurantId/select', tableSelect)
+router.get('/:restaurantId/numbers', getTableNumbers)
+router.post('/:restaurantId/add', addTable)
 
 export default router;
