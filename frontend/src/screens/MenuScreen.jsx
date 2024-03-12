@@ -4,9 +4,9 @@ import Grid from '@mui/material/Grid';
 import SideNav from '../components/SideNav';
 import MenuCard from '../components/MenuCard';
 import { Button } from '@mui/material';
-import AddIcon from '@mui/icons-material/Add';
 import { styled, useTheme } from '@mui/material/styles';
 import NewItemModal from '../components/NewItemModal';
+import CategoriesBar from '../components/CategoriesBar';
 
 const StyledButton = styled(Button)(({ theme }) => ({
   backgroundColor: '#F19413',
@@ -67,6 +67,10 @@ const MenuScreen = () => {
     <div style={{ display: 'flex' }}>
       <SideNav />
       <Grid container style={{ flexGrow: 1, padding: theme.spacing(3), marginLeft: '200px' }}> {/* Adjust marginLeft to the width of SideNav */}
+        <Grid item xs={12} style={{ padding: theme.spacing(1) }}>
+          <CategoriesBar restaurantId={restaurantId} userInfo={userInfo}/>
+        </Grid>  
+          
         {menuItems.map((item, index) => (
           <Grid item xs={12} sm={12} md={12} lg={6} key={index} style={{ padding: theme.spacing(1) }}>
             <MenuCard
