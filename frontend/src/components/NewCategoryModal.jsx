@@ -1,7 +1,6 @@
 import React, { useState } from 'react';
 import { Modal, Box, Typography, TextField, Button, IconButton } from '@mui/material';
 import CloseIcon from '@mui/icons-material/Close';
-import CloudUploadIcon from '@mui/icons-material/CloudUpload';
 import { styled, useTheme } from '@mui/material/styles';
 import axios from 'axios';
 
@@ -17,18 +16,6 @@ const style = {
   p: 4,
   borderRadius: 1,
 };
-
-const VisuallyHiddenInput = styled('input')({
-  clip: 'rect(0 0 0 0)',
-  clipPath: 'inset(50%)',
-  height: 1,
-  overflow: 'hidden',
-  position: 'absolute',
-  bottom: 0,
-  left: 0,
-  whiteSpace: 'nowrap',
-  width: 1,
-});
 
 const NewCategoryModal = ({ open, handleClose, restaurantId }) => {
   const [formData, setFormData] = useState({
@@ -60,10 +47,10 @@ const NewCategoryModal = ({ open, handleClose, restaurantId }) => {
           },
         }
       );
-      console.log('Item added:', response.data); 
+      console.log('Category added:', response.data); 
       handleClose(); 
     } catch (error) {
-      console.error('There was an error adding the item:', error.response?.data || error.message);
+      console.error('There was an error adding the category:', error.response?.data || error.message);
     }
   };
 
@@ -71,8 +58,8 @@ const NewCategoryModal = ({ open, handleClose, restaurantId }) => {
     <Modal
       open={open}
       onClose={handleClose}
-      aria-labelledby="new-item-modal-title"
-      aria-describedby="new-item-modal-description"
+      aria-labelledby="new-category-modal-title"
+      aria-describedby="new-category-modal-description"
     >
       <Box sx={style}>
         <IconButton

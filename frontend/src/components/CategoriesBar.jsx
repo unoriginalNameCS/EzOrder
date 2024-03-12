@@ -5,7 +5,9 @@ import { styled, useTheme } from '@mui/material/styles';
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import NewCategoryModal from '../components/NewCategoryModal';
+import EditCategoryModal from '../components/EditCategoryModal';
 import AddIcon from '@mui/icons-material/Add';
+import ReorderIcon from '@mui/icons-material/Reorder';
 
   const CategoryButton = styled(Button)(({ theme }) => ({
     backgroundColor: '#FBFBF2',
@@ -99,6 +101,13 @@ import AddIcon from '@mui/icons-material/Add';
           theme={theme}
           onClick={handleOpenModal}
         >
+          <ReorderIcon/>
+        </EditButton>
+        <EditButton
+          variant='outlined'
+          theme={theme}
+          onClick={handleOpenModal}
+        >
           <AddIcon/>
         </EditButton>
       </Box>
@@ -108,6 +117,13 @@ import AddIcon from '@mui/icons-material/Add';
           refreshItems={refreshMenuCategories}
           restaurantId={restaurantId} 
       />
+      <EditCategoryModal
+          open={modalOpen}
+          handleClose={handleCloseModal}
+          refreshItems={refreshMenuCategories}
+          restaurantId={restaurantId} 
+          categories={menuCategories}
+      />      
     </>
   );
 }
