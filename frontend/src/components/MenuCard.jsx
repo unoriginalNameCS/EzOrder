@@ -7,38 +7,40 @@ import Box from '@mui/material/Box';
 import { styled, useTheme } from '@mui/material/styles';
 
 const ItemCard = styled(Card)(({ theme }) => ({
-  display: 'flex',
-  maxWidth: 345,
+  display: 'inline-flex',
+  maxWidth: '100%',
   boxShadow: "none",
-  border: `1px solid ${theme.palette.divider}`,
+  border: `1.5px solid ${theme.palette.divider}`,
   alignItems: 'center',
   overflow: 'hidden',
-  marginLeft: '200px',
 }));
 
 const ImageContainer = styled(CardMedia)(({ theme }) => ({
-  width: '140px',  
-  height: '140px',
+  width: '100px',  
+  height: '100px',
   display: 'flex',
   alignItems: 'center', 
   justifyContent: 'center', 
   overflow: 'hidden', 
   borderRadius: theme.shape.borderRadius, 
-  marginLeft: '1rem'
+  margin: '1rem',
+  marginRight: '0'
 }));
 
 
-const StyledImage = styled('img')({
-  height: '100%',
-  width: '100%',
+const StyledImage = styled('img')(({ theme }) => ({
+  maxHeight: '100%',
+  maxWidth: '100%',
   objectFit: 'contain', 
-});
+  borderRadius: theme.shape.borderRadius,
+}));
 
 const ContentContainer = styled(Box)(({ theme }) => ({
   display: 'flex',
   flexDirection: 'column',
   justifyContent: 'space-between',
-  flexGrow: 1, 
+  flexGrow: 1,
+  marginRight: theme.spacing(1)
 }));
 
 const Title = styled(Typography)({

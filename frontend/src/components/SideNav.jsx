@@ -32,7 +32,8 @@ const SideNav = () => {
           backgroundColor: '#FDFDFD',
           height: '100vh',
           position: 'fixed',
-          left: '0'
+          left: '0',
+          top: '0'
       }}
     >
     <div style={{
@@ -40,7 +41,7 @@ const SideNav = () => {
       justifyContent: 'center',
       alignItems: 'center',
     }}>
-      <img src={EzOrderLogo} alt="EzOrderLogo" style={{ width: '100%', maxWidth: '150px' }} /> {/* Adjust the size as needed */}
+      <img src={EzOrderLogo} alt="EzOrderLogo" style={{ width: '100%', maxWidth: '150px', marginTop: '2rem'}} /> {/* Adjust the size as needed */}
     </div>
       <Menu
         menuItemStyles={{
