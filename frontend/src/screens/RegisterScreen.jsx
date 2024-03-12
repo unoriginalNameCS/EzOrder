@@ -41,7 +41,7 @@ const RegisterScreen = () => {
     }
   }
 
-  
+
 
   const submitHandler = async (e) => {
     e.preventDefault();
@@ -58,7 +58,7 @@ const RegisterScreen = () => {
   };
   return (
     <FormContainer>
-      <h1>Register</h1>
+      <h2>Register</h2>
       <Form onSubmit={submitHandler}>
         <Form.Group className='my-2' controlId='name'>
           <Form.Label>Name</Form.Label>

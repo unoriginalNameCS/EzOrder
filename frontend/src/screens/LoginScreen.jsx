@@ -1,7 +1,9 @@
 import React from 'react'
 import { useNavigate } from 'react-router-dom';
 import { toast } from 'react-toastify'
-
+import TextField from '@mui/material/TextField';
+import Button from '@mui/material/Button';
+import FormContainer from '../components/FormContainer'
 
 const Login = () => {
 
@@ -42,23 +44,43 @@ const Login = () => {
 
   return (
     <>
-      <div>Login</div>
-      <input type="text"
-        placeholder='email'
-        aria-label='email'
-        value={email}
+    <FormContainer>
+      <h2>Login</h2>
+      <br />
+      <TextField
+        required
+        label='email'
         onChange={(e) => setEmail(e.target.value)}
+        sx={{margin: 1}}
       />
-
-      <input type="password" 
-      placeholder='password'
-      value={password}
-      onChange={(e) => setPassword(e.target.value)}
-      />
-      <br /> <br />
-      <button type='submit'
-              onClick={submitHandler}
-      >Submit</button>
+      <br />
+      <TextField
+        type='password'
+        required
+        label='password'
+        sx={{margin: 1}}
+        onChange={(e) => setPassword(e.target.value)}
+      >
+        Password
+      </TextField>
+      <br />
+      <Button
+      variant='contained'
+      color='primary'
+      sx={{margin: 1}}
+      onClick={submitHandler}>
+        Login
+      </Button>
+      <br />
+      Don't have an account?
+      <Button
+      variant='contained'
+      color='primary'
+      sx={{margin: 1}}
+      onClick={() => {navigate('/register')}}>
+        Register now
+      </Button>
+      </FormContainer>
     </>
   )
 }

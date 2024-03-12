@@ -10,12 +10,12 @@ import ProfileScreen from './screens/ProfileScreen';
 import PrivateRoute from './components/PrivateRoute';
 import StaffScreen from './screens/StaffScreen';
 import MenuScreen from './screens/MenuScreen';
-import Login from './screens/Login';
+import LoginScreen from './screens/LoginScreen';
 
 const router = createBrowserRouter(createRoutesFromElements(
   <Route path='/' element={<App />}>
     <Route index={true} path='/' element={<HomeScreen />} />
-    <Route path='/login' element={<Login />} />
+    <Route path='/login' element={<LoginScreen />} />
     <Route path='/register' element={<RegisterScreen />} />
     <Route path='/staff' element={<StaffScreen/>}/>
     { /* Private routes (user has to be logged in */}

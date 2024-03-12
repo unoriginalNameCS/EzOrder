@@ -26,6 +26,7 @@ const ProfileScreen = () => {
         name,
         email,
         password,
+        id: userInfo._id,
       })
     })
     const data = await response.json();
@@ -36,8 +37,6 @@ const ProfileScreen = () => {
       let updatedUserInfo = JSON.parse(localStorage.getItem('userInfo'))
       updatedUserInfo.name = name;
       localStorage.setItem('userInfo', JSON.stringify(updatedUserInfo))
-      console.log(updatedUserInfo)
-
       
     } else {
       toast.error(data.message)
