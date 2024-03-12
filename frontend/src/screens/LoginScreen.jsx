@@ -1,85 +1,88 @@
-import { useState, useEffect } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
-import { Form, Button, Row, Col } from 'react-bootstrap';
-import FormContainer from '../components/FormContainer';
-import { useDispatch, useSelector } from 'react-redux';
-import { useLoginMutation } from '../slices/usersApiSlice';
-import { setCredentials } from '../slices/authSlice';
-import { toast } from 'react-toastify';
+import React from 'react'
+import { useNavigate } from 'react-router-dom';
+import { toast } from 'react-toastify'
+import TextField from '@mui/material/TextField';
+import Button from '@mui/material/Button';
+import FormContainer from '../components/FormContainer'
 
-const LoginScreen = () => {
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
+const Login = () => {
 
-  const dispatch = useDispatch();
+  const [email, setEmail] = React.useState('');
+  const [password, setPassword] = React.useState('')
   const navigate = useNavigate();
 
-  const [login, { isLoading }] = useLoginMutation();
+  async function signin (email, password) {
+    const response = await fetch('http://localhost:5000/api/users/auth', {
+      method: 'POST',
+      headers: {
+        'Content-type': 'application/json',
+      },
+      body: JSON.stringify({
+        email,
+        password,
+      })
+    })
+    const data = await response.json();
+    // store info in localStorage
 
-  const { userInfo } = useSelector((state) => state.auth);
+    // if successful signIn then navigate to dashboard
+    if (response.status === 200) {
+      localStorage.setItem('userInfo', JSON.stringify(data))
+      toast.success('Successfully signed in')
+      navigate('/')
+    } else {
+      toast.error(data?.message)
+      console.log(data?.message);
 
-  useEffect(() => {
-    if (userInfo) {
-      navigate('/');
     }
-  }, [navigate, userInfo]);
 
-  const submitHandler = async (e) => {
-    e.preventDefault();
-    try {
-      const res = await login({ email, password }).unwrap();
-      dispatch(setCredentials({ ...res }));
-      navigate('/');
-    } catch (err) {
-      console.log(err?.data?.message || err.error);
-      toast.error(err?.data?.message || err.error);
-    }
-  };
+  }
+
+  const submitHandler = () => {
+    signin(email, password)
+  }
 
   return (
+    <>
     <FormContainer>
-      <h1>Sign In</h1>
+      <h2>Login</h2>
+      <br />
+      <TextField
+        required
+        label='email'
+        onChange={(e) => setEmail(e.target.value)}
+        sx={{margin: 1}}
+      />
+      <br />
+      <TextField
+        type='password'
+        required
+        label='password'
+        sx={{margin: 1}}
+        onChange={(e) => setPassword(e.target.value)}
+      >
+        Password
+      </TextField>
+      <br />
+      <Button
+      variant='contained'
+      color='primary'
+      sx={{margin: 1}}
+      onClick={submitHandler}>
+        Login
+      </Button>
+      <br />
+      Don't have an account?
+      <Button
+      variant='contained'
+      color='primary'
+      sx={{margin: 1}}
+      onClick={() => {navigate('/register')}}>
+        Register now
+      </Button>
+      </FormContainer>
+    </>
+  )
+}
 
-      <Form onSubmit={submitHandler}>
-        <Form.Group className='my-2' controlId='email'>
-          <Form.Label>Email Address</Form.Label>
-          <Form.Control
-            type='email'
-            placeholder='Enter email'
-            value={email}
-            onChange={(e) => setEmail(e.target.value)}
-          ></Form.Control>
-        </Form.Group>
-
-        <Form.Group className='my-2' controlId='password'>
-          <Form.Label>Password</Form.Label>
-          <Form.Control
-            type='password'
-            placeholder='Enter password'
-            value={password}
-            onChange={(e) => setPassword(e.target.value)}
-          ></Form.Control>
-        </Form.Group>
-
-        <Button
-          disabled={isLoading}
-          type='submit'
-          variant='primary'
-          className='mt-3'
-        >
-          Sign In
-        </Button>
-      </Form>
-
-      {isLoading && <p>Loading...</p>}
-
-      <Row className='py-3'>
-        <Col>
-          New Customer? <Link to='/register'>Register</Link>
-        </Col>
-      </Row>
-    </FormContainer>
-  );
-};
-
-export default LoginScreen;
+export default Login

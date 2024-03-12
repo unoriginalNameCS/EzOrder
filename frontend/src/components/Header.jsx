@@ -1,32 +1,38 @@
 import { Navbar, Nav, Container, NavDropdown } from 'react-bootstrap';
 import { FaSignInAlt, FaSignOutAlt } from 'react-icons/fa';
 import { LinkContainer } from 'react-router-bootstrap';
-import { useSelector, useDispatch } from 'react-redux';
-import { useLogoutMutation } from '../slices/usersApiSlice';
-import { logout } from '../slices/authSlice';
 import { useNavigate } from 'react-router-dom';
+import { toast } from 'react-toastify';
 
 const Header = () => {
-  const { userInfo } = useSelector((state) => state.auth);
   
-  const dispatch = useDispatch();
   const navigate = useNavigate();
-  const [logoutApiCall] = useLogoutMutation();
+  const userInfo = JSON.parse(localStorage.getItem('userInfo'))
 
   const logoutHandler = async () => {
-    try {
-      await logoutApiCall().unwrap();
-      dispatch(logout()); // clear localStorage
-      navigate('/')
-    } catch (err) {
-      console.log(err)
-    }
+      const response = await fetch('http://localhost:5000/api/users/logout', {
+        method: 'POST',
+        headers: {
+          'Content-type': 'application/json',
+        },
+      })
+
+      const data = await response.json();
+      if (response.status === 200) {
+        localStorage.removeItem('userInfo')
+        toast.success(data.message)
+        navigate('/login')
+      } else {
+        toast.error(data.message)
+      }
   }
   return (
     <header>
-      <Navbar bg='dark' variant='dark' expand='lg' collapseOnSelect>
+      <Navbar bg='light' variant='light' expand='lg' collapseOnSelect fixed='top' sticky='top'>
         <Container>
-          <Navbar.Brand href='/'>EzOrder</Navbar.Brand>
+          <LinkContainer to='/'>
+          <Navbar.Brand>EzOrder</Navbar.Brand>
+          </LinkContainer>
           <Navbar.Toggle aria-controls='basic-navbar-nav' />
           <Navbar.Collapse id='basic-navbar-nav'>
             <Nav className='ms-auto'>

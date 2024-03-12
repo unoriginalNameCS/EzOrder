@@ -2,9 +2,6 @@ import { useState, useEffect } from 'react';
 import { Form, Button, Row, Col } from 'react-bootstrap';
 import FormContainer from '../components/FormContainer';
 import { Link, useNavigate } from 'react-router-dom';
-import { useDispatch, useSelector } from 'react-redux';
-import { useRegisterMutation } from '../slices/usersApiSlice';
-import { setCredentials } from '../slices/authSlice';
 import { toast } from 'react-toastify';
 
 const RegisterScreen = () => {
@@ -12,19 +9,39 @@ const RegisterScreen = () => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
+  const [restaurantName, setRestaurantName] = useState('')
 
-  const dispatch = useDispatch();
   const navigate = useNavigate();
 
-  const [register, { isLoading }] = useRegisterMutation();
+  const register = async (name, email, restaurantName, password) => {
+    const response = await fetch('http://localhost:5000/api/users/register', {
+      method: 'POST',
+      headers: {
+        'Content-type': 'application/json',
+      },
+      body: JSON.stringify({
+        name,
+        email,
+        restaurantName,
+        password, // might have to swap restaurant and password
+      })
+    })
 
-  const { userInfo } = useSelector((state) => state.auth);
+    const data = await response.json();
 
-  useEffect(() => {
-    if (userInfo) {
-      navigate('/');
+    // 201 created user
+    if (response.status === 201) {
+      // successfully created an account
+      toast.success('Successfully registered an account, try logging in')
+      navigate('/')
+    } else {
+      toast.error(data?.message)
+      console.log(data)
+      console.log('res', response)
     }
-  }, [navigate, userInfo]);
+  }
+
+
 
   const submitHandler = async (e) => {
     e.preventDefault();
@@ -33,9 +50,7 @@ const RegisterScreen = () => {
       toast.error('Passwords do not match');
     } else {
       try {
-        const res = await register({ name, email, password }).unwrap();
-        dispatch(setCredentials({ ...res }));
-        navigate('/');
+        register(name, email, restaurantName, password)
       } catch (err) {
         toast.error(err?.data?.message || err.error);
       }
@@ -43,7 +58,7 @@ const RegisterScreen = () => {
   };
   return (
     <FormContainer>
-      <h1>Register</h1>
+      <h2>Register</h2>
       <Form onSubmit={submitHandler}>
         <Form.Group className='my-2' controlId='name'>
           <Form.Label>Name</Form.Label>
@@ -62,6 +77,16 @@ const RegisterScreen = () => {
             placeholder='Enter email'
             value={email}
             onChange={(e) => setEmail(e.target.value)}
+          ></Form.Control>
+        </Form.Group>
+
+        <Form.Group className='my-2' controlId='restaurantName'>
+          <Form.Label>Restaurant Name</Form.Label>
+          <Form.Control
+            type='text'
+            placeholder='Name of your restaurant'
+            value={restaurantName}
+            onChange={(e) => setRestaurantName(e.target.value)}
           ></Form.Control>
         </Form.Group>
 
@@ -84,7 +109,8 @@ const RegisterScreen = () => {
           ></Form.Control>
         </Form.Group>
 
-        <Button type='submit' variant='primary' className='mt-3'>
+        <Button type='submit' variant='primary' className='mt-3'
+                onSubmit={submitHandler}>
           Register
         </Button>
 
