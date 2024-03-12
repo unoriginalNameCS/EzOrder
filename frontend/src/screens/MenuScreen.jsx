@@ -29,6 +29,7 @@ const MenuScreen = () => {
   const [EditItemModalOpen, setEditItemModalOpen] = useState(false);
   
   const userInfo = JSON.parse(localStorage.getItem('userInfo'));
+  const isManager = userInfo.role === 'manager';
   const restaurantId = userInfo.restaurant;
   const categoryId = '65ea97143da39234d8571e73';
 
@@ -97,7 +98,7 @@ const MenuScreen = () => {
             />
           </Grid>
         ))}
-        <Grid item xs={12} style={{ padding: theme.spacing(1) }}>
+        {isManager && (<Grid item xs={12} style={{ padding: theme.spacing(1) }}>
           <StyledButton
             variant="contained"
             onClick={handleOpenNewItemModal}
@@ -111,23 +112,25 @@ const MenuScreen = () => {
           >
             Edit Item
           </StyledButton>
-        </Grid>
+        </Grid>)}
       </Grid>
-      <NewItemModal
-        open={NewItemModalOpen}
-        handleClose={handleCloseNewItemModal}
-        refreshItems={refreshMenuItems} 
-        restaurantId={restaurantId}
-        categoryId={categoryId}
-      />
-      <EditItemModal
-        open={EditItemModalOpen}
-        handleClose={handleCloseEditItemModal}
-        refreshItems={refreshMenuItems} 
-        restaurantId={restaurantId}
-        categoryId={categoryId}
-        menuItems={menuItems}
-      />      
+      {isManager && (<>
+        <NewItemModal
+          open={NewItemModalOpen}
+          handleClose={handleCloseNewItemModal}
+          refreshItems={refreshMenuItems} 
+          restaurantId={restaurantId}
+          categoryId={categoryId}
+        />
+        <EditItemModal
+          open={EditItemModalOpen}
+          handleClose={handleCloseEditItemModal}
+          refreshItems={refreshMenuItems} 
+          restaurantId={restaurantId}
+          categoryId={categoryId}
+          menuItems={menuItems}
+        />
+      </>)}      
     </div>
   );
 };

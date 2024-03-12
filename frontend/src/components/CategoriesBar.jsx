@@ -47,6 +47,7 @@ import ReorderIcon from '@mui/icons-material/Reorder';
     const [menuCategories, setMenuCategories] = useState([]); 
     const [newCategoryModalOpen, setNewCategoryModalOpen] = useState(false);
     const [editCategoryModalOpen, setEditCategoryModalOpen] = useState(false);
+    const isManager = userInfo.role === 'manager';
 
     const handleOpenNewCategoryModal = () => {
         setNewCategoryModalOpen(true);
@@ -106,20 +107,22 @@ import ReorderIcon from '@mui/icons-material/Reorder';
             ))}
           </ButtonGroup>
         </ButtonGroup>
-        <EditButton
-          variant='outlined'
-          theme={theme}
-          onClick={handleOpenEditCategoryModal}
-        >
-          <ReorderIcon/>
-        </EditButton>
-        <EditButton
-          variant='outlined'
-          theme={theme}
-          onClick={handleOpenNewCategoryModal}
-        >
-          <AddIcon/>
-        </EditButton>
+        {isManager && (<>
+          <EditButton
+            variant='outlined'
+            theme={theme}
+            onClick={handleOpenEditCategoryModal}
+          >
+            <ReorderIcon/>
+          </EditButton>
+          <EditButton
+            variant='outlined'
+            theme={theme}
+            onClick={handleOpenNewCategoryModal}
+          >
+            <AddIcon/>
+          </EditButton>
+        </>)}
       </Box>
       <NewCategoryModal
           open={newCategoryModalOpen}
