@@ -220,9 +220,22 @@ const registerStaff = asyncHandler(async (req, res) => {
   }
 });
 
+// @desc    Get restaurant details
+// @route   GET /api/users/restaurant
+// @access  Private
+const getRestaurant = asyncHandler(async (req, res) => {
+  const restaurant = await Restaurant.findById(req.user.restaurant._id);
+
+  if (restaurant) {
+    res.json(restaurant);
+  } else {
+    res.status(404);
+    throw new Error('Restaurant not found');
+  }
+});
+
 export {
-  authUser,
-  getUserProfile,
+  authUser, getRestaurant, getUserProfile,
   getUserProfiles,
   logoutUser,
   registerStaff,
