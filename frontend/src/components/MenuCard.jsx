@@ -37,6 +37,7 @@ const StyledImage = styled('img')(({ theme }) => ({
 
 const ContentContainer = styled(Box)(({ theme }) => ({
   display: 'flex',
+  minWidth: '25rem',
   flexDirection: 'column',
   justifyContent: 'space-between',
   flexGrow: 1,
@@ -59,49 +60,49 @@ const Price = styled(Typography)(({ theme }) => ({
 const Description = styled(Typography)(({ theme }) => ({
   fontSize: '0.8rem',
   color: theme.palette.text.secondary,
-  fontWeight: 'light', 
+  fontWeight: 300,
+  whiteSpace: 'normal' 
 }));
 
 const Ingredients = styled('div')(({ theme }) => ({
   display: 'flex',
   gap: theme.spacing(1), 
-  flexWrap: 'wrap', 
   marginTop: theme.spacing(1),
 }));
 
 const Tag = styled(Typography)(({ theme }) => ({
-  backgroundColor: theme.palette.background.paper,
+  color: 'white',
+  backgroundColor: '#83AE0B',
   borderRadius: theme.shape.borderRadius,
+  borderColor: '#83AE0B',
   padding: theme.spacing(0.5, 1),
   fontSize: '0.5rem',
-  boxShadow: theme.shadows[1],
 }));
 
-export default function MenuCard() {
+const MenuCard = ({ title, description, price, imageUrl, tags }) => {
   const theme = useTheme();
-  const dummyImageUrl = 'https://via.placeholder.com/140';
 
   return (
     <ItemCard>
       <ImageContainer theme={theme}>
-        <StyledImage src={dummyImageUrl} alt="Salmon Nigiri" />
+        <StyledImage src={imageUrl} alt="Salmon Nigiri" />
       </ImageContainer>
       <ContentContainer>
         <CardContent>
           <Title gutterBottom variant="h5" component="div">
-            Salmon Nigiri
+            {title}
           </Title>
           <Description variant="body2">
-            A ball of vinegared sushi rice topped with a slice of salmon.
+            {description}
           </Description>
-          <Box display='flex' justifyContent='space-between' alignItems='center'>
+          <Box justifyContent='space-between' alignItems='center' display='flex' flexDirection='' flexGrow='1'>
             <Ingredients>
-              <Tag>Rice</Tag>
-              <Tag>Rice Vinegar</Tag>
-              <Tag>Salmon</Tag>
+              {tags.map((tag, index) => (
+                <Tag key={index}>{tag}</Tag>
+              ))}
             </Ingredients>
             <Price variant="h5">
-              $5.30
+              {price}
             </Price>            
           </Box>
         </CardContent>
@@ -109,3 +110,5 @@ export default function MenuCard() {
     </ItemCard>
   );
 }
+
+export default MenuCard
