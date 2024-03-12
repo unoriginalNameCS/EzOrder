@@ -130,46 +130,39 @@ const addItem = asyncHandler(async (req, res) => {
 // @access Private
 const updateCategoriesOrder = asyncHandler(async (req, res) => {
   const { restaurantId } = req.params;
-  const { orderedCategories } = req.body;
+  const { categoryName, newPosition } = req.body;
 
-  // Check if the input is correct
-  if (!Array.isArray(orderedCategories)) {
-    res.status(400);
-    throw new Error('Invalid input');
-  }
+  // Validate the input
+  //if (typeof newPosition !== 'number' || typeof categoryName !== 'string') {
+  //  return res.status(400).json({ message: 'Invalid input' });
+  //}
 
-  // Check if the ordered categories is actually a rearrangement
-  const uniqueIds = new Set(orderedCategories.map(category => category._id));
-  if (uniqueIds.size != orderedCategories.length) {
-    res.status(400);
-    throw new Error('Invalid category ordering');
-  }
-  
-  const categories = await MenuCategory.find({ restaurant: restaurantId }).select('_id');
-  
-  // Check if all categories are valid in the ordered categories
-  const categoryIds = categories.map(c => c._id.toString());
-  const isValidOrder = orderedCategories.every(category => categoryIds.includes(category._id));
-  if (!isValidOrder) {
-    res.status(400);
-    throw new Error('Invalid category ordering');
-  }
-
-  // Rearrange the categories
   try {
-    await Promise.all(orderedCategories.map(async (category, index) => {
-      
-      const categoryToUpdate = await MenuCategory.findOne({_id: category._id, restaurant: restaurantId });
-      console.log(categoryToUpdate);
-      console.log(index);
-      if (categoryToUpdate) {
-        await MenuCategory.findByIdAndUpdate(categoryToUpdate._id, { position: index + 1 });
-      }     
-    }));
+    // Find the category to update
+    const categoryToUpdate = await MenuCategory.findOne({ name: categoryName, restaurant: restaurantId });
+    if (!categoryToUpdate) {
+      return res.status(404).json({ message: 'Category not found' });
+    }
 
-    res.status(200).json({ message: 'Categories order updated'})   
+    // Calculate the direction of the shift (up or down)
+    const shiftDirection = newPosition > categoryToUpdate.position ? 'down' : 'up';
+
+    // Update the positions of the categories
+    const categories = await MenuCategory.find({ restaurant: restaurantId }).sort({ position: 1 });
+    for (let category of categories) {
+      if (shiftDirection === 'down' && category.position > categoryToUpdate.position && category.position <= newPosition) {
+        await MenuCategory.findByIdAndUpdate(category._id, { $inc: { position: -1 } });
+      } else if (shiftDirection === 'up' && category.position < categoryToUpdate.position && category.position >= newPosition) {
+        await MenuCategory.findByIdAndUpdate(category._id, { $inc: { position: 1 } });
+      }
+    }
+
+    // Update the position of the target category
+    await MenuCategory.findByIdAndUpdate(categoryToUpdate._id, { position: newPosition });
+
+    res.status(200).json({ message: 'Categories order updated' });
   } catch (error) {
-      res.status(500).json({ message: 'Error updating categories order', error: error.message })
+    res.status(500).json({ message: 'Error updating categories order', error: error.message });
   }
 });
 
@@ -177,51 +170,63 @@ const updateCategoriesOrder = asyncHandler(async (req, res) => {
 // @route  PUT /:restaurantId/menu/categories/:categoryId/items/order
 // @access Private
 const updateMenuItemsOrder = asyncHandler(async (req, res) => {
-    const { restaurantId, categoryId } = req.params;
-    const { orderedItems } = req.body;
+  const { restaurantId, categoryId } = req.params;
+  const { itemName, newPosition } = req.body;
 
-    // Check if the input is correct
-    if (!Array.isArray(orderedItems)) {
-        res.status(400);
-        throw new Error('Invalid input');
-    }
-    
-    // Check if category is valid
-    const category = await MenuCategory.findById({_id: categoryId, restaurant: restaurantId});
+  // Validate the input
+  //if (typeof newPosition !== 'number' || typeof categoryName !== 'string') {
+  //  return res.status(400).json({ message: 'Invalid input' });
+  //}
+
+  try {
+    // Find the category to update
+    const category = await MenuCategory.findById({ _id: categoryId, restaurant: restaurantId });
     if (!category) {
       res.status(404);
       throw new Error('Category not found');
+    } 
+    const itemToUpdate = await MenuItem.findOne({ name: itemName, category});
+    if (!itemToUpdate) {
+      return res.status(404).json({ message: 'Item not found' });
     }
 
-    // Check if the ordered items is actually a rearrangement
-    const uniqueIds = new Set(orderedItems.map(item => item._id));
-    if (uniqueIds.size != orderedItems.length) {
-      res.status(400);
-      throw new Error('Invalid item ordering');
-    }
-    
-    // Check if all items are valid in the ordered items
-    const items = await MenuItem.find({ category: categoryId }).select('_id');
-    const itemIds = items.map(item => item._id.toString());
-    const isValidOrder = orderedItems.every(item => itemIds.includes(item._id));
-    if (!isValidOrder) {
-      res.status(400);
-      throw new Error('Invalid item ordering');
+    // Calculate the direction of the shift (up or down)
+    const shiftDirection = newPosition > itemToUpdate.position ? 'down' : 'up';
+
+    // Update the positions of the items
+    const items = await MenuItem.find({ category }).sort({ position: 1 });
+    for (let item of items) {
+      if (shiftDirection === 'down' && item.position > itemToUpdate.position && item.position <= newPosition) {
+        await MenuItem.findByIdAndUpdate(item._id, { $inc: { position: -1 } });
+      } else if (shiftDirection === 'up' && item.position < itemToUpdate.position && item.position >= newPosition) {
+        await MenuItem.findByIdAndUpdate(item._id, { $inc: { position: 1 } });
+      }
     }
 
-    // Rearrange the items
-    try {
-      await Promise.all(orderedItems.map(async (item, index) => {
-          await MenuItem.findByIdAndUpdate({_id: item._id, category: categoryId}, {position: index + 1});
-      }));
+    // Update the position of the target item
+    await MenuItem.findByIdAndUpdate(itemToUpdate._id, { position: newPosition });
 
-      res.status(200).json({ message: 'Menu items order updated'})   
-    } catch (error) {
-      res.status(500).json({ message: 'Error updating items order', error: error.message })
-    }
+    res.status(200).json({ message: 'Item order updated' });
+  } catch (error) {
+    res.status(500).json({ message: 'Error updating item order', error: error.message });
+  }
 });
 
-// @desc  update menu item details
+// @desc  getCategoryItem
+// @route  GET /:restaurantId/menu/categories/:categoryId/items/:itemId
+// @access Private
+const getMenuCategory = asyncHandler(async (req, res) => {
+  const { restaurantId, categoryId } = req.params;
+
+  const category = await MenuCategory.findOne({_id: categoryId});
+  if (!category) {
+      res.status(404);
+      throw new Error('Menu category not found');
+  }
+  res.status(200).json(category);
+});
+
+// @desc  get menu item details
 // @route  GET /:restaurantId/menu/categories/:categoryId/items/:itemId
 // @access Private
 const getMenuItemDetails = asyncHandler(async (req, res) => {
@@ -259,6 +264,7 @@ const updateMenuItemDetails = asyncHandler(async (req, res) => {
 });
 
 export {
-  addCategory, addItem, getCategories, getMenu, getMenuItemDetails, getMenuItems, updateCategoriesOrder, updateMenuItemDetails, updateMenuItemsOrder
+  addCategory, addItem, getCategories, getMenu, getMenuItemDetails, getMenuItems, 
+  updateCategoriesOrder, updateMenuItemDetails, updateMenuItemsOrder, getMenuCategory
 };
 
