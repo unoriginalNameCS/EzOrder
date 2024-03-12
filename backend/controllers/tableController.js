@@ -6,16 +6,17 @@ import Table from '../models/tableModel.js';
 // @route   POST /tables/:restaurantId/select
 // @access  Public
 const tableSelect = asyncHandler(async (req, res) => {
+  const { restaurantId } = req.params;
   const { tableNumber } = req.body;
   
-  const table = await Table.findOne({ number:tableNumber });
+  const table = await Table.findOne({ number:tableNumber, restaurant : restaurantId });
   
   //check if table is occupied
   if (table.occupied) {
     res.status(401);
     throw new Error('Table is occupied');    
   } else {
-      
+    res.status(200).json(table);
   }
 });
 
@@ -25,7 +26,7 @@ const tableSelect = asyncHandler(async (req, res) => {
 const getTableNumbers = asyncHandler(async (req, res) => {
   const { restaurantId } = req.params
 
-  const tableNumbers = await Table.find({ restaurant : restaurantId}).select('number')
+  const tableNumbers = await Table.find({ restaurant : restaurantId }).select('number')
   if (tableNumbers) {
     res.status(201).json({
       tableNumbers
