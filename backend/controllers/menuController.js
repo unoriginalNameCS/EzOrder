@@ -75,7 +75,7 @@ const getMenuItems = asyncHandler(async (req, res) => {
   if (menuItems.length > 0) {
     res.status(200).json(menuItems);
   } else {
-    res.status(404).json({ message: 'No items within category' })
+    res.status(200).json(menuItems);
   }
 })
 

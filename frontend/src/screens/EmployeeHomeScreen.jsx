@@ -52,7 +52,7 @@ const EmployeeHomeScreen = () => {
         <Button 
           variant='contained'
           color='primary'
-          sx={{margin: 1}}
+          sx={{marginTop: 3}}
           onClick={() => navigate('/tasks')}>
           Assign Tasks to your staff from here
         </Button>
