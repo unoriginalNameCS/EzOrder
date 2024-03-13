@@ -12,9 +12,10 @@ import StaffScreen from './screens/StaffScreen';
 import MenuScreen from './screens/MenuScreen';
 import LoginScreen from './screens/LoginScreen';
 import TasksScreen from './screens/TasksScreen';
-
+import TableSelectionScreen from './screens/TableSelectionScreen';
 const router = createBrowserRouter(createRoutesFromElements(
   <Route path='/' element={<App />}>
+    <Route path='/table' element={<TableSelectionScreen/>}/>
     <Route index={true} path='/' element={<HomeScreen />} />
     <Route path='/login' element={<LoginScreen />} />
     <Route path='/register' element={<RegisterScreen />} />
