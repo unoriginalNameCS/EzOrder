@@ -2,7 +2,7 @@ import Button from '@mui/material/Button';
 import ButtonGroup from '@mui/material/ButtonGroup';
 import Box from '@mui/material/Box';
 import { styled, useTheme } from '@mui/material/styles';
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback} from 'react';
 import axios from 'axios';
 import NewCategoryModal from '../components/NewCategoryModal';
 import EditCategoryModal from '../components/EditCategoryModal';
@@ -42,12 +42,18 @@ import ReorderIcon from '@mui/icons-material/Reorder';
     },
   }));
 
-  const CategoriesBar = ({restaurantId, userInfo}) => {
+  const CategoriesBar = ({restaurantId, userInfo, onCategorySelected}) => {
     const theme = useTheme();
     const [menuCategories, setMenuCategories] = useState([]); 
     const [newCategoryModalOpen, setNewCategoryModalOpen] = useState(false);
     const [editCategoryModalOpen, setEditCategoryModalOpen] = useState(false);
     const isManager = userInfo.role === 'manager';
+
+    const handleCategoryClick = (categoryId) => {
+      if(onCategorySelected) {
+        onCategorySelected(categoryId);
+      }
+    };
 
     const handleOpenNewCategoryModal = () => {
         setNewCategoryModalOpen(true);
@@ -71,25 +77,29 @@ import ReorderIcon from '@mui/icons-material/Reorder';
       fetchMenuCategories();
     };
 
-    const fetchMenuCategories = async () => {
-        try {
-          const url = `http://localhost:5000/menus/${restaurantId}/menu/categories`;
-    
-          const { data } = await axios.get(url, {
-            headers: {
-              Authorization: `${userInfo.token}`, 
-            },
-          });
-    
-          setMenuCategories(data); 
-        } catch (error) {
-          console.error('There was an error fetching the categories:', error.response?.data || error.message);
-        }
-      };
+    const fetchMenuCategories = useCallback(async () => {
+      try {
+        const url = `http://localhost:5000/menus/${restaurantId}/menu/categories`;
+  
+        const { data } = await axios.get(url, {
+          headers: {
+            Authorization: `${userInfo.token}`, 
+          },
+        });
+  
+        setMenuCategories(data); 
+      } catch (error) {
+        console.error('There was an error fetching the categories:', error.response?.data || error.message);
+      }
+    }, [restaurantId, userInfo.token]);
     
     useEffect(() => {
       fetchMenuCategories();
     }, []);
+
+    useEffect(() => {
+      fetchMenuCategories();
+    }, [fetchMenuCategories]);
 
   return (
     <>
@@ -103,7 +113,7 @@ import ReorderIcon from '@mui/icons-material/Reorder';
         <ButtonGroup variant="outlined" aria-label="Basic button group">
           <ButtonGroup variant="outlined" aria-label="category button group">
             {menuCategories.map((category, index) => (
-              <CategoryButton theme={theme} key={index}>{category.name}</CategoryButton>
+              <CategoryButton theme={theme} key={index} onClick={() => handleCategoryClick(category._id)}>{category.name}</CategoryButton>
             ))}
           </ButtonGroup>
         </ButtonGroup>

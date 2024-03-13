@@ -27,11 +27,13 @@ const MenuScreen = () => {
   const [menuItems, setMenuItems] = useState([]); 
   const [NewItemModalOpen, setNewItemModalOpen] = useState(false);
   const [EditItemModalOpen, setEditItemModalOpen] = useState(false);
+  const [menuCategories, setMenuCategories] = useState([]);
+  const [selectedCategoryId, setSelectedCategoryId] = useState('');
+
   
   const userInfo = JSON.parse(localStorage.getItem('userInfo'));
   const isManager = userInfo.role === 'manager';
   const restaurantId = userInfo.restaurant;
-  const categoryId = '65ea97143da39234d8571e73';
 
 
   const handleOpenNewItemModal = () => {
@@ -52,16 +54,36 @@ const MenuScreen = () => {
     refreshMenuItems();
   };
 
-
-
-
   const refreshMenuItems = () => {
     fetchMenuItems();
   };
 
-  const fetchMenuItems = async () => {
+  const onCategorySelected = (categoryId) => {
+    setSelectedCategoryId(categoryId);
+    fetchMenuItems(categoryId);
+  };
+
+  const fetchMenuCategories = async () => {
     try {
-      const url = `http://localhost:5000/menus/${restaurantId}/menu/categories/${categoryId}/items`;
+      const url = `http://localhost:5000/menus/${restaurantId}/menu/categories`;
+      const { data } = await axios.get(url, {
+        headers: {
+          Authorization: `${userInfo.token}`, 
+        },
+      });
+      setMenuCategories(data);
+      if (data.length > 0) {
+        setSelectedCategoryId(data[0]._id); // Set the first category as default
+      }
+    } catch (error) {
+      console.error('There was an error fetching the categories:', error.response?.data || error.message);
+    }
+  };
+
+  const fetchMenuItems = async () => {
+    console.log(selectedCategoryId)
+    try {
+      const url = `http://localhost:5000/menus/${restaurantId}/menu/categories/${selectedCategoryId}/items`;
 
       const { data } = await axios.get(url, {
         headers: {
@@ -76,15 +98,21 @@ const MenuScreen = () => {
   };
 
   useEffect(() => {
-    fetchMenuItems();
+    fetchMenuCategories();
   }, []);
+
+  useEffect(() => {
+    if (selectedCategoryId) {
+      fetchMenuItems(selectedCategoryId);
+    }
+  }, [selectedCategoryId]);
 
   return (
     <div style={{ display: 'flex' }}>
       <SideNav />
       <Grid container style={{ flexGrow: 1, padding: theme.spacing(3), marginLeft: '200px' }}> {/* Adjust marginLeft to the width of SideNav */}
         <Grid item xs={12} style={{ padding: theme.spacing(1) }}>
-          <CategoriesBar restaurantId={restaurantId} userInfo={userInfo}/>
+          <CategoriesBar restaurantId={restaurantId} userInfo={userInfo} onCategorySelected={onCategorySelected}/>
         </Grid>  
           
         {menuItems.map((item, index) => (
@@ -120,14 +148,14 @@ const MenuScreen = () => {
           handleClose={handleCloseNewItemModal}
           refreshItems={refreshMenuItems} 
           restaurantId={restaurantId}
-          categoryId={categoryId}
+          categoryId={selectedCategoryId}
         />
         <EditItemModal
           open={EditItemModalOpen}
           handleClose={handleCloseEditItemModal}
           refreshItems={refreshMenuItems} 
           restaurantId={restaurantId}
-          categoryId={categoryId}
+          categoryId={selectedCategoryId}
           menuItems={menuItems}
         />
       </>)}      
