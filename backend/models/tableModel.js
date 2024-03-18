@@ -12,10 +12,20 @@ const tableSchema = mongoose.Schema(
       required: true
     },
     occupied: {
-        type: Boolean,
-        default: false,
-        required: true
-    }
+      type: Boolean,
+      default: false,
+      required: true
+    },
+    cart: [{
+      type: mongoose.Schema.Types.ObjectId,
+      ref: 'MenuItem',
+      notes: String,
+      quantity: Number
+    }],
+    order_list: [{
+      type: mongoose.Schema.Types.ObjectId,
+      ref: 'Order',
+    }]
   }
 );
   
