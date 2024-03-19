@@ -3,6 +3,7 @@ import Restaurant from '../models/restaurantModel.js';
 import Table from '../models/tableModel.js';
 import Request from '../models/requestModel.js';
 import MenuItem from '../models/itemModel.js';
+import { gridColumnLookupSelector } from '@mui/x-data-grid';
 
 // @desc    Sets a table status to occupied
 // @route   POST /tables/:restaurantId/select
@@ -93,6 +94,26 @@ const requestAssistance = asyncHandler(async (req, res) => {
   } else {
       res.status(400);
       throw new Error('invalid');
+  }
+})
+
+// @desc    Returns a list of pending requests for assistance for the given restaurant
+// @route   GET /tables/assistance
+// @access  Private
+const getPendingRequestsForAssistance = asyncHandler(async (req, res) => {
+  // search for requests with restaurantId
+  const restaurant = req.body.restaurantId
+
+  // for given restaurantId and state has to equal 'pending'
+  const requests = await Request.find({restaurant: restaurant, state: 'pending', })
+  console.log('requests', requests)
+  // no requests found for the given restaurant
+  if (!requests) {
+    // send empty array
+    res.status(200).json(requests)
+  } else {
+    // at least one request found
+    res.status(200).json(requests)
   }
 })
 
@@ -210,5 +231,5 @@ const getOrders = asyncHandler(async (req, res) => {
 });
 
   export {
-  tableSelect, getTableNumbers, addTable, requestAssistance, addItem, removeItem, getCart, getOrders
+  tableSelect, getTableNumbers, addTable, requestAssistance, addItem, removeItem, getCart, getOrders, getPendingRequestsForAssistance
   };
