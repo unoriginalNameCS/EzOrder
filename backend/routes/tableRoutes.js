@@ -11,7 +11,7 @@ router.post(':restaurantId/:tableId/:itemId/addItem', addItem);
 router.delete(':restaurantId/:tableId/:itemId/removeItem', removeItem);
 router.get('/:restaurantId/:tableId/cart', getCart);
 router.get('/:restaurantId/:tableId/orders', getOrders);
-router.get('/assistance', getPendingRequestsForAssistance)
+router.get('/:restaurantId/assistance', getPendingRequestsForAssistance)
 router.patch('/assistance', updateRequestsForAssistance)
 
 export default router;

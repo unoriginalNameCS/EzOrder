@@ -15,6 +15,10 @@ const requestSchema = mongoose.Schema(
       type: String,
       required: true,
       enum: ['pending', 'assisting', 'complete']
+    },
+    tableNum: {
+      type: Number,
+      required: true,
     }
   }
 );
