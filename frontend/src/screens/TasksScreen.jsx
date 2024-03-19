@@ -3,8 +3,6 @@ import SideNav from '../components/SideNav'
 import FormContainer from '../components/FormContainer'
 import Button from '@mui/material/Button';
 import { useNavigate } from 'react-router-dom';
-import WaitStaffTasks from './WaitStaffTasks';
-
 
 const TasksScreen = () => {
     const navigate = useNavigate()
