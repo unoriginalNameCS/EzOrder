@@ -28,6 +28,7 @@ app.get('/', (req, res) => res.status(200).json({message: "Success"}))
 app.use('/api/users', userRoutes);
 app.use('/menus', menuRoutes);
 app.use('/tables', tableRoutes);
+app.use('/orders', orderRoutes);
 
 // errors
 app.use(notFound);
