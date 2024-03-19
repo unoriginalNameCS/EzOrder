@@ -98,6 +98,7 @@ const requestAssistance = asyncHandler(async (req, res) => {
 })
 
 // @desc    Returns a list of pending requests for assistance for the given restaurant
+// @params  body: restaurantId - the objectId of the restaurant that the waiter is employed at
 // @route   GET /tables/assistance
 // @access  Private
 const getPendingRequestsForAssistance = asyncHandler(async (req, res) => {
