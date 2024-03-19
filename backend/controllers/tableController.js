@@ -3,6 +3,7 @@ import Restaurant from '../models/restaurantModel.js';
 import Table from '../models/tableModel.js';
 import Request from '../models/requestModel.js';
 import MenuItem from '../models/itemModel.js';
+import { gridColumnLookupSelector } from '@mui/x-data-grid';
 
 // @desc    Sets a table status to occupied
 // @route   POST /tables/:restaurantId/select
@@ -95,6 +96,50 @@ const requestAssistance = asyncHandler(async (req, res) => {
       throw new Error('invalid');
   }
 })
+
+// @desc    Returns a list of pending requests for assistance for the given restaurant
+// @params  body: restaurantId - the objectId of the restaurant that the waiter is employed at
+// @route   GET /tables/assistance
+// @access  Private
+const getPendingRequestsForAssistance = asyncHandler(async (req, res) => {
+  // search for requests with restaurantId
+  const restaurant = req.body.restaurantId
+
+  // for given restaurantId and state has to equal 'pending'
+  const requests = await Request.find({restaurant: restaurant, state: 'pending', })
+  console.log('requests', requests)
+  // no requests found for the given restaurant
+  if (!requests) {
+    // send empty array
+    res.status(200).json(requests)
+  } else {
+    // at least one request found
+    res.status(200).json(requests)
+  }
+})
+
+// @desc    Change state of request
+// @route   PATCH /tables/assistanc
+// @params  body: state - 'assisting' or 'complete'
+// @params  body: _id - the id of the request in MongoDB
+// @access  Private
+const updateRequestsForAssistance = asyncHandler(async (req, res) => {
+  const request_id = req.body.request_id
+  const state = req.body.state
+  // search db for particular request with _id
+  const request = await Request.findById(request_id)
+  if (!request) {
+    // can't find the request for assistance in the db, something went wrong
+    res.status(404)
+    throw new Error('Something went wrong, could not find the Request For Assistance')
+  } else {
+    // found the particular request in the db
+    request.state = state // update state
+    const updatedRequest = await request.save();
+    res.status(200).json(updatedRequest)
+  }
+})
+
 
 // @desc    adds item to table cart
 // @route   POST /tables/:restaurantId/:tableId/:itemId/addItem
@@ -210,5 +255,5 @@ const getOrders = asyncHandler(async (req, res) => {
 });
 
   export {
-  tableSelect, getTableNumbers, addTable, requestAssistance, addItem, removeItem, getCart, getOrders
+  tableSelect, getTableNumbers, addTable, requestAssistance, addItem, removeItem, getCart, getOrders, getPendingRequestsForAssistance, updateRequestsForAssistance
   };
