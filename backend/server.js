@@ -5,6 +5,7 @@ import connectDB from './config/db.js';
 import userRoutes from './routes/userRoutes.js';
 import tableRoutes from './routes/tableRoutes.js';
 import menuRoutes from './routes/menuRoutes.js';
+import orderRoutes from './routes/orderRoutes.js';
 import { notFound, errorHandler } from './middleware/errorMiddleware.js';
 import cookieParser from 'cookie-parser';
 
