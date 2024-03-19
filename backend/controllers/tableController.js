@@ -118,6 +118,29 @@ const getPendingRequestsForAssistance = asyncHandler(async (req, res) => {
   }
 })
 
+// @desc    Change state of request
+// @route   PATCH /tables/assistanc
+// @params  body: state - 'assisting' or 'complete'
+// @params  body: _id - the id of the request in MongoDB
+// @access  Private
+const updateRequestsForAssistance = asyncHandler(async (req, res) => {
+  const request_id = req.body.request_id
+  const state = req.body.state
+  // search db for particular request with _id
+  const request = await Request.findById(request_id)
+  if (!request) {
+    // can't find the request for assistance in the db, something went wrong
+    res.status(404)
+    throw new Error('Something went wrong, could not find the Request For Assistance')
+  } else {
+    // found the particular request in the db
+    request.state = state // update state
+    const updatedRequest = await request.save();
+    res.status(200).json(updatedRequest)
+  }
+})
+
+
 // @desc    adds item to table cart
 // @route   POST /tables/:restaurantId/:tableId/:itemId/addItem
 // @access  Public
@@ -232,5 +255,5 @@ const getOrders = asyncHandler(async (req, res) => {
 });
 
   export {
-  tableSelect, getTableNumbers, addTable, requestAssistance, addItem, removeItem, getCart, getOrders, getPendingRequestsForAssistance
+  tableSelect, getTableNumbers, addTable, requestAssistance, addItem, removeItem, getCart, getOrders, getPendingRequestsForAssistance, updateRequestsForAssistance
   };

@@ -14,7 +14,7 @@ const requestSchema = mongoose.Schema(
     state: {
       type: String,
       required: true,
-      enum: ['pending', 'assisting']
+      enum: ['pending', 'assisting', 'complete']
     }
   }
 );
