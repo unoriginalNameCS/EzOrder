@@ -77,16 +77,18 @@ const addTable = asyncHandler(async (req, res) => {
 const requestAssistance = asyncHandler(async (req, res) => {
   const { restaurantId, tableId } = req.params
 
-  const tableNum = await Table.find({ _id : tableId, restaurant : restaurantId }).select('number')
-  if (!tableNum) {
+  const table = await Table.findById(tableId)
+  if (!table) {
     res.status(404);
-    throw new Error('Tables not found')
+    throw new Error('Table not found')
   }
 
+  console.log(table)
   const request = await Request.create({
     restaurant: restaurantId,
     table: tableId,
-    state: 'pending'
+    state: 'pending',
+    tableNum: table.number,
   });
 
   if (request) {
@@ -99,19 +101,17 @@ const requestAssistance = asyncHandler(async (req, res) => {
 
 // @desc    Returns a list of pending requests for assistance for the given restaurant
 // @params  body: restaurantId - the objectId of the restaurant that the waiter is employed at
-// @route   GET /tables/assistance
+// @route   GET restaurantId/assistance
 // @access  Private
 const getPendingRequestsForAssistance = asyncHandler(async (req, res) => {
   // search for requests with restaurantId
-  const restaurant = req.body.restaurantId
-
+  const restaurant = req.params.restaurantId
   // for given restaurantId and state has to equal 'pending'
   const requests = await Request.find({restaurant: restaurant, state: 'pending', })
-  console.log('requests', requests)
   // no requests found for the given restaurant
   if (!requests) {
     // send empty array
-    res.status(200).json(requests)
+    res.status(204).json(requests)
   } else {
     // at least one request found
     res.status(200).json(requests)
