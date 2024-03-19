@@ -17,6 +17,13 @@ const orderSchema = mongoose.Schema(
       notes: String,
       quantity: Number
     }],
+    time: {
+      type: Date,
+      required: true
+    },
+    notes : {
+      type: String
+    },
     state: {
       type: String,
       required: true,
