@@ -1,6 +1,4 @@
 import asyncHandler from 'express-async-handler';
-import Restaurant from '../models/restaurantModel.js';
-import Table from '../models/tableModel.js';
 import Order from '../models/orderModel.js';
 
 // @desc    gets all orders
@@ -68,6 +66,56 @@ const viewOrderNotes = asyncHandler(async (req, res) => {
   res.status(201).json(order.notes);
 })
 
-  export {
-    getOrders, setOrderInProgress, setOrderPrepared, viewOrderNotes
-  };
+// @desc    gets all completed orders
+// @route   GET /orders/:restaurantId/completedOrders
+// @access  Public
+const getCompletedOrders = asyncHandler(async (req, res) => {
+  const { restaurantId } = req.params;
+
+  const completedOrders = await Order.find({ restaurant : restaurantId, state: "serve" } ).sort('time');
+  if (completedOrders) {
+    res.status(201).json({
+      completedOrders
+    });
+  } else {
+    res.status(404);
+    throw new Error('No Ready To Serve Orders')
+  }
+})
+
+// @desc    gets all completed orders
+// @route   GET /orders/:restaurantId/preparingOrders
+// @access  Public
+const getPreparingOrders = asyncHandler(async (req, res) => {
+  const { restaurantId } = req.params;
+
+  const preparingOrders = await Order.find({ restaurant : restaurantId, state: "preparing" } ).sort('time');
+  if (preparingOrders) {
+    res.status(201).json({
+      preparingOrders
+    });
+  } else {
+    res.status(404);
+    throw new Error('No Orders Being Prepared')
+  }
+})
+
+// @desc    gets all completed orders
+// @route   GET /orders/:restaurantId/pendingOrders
+// @access  Public
+const getPendingOrders = asyncHandler(async (req, res) => {
+  const { restaurantId } = req.params;
+
+  const pendingOrders = await Order.find({ restaurant : restaurantId, state: "pending" }).sort('time');
+  if (pendingOrders) {
+    res.status(201).json({
+      pendingOrders
+    });
+  } else {
+    res.status(404);
+    throw new Error('No Orders Are Pending')
+  }
+})
+
+export { getCompletedOrders, getOrders, getPendingOrders, getPreparingOrders, setOrderInProgress, setOrderPrepared, viewOrderNotes };
+
