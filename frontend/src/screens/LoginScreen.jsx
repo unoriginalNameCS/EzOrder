@@ -35,7 +35,6 @@ const Login = () => {
       toast.success('Successfully signed in')
       navigate('/')
       setLoggedIn(true)
-      console.log(loggedIn, typeof(loggedIn))
     } else {
       toast.error(data?.message)
       console.log(data?.message);

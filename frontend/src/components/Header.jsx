@@ -25,7 +25,6 @@ const Header = () => {
         toast.success(data.message)
         navigate('/login')
         setLoggedIn(false)
-        console.log(loggedIn)
       } else {
         toast.error(data.message)
       }
@@ -57,7 +56,7 @@ const Header = () => {
         if (userInfo.role === 'staff') {
           const interval = setInterval(() => {
             getTableRequests();
-          }, 3000);
+          }, 5000);
           return () => {
             clearInterval(interval);
           };
