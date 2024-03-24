@@ -34,7 +34,7 @@ const Login = () => {
       localStorage.setItem('userInfo', JSON.stringify(data))
       toast.success('Successfully signed in')
       navigate('/')
-      setLoggedIn(true)
+      setLoggedIn(!loggedIn)
     } else {
       toast.error(data?.message)
       console.log(data?.message);
