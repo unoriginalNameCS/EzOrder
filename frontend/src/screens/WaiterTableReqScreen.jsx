@@ -38,7 +38,7 @@ const TableRequestsScreen = () => {
         {newRequests.map((req) => 
         <>
           <ListGroup.Item variant="danger">
-            {req.tableNum} has requested assistance.
+            Table {req.tableNum} has requested assistance.
           </ListGroup.Item>
         </>)}
       </ListGroup>
