@@ -19,6 +19,7 @@ const tableSelect = asyncHandler(async (req, res) => {
     res.status(401);
     throw new Error('Table is occupied');    
   } else {
+    table.occupied = true;
     res.status(200).json(table);
   }
 });
@@ -29,11 +30,13 @@ const tableSelect = asyncHandler(async (req, res) => {
 const getTableNumbers = asyncHandler(async (req, res) => {
   const { restaurantId } = req.params
 
-  const tableNumbers = await Table.find({ restaurant : restaurantId }).select('number')
+  // changed query to include occupied field as well
+  const tableNumbers = await Table.find({ restaurant : restaurantId }).select('number occupied')
   if (tableNumbers) {
-    res.status(201).json({
-      tableNumbers
-    });
+    // changed status code from 201 to 200
+    // removed unecessary object encapsulating tableNumbers array
+    res.status(200).json(
+      tableNumbers);
   } else {
     res.status(404);
     throw new Error('Tables not found')
