@@ -1,10 +1,11 @@
 import React from "react";
-import Hero from "../components/Hero";
 import Button from "@mui/material/Button";
 import { useNavigate } from "react-router-dom";
 import SideNav from "../components/SideNav.jsx";
 import FormContainer from "../components/FormContainer.jsx";
 import EmployeeHomeScreen from "./EmployeeHomeScreen.jsx";
+import Card from "react-bootstrap/Card";
+
 
 // just doing manager home screen for now, just basics
 const HomeScreen = () => {
@@ -21,11 +22,14 @@ const HomeScreen = () => {
         </>
       ) : (
         <>
-          <FormContainer>
-            <div>
-              Welcome to EzOrder <br />
-              Order quick, order easy
-              <br /> <br />
+        <br />
+          <Card className="text-center">
+            <Card.Header>Welcome to EzOrder</Card.Header>
+            <Card.Body>
+              <Card.Text>
+                Order quick, order easy
+              </Card.Text>
+              <Card.Title>Customers</Card.Title>
               <Button
                 variant="contained"
                 color="primary"
@@ -34,11 +38,11 @@ const HomeScreen = () => {
                   navigate("/customer");
                 }}
               >
-                Customer
+                Order now
               </Button>
               <br />
               <br />
-                Manager and Staff <br />
+                <Card.Title>Restaurant accounts</Card.Title>
               <Button
                 variant="contained"
                 color="primary"
@@ -49,7 +53,7 @@ const HomeScreen = () => {
               >
                 Sign In
               </Button>
-              <br /> <br />
+              <br />
               <Button
                 variant="outlined"
                 color="primary"
@@ -60,8 +64,8 @@ const HomeScreen = () => {
               >
                 Sign Up
               </Button>
-            </div>
-          </FormContainer>
+              </Card.Body>
+          </Card>
         </>
       )}
     </>
