@@ -254,6 +254,23 @@ const getOrders = asyncHandler(async (req, res) => {
   }
 });
 
+// @desc  Get a list of all restaurants
+// @route GET /tables/restaurants
+// @access Public
+const getAllRestaurants = asyncHandler(async (req, res) => {
+  // Find all restaurants within Restaurant collection in MongoDB
+  const allRestaurants = await Restaurant.find({});
+
+  // return an array of all the restaurants
+  if (allRestaurants.length === 0) {
+    // No content
+    res.status(204).json(allRestaurants);
+  } else {
+    // There is at least one restaurant in the database and its returned in an array
+    res.status(200).json(allRestaurants);
+  }
+});
+
   export {
-  tableSelect, getTableNumbers, addTable, requestAssistance, addItem, removeItem, getCart, getOrders, getPendingRequestsForAssistance, updateRequestsForAssistance
+  tableSelect, getTableNumbers, addTable, requestAssistance, addItem, removeItem, getCart, getOrders, getPendingRequestsForAssistance, updateRequestsForAssistance, getAllRestaurants,
   };
