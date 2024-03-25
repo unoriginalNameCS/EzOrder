@@ -3,7 +3,7 @@ import { tableSelect, getTableNumbers, addTable, requestAssistance, addItem, rem
 
 const router = express.Router();
 
-router.post('/:restaurantId/select', tableSelect);
+router.put('/:restaurantId/select', tableSelect);
 router.get('/:restaurantId/numbers', getTableNumbers);
 router.post('/:restaurantId/add', addTable);
 router.post('/:restaurantId/:tableId/assistance', requestAssistance);

@@ -13,14 +13,17 @@ const tableSelect = asyncHandler(async (req, res) => {
   const { tableNumber } = req.body;
   
   const table = await Table.findOne({ number:tableNumber, restaurant : restaurantId });
-  
   //check if table is occupied
+  // changed error code to 400 from 401 as 401 is unauthorised
   if (table.occupied) {
-    res.status(401);
-    throw new Error('Table is occupied');    
+    res.status(400);
+    throw new Error('Table is occupied');
   } else {
-    table.occupied = true;
-    res.status(200).json(table);
+    // set table occupied to true now that its being selected
+    table.occupied = true
+    // save the updated table in the database
+    const updatedTable = await table.save();
+    res.status(200).json(updatedTable);
   }
 });
 
@@ -34,7 +37,7 @@ const getTableNumbers = asyncHandler(async (req, res) => {
   const tableNumbers = await Table.find({ restaurant : restaurantId }).select('number occupied')
   if (tableNumbers) {
     // changed status code from 201 to 200
-    // removed unecessary object encapsulating tableNumbers array
+    // removed unecessary object encapsulating tableNumbers
     res.status(200).json(
       tableNumbers);
   } else {

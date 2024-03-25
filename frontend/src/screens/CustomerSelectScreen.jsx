@@ -11,6 +11,7 @@ const CustomerSelectScreen = () => {
   const [selectedRestaurant, setSelectedRestaurant] = useState(
     "Select a restaurant"
   );
+  const [selectedTable, setSelectedTable] = useState("Select a table");
 
   // Get a list of current restaurants
   async function getRestaurants() {
@@ -58,9 +59,63 @@ const CustomerSelectScreen = () => {
     }
   }
 
+  // Select the table that the customer has chosen
+  //
+  async function selectTable(selectedRestaurant, selectedTable) {
+    // get the restaurantId of the selected restaurant
+    const restaurant = restaurants.find(
+      (rest) => rest.name === selectedRestaurant
+    );
+    console.log(
+      `So the user has chosen ${restaurant.name} with the ID of ${restaurant._id} and the table number ${selectedTable}`
+    );
+
+    const response = await fetch(
+      `http://localhost:5000/tables/${restaurant._id}/select`,
+      {
+        method: "PUT",
+        headers: {
+          "Content-type": "application/json",
+        },
+        body: JSON.stringify({
+          tableNumber: selectedTable,
+        }),
+      }
+    );
+
+    const data = await response.json();
+    if (response.status === 200) {
+      toast.success(`Successfully selected table number ${selectedTable}`);
+    } else {
+      toast.error(data?.message);
+      console.log(data?.message);
+    }
+  }
+
+  // User has selected a restaurant
   const onClickHandlerRestaurantSelect = (restaurantId, restaurantName) => {
+    // Since user has chosen a restaurant, reset table selection
+    setSelectedTable("Select a table");
     getTables(restaurantId);
     setSelectedRestaurant(restaurantName);
+  };
+
+  const onClickHandlerTableSelection = (tableNumber) => {
+    setSelectedTable(tableNumber);
+  };
+
+  const handleSelection = (selectedRestaurant, selectedTable) => {
+    // check if a valid table and restaurant have even been selected
+    // Assumption: That no restaurant is named 'Select a restaurant'
+    if (
+      selectedRestaurant === "Select a restaurant" ||
+      selectedTable === "Select a table"
+    ) {
+      toast.error("Please select a restaurant and a table");
+    } else {
+      // Call API to select/occupy user's chosen restaurant and table
+      selectTable(selectedRestaurant, selectedTable);
+    }
   };
 
   useEffect(() => {
@@ -91,21 +146,34 @@ const CustomerSelectScreen = () => {
           </DropdownButton>
           <br />
           <Card.Title>Table Selection</Card.Title>
-          <DropdownButton id="table-select" title="Select a table">
+          <DropdownButton id="table-select" title={selectedTable}>
             {/* If tables === [] i.e the list of tables is empty */}
             {tables.length === 0 ? (
               <Dropdown.Item key="nothing">There are no tables</Dropdown.Item>
             ) : (
               tables.map((table) => (
-                <Dropdown.Item className={table.occupied ? "disabled" : ""} key={table.number}>{table.number}</Dropdown.Item>
+                <Dropdown.Item
+                  className={table.occupied ? "disabled" : ""}
+                  key={table.number}
+                  onClick={() => onClickHandlerTableSelection(table.number)}
+                >
+                  {table.number}
+                </Dropdown.Item>
               ))
             )}
           </DropdownButton>
           <br />
           <br />
-          <Button variant="primary">Select restaurant and table</Button>
+          <Button
+            variant="primary"
+            onClick={() => handleSelection(selectedRestaurant, selectedTable)}
+          >
+            Select restaurant and table
+          </Button>
         </Card.Body>
-        <Card.Footer className="text-muted">Scan the QR code at your table to skip this</Card.Footer>
+        <Card.Footer className="text-muted">
+          Scan the QR code at your table to skip this
+        </Card.Footer>
       </Card>
     </>
   );
