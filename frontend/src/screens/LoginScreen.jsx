@@ -4,12 +4,16 @@ import { toast } from 'react-toastify'
 import TextField from '@mui/material/TextField';
 import Button from '@mui/material/Button';
 import FormContainer from '../components/FormContainer'
+import { UserContext } from '../UserContext';
+import { useContext } from 'react'
+
 
 const Login = () => {
-
   const [email, setEmail] = React.useState('');
   const [password, setPassword] = React.useState('')
   const navigate = useNavigate();
+  const {loggedIn, setLoggedIn} = useContext(UserContext)
+
 
   async function signin (email, password) {
     const response = await fetch('http://localhost:5000/api/users/auth', {
@@ -30,6 +34,7 @@ const Login = () => {
       localStorage.setItem('userInfo', JSON.stringify(data))
       toast.success('Successfully signed in')
       navigate('/')
+      setLoggedIn(!loggedIn)
     } else {
       toast.error(data?.message)
       console.log(data?.message);
