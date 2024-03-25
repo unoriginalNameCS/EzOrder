@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Modal, Box, Typography, TextField, Button, IconButton } from '@mui/material';
 import CloseIcon from '@mui/icons-material/Close';
 import { styled, useTheme } from '@mui/material/styles';
@@ -24,11 +24,47 @@ const style = {
 
 
 const EditCategoryModal = ({ open, handleClose, restaurantId, categoryId, menuItems }) => {
-  const [selectedItem, setselectedItem] = useState('');
+  console.log(menuItems);
+  const [selectedItem, setSelectedItem] = useState('');
+  const [itemDetails, setItemDetails] = useState({});
+  const [newDescription, setNewDescription] = useState('');
+  const [newIngredients, setNewIngredients] = useState('');
+  const [newPrice, setNewPrice] = useState('');
   const [newPosition, setNewPosition] = useState('');
 
+  useEffect(() => {
+    const details = menuItems.find(item => item.name === selectedItem);
+    console.log(details)
+    setItemDetails(details);
+  }, [selectedItem, menuItems]);
+
+
   const handleItemChange = (event) => {
-    setselectedItem(event.target.value);
+    setSelectedItem(event.target.value);
+  };
+
+  const handleDescriptionChange = (event) => {
+    setNewDescription(event.target.value);
+    setItemDetails(prevDetails => ({
+      ...prevDetails,
+      description: event.target.value,
+    }));
+  };
+
+  const handleIngredientsChange = (event) => {
+    setNewIngredients(event.target.value);
+    setItemDetails(prevDetails => ({
+      ...prevDetails,
+      ingredients: event.target.value.split(',').map(ingredient => ingredient.trim()),
+    }));
+  };
+
+  const handlePriceChange = (event) => {
+    setNewPrice(event.target.value);
+    setItemDetails(prevDetails => ({
+      ...prevDetails,
+      price: event.target.value,
+    }));
   };
 
   const handlePositionChange = (event) => {
@@ -38,14 +74,17 @@ const EditCategoryModal = ({ open, handleClose, restaurantId, categoryId, menuIt
   const handleSubmit = async (e) => {
     e.preventDefault();
     const userInfo = JSON.parse(localStorage.getItem('userInfo')); 
-
     try {
-      console.log('Sending the following data:', selectedItem, newPosition);
-      const response = await axios.put(
-        `http://localhost:5000/menus/${restaurantId}/menu/categories/${categoryId}/items/order`, 
+      console.log('Updating the following item:', selectedItem);
+      console.log(itemDetails._id)
+      const response = await axios.patch(
+        `http://localhost:5000/menus/${restaurantId}/menu/categories/${categoryId}/items/${itemDetails._id}/update`, 
         {
-          itemName: selectedItem,
-          newPosition: newPosition
+          name: selectedItem,
+          price: parseInt(itemDetails.price),
+          description: itemDetails.description,
+          ingredients: itemDetails.ingredients,
+          imageUrl: ""
         },
         {
           headers: {
@@ -53,10 +92,40 @@ const EditCategoryModal = ({ open, handleClose, restaurantId, categoryId, menuIt
           },
         }
       );
-      console.log('Item moved:', response.data); 
+      console.log('Item updated:', response.data);
+       
+      setSelectedItem('');
+      setItemDetails({});
+      setNewDescription('');
+      setNewIngredients('');
+      setNewPrice('');
+      setNewPosition('');
+
       handleClose(); 
     } catch (error) {
-      console.error('There was an error moving the item:', error.response?.data || error.message);
+      console.error('There was an error updating the item:', error.response?.data || error.message);
+    }
+
+    if (newPosition) {
+      try {
+        console.log('Moving the following item:', selectedItem, newPosition);
+        const response = await axios.put(
+          `http://localhost:5000/menus/${restaurantId}/menu/categories/${categoryId}/items/order`, 
+          {
+            itemName: selectedItem,
+            newPosition: newPosition
+          },
+          {
+            headers: {
+              Authorization: `${userInfo.token}`,
+            },
+          }
+        );
+        console.log('Item moved:', response.data); 
+        handleClose(); 
+      } catch (error) {
+        console.error('There was an error moving the item:', error.response?.data || error.message);
+      }
     }
   };
 
@@ -81,23 +150,52 @@ const EditCategoryModal = ({ open, handleClose, restaurantId, categoryId, menuIt
           <CloseIcon />
         </IconButton>
         <Typography id="new-item-modal-title" variant="h6" component="h2" sx={{ mb: 3 }}>
-          Edit Category
+          Edit Item
         </Typography>
         <Box component="form" onSubmit={handleSubmit} noValidate sx={{ mt: 1 }}>
           <FormControl fullWidth sx={{ mb: 2 }}>
-              <InputLabel>Category</InputLabel>
-              <Select
-                value={selectedItem}
-                onChange={handleItemChange}
-                label="Category"
-              >
-                {menuItems.map((item) => (
-                  <MenuItem key={item._id} value={item.name}>
-                    {item.name}
-                  </MenuItem>
-                ))}
-              </Select>
-            </FormControl>
+            <InputLabel>Item</InputLabel>
+            <Select
+              value={selectedItem}
+              onChange={handleItemChange}
+              label="Item"
+            >
+              {menuItems.map((item) => (
+                <MenuItem key={item._id} value={item.name}>
+                  {item.name}
+                </MenuItem>
+              ))}
+            </Select>
+          </FormControl>
+          {selectedItem && itemDetails ? (
+          <>
+            <TextField
+              margin="normal"
+              fullWidth
+              multiline
+              label={"Description"}
+              name="description"
+              value={newDescription}
+              placeholder={itemDetails.description.slice(0, 35) + '...'}
+              onChange={handleDescriptionChange} />
+            <TextField
+              margin="normal"
+              fullWidth
+              label="Price"
+              name="price"
+              value={newPrice}
+              placeholder={String(itemDetails.price)}
+              onChange={handlePriceChange} />
+            <TextField
+              margin="normal"
+              fullWidth
+              label="Ingredients"
+              name="ingredients"
+              value={newIngredients}
+              onChange={handleIngredientsChange}
+              placeholder={itemDetails.ingredients.join(",")}
+              helperText="Separate ingredients with commas"
+              sx={{ mb: 3 }} />
             <FormControl fullWidth sx={{ mb: 3 }}>
               <InputLabel>New Position</InputLabel>
               <Select
@@ -113,13 +211,15 @@ const EditCategoryModal = ({ open, handleClose, restaurantId, categoryId, menuIt
                 ))}
               </Select>
             </FormControl>
-            <Button
-              type="submit"
-              variant="contained"
-              fullWidth
-            >
-              Confirm
-            </Button>
+          </>
+          ) : <></>}
+          <Button
+            type="submit"
+            variant="contained"
+            fullWidth
+          >
+            Confirm
+          </Button>
         </Box>
       </Box>
     </Modal>
