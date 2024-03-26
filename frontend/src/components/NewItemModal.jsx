@@ -119,20 +119,21 @@ const NewItemModal = ({ open, handleClose, restaurantId, categoryId }) => {
             margin="normal"
             required
             fullWidth
+            label="Price"
+            name="price"
+            value={formData.price}
+            onChange={handleChange}
+          />          
+          <TextField
+            margin="normal"
+            required
+            fullWidth
             label="Ingredients"
             name="ingredients"
             value={formData.ingredients}
             onChange={handleChange}
             helperText="Separate ingredients with commas"
-          />
-          <TextField
-            margin="normal"
-            required
-            fullWidth
-            label="Price"
-            name="price"
-            value={formData.price}
-            onChange={handleChange}
+            sx={{ mb: 3 }}
           />
           {/* <TextField
             margin="normal"
