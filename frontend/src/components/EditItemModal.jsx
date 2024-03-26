@@ -1,11 +1,10 @@
 import React, { useState, useEffect } from 'react';
 import { Modal, Box, Typography, TextField, Button, IconButton } from '@mui/material';
 import CloseIcon from '@mui/icons-material/Close';
-import { styled, useTheme } from '@mui/material/styles';
 import InputLabel from '@mui/material/InputLabel';
 import MenuItem from '@mui/material/MenuItem';
 import FormControl from '@mui/material/FormControl';
-import Select, { SelectChangeEvent } from '@mui/material/Select';
+import Select from '@mui/material/Select';
 
 import axios from 'axios';
 
@@ -80,11 +79,7 @@ const EditCategoryModal = ({ open, handleClose, restaurantId, categoryId, menuIt
       const response = await axios.patch(
         `http://localhost:5000/menus/${restaurantId}/menu/categories/${categoryId}/items/${itemDetails._id}/update`, 
         {
-          name: selectedItem,
-          price: parseInt(itemDetails.price),
-          description: itemDetails.description,
-          ingredients: itemDetails.ingredients,
-          imageUrl: ""
+          ...itemDetails, price: parseInt(itemDetails.price)
         },
         {
           headers: {
@@ -129,6 +124,8 @@ const EditCategoryModal = ({ open, handleClose, restaurantId, categoryId, menuIt
     }
   };
 
+
+  
   return (
     <Modal
       open={open}
@@ -203,7 +200,6 @@ const EditCategoryModal = ({ open, handleClose, restaurantId, categoryId, menuIt
                 onChange={handlePositionChange}
                 label="New Position"
               >
-                {/* Adjust the range as necessary */}
                 {Array.from({ length: menuItems.length }, (_, index) => (
                   <MenuItem key={index} value={index + 1}>
                     {index + 1}
