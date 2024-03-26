@@ -15,6 +15,7 @@ import TasksScreen from './screens/TasksScreen';
 import TableSelectionScreen from './screens/TableSelectionScreen';
 import WaiterTableReqScreen from './screens/WaiterTableReqScreen';
 import CustomerSelectScreen from './screens/CustomerSelectScreen';
+import CustomerMenuScreen from './screens/CustomerMenuScreen';
 
 const router = createBrowserRouter(createRoutesFromElements(
   <Route path='/' element={<App />}>
@@ -23,6 +24,7 @@ const router = createBrowserRouter(createRoutesFromElements(
     <Route path='/login' element={<LoginScreen />} />
     <Route path='/register' element={<RegisterScreen />} />
     <Route path='/customer' element={<CustomerSelectScreen />} />
+    <Route path='/customerMenu' element={<CustomerMenuScreen />} />
     { /* Private routes (user has to be logged in */}
     <Route path='' element={<PrivateRoute />}>
       <Route path='/profile' element={<ProfileScreen />} />

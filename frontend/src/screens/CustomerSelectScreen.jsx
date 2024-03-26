@@ -4,6 +4,7 @@ import Card from "react-bootstrap/Card";
 import Dropdown from "react-bootstrap/Dropdown";
 import DropdownButton from "react-bootstrap/DropdownButton";
 import { toast } from "react-toastify";
+import { useNavigate } from "react-router-dom";
 
 const CustomerSelectScreen = () => {
   const [restaurants, setRestaurants] = useState([]);
@@ -12,6 +13,7 @@ const CustomerSelectScreen = () => {
     "Select a restaurant"
   );
   const [selectedTable, setSelectedTable] = useState("Select a table");
+  const navigate = useNavigate();
 
   // Get a list of current restaurants
   async function getRestaurants() {
@@ -109,6 +111,8 @@ const CustomerSelectScreen = () => {
       // Store customerInfo in localStorage
       localStorage.setItem('customerInfo', JSON.stringify(customerInfo))
       console.log(customerInfo)
+
+      navigate(`/customerMenu`);
 
     } else {
       toast.error(data?.message);
