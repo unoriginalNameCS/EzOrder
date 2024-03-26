@@ -8,7 +8,6 @@ import Select from '@mui/material/Select';
 
 import axios from 'axios';
 
-
 const style = {
   position: 'absolute',
   top: '50%',
@@ -21,9 +20,7 @@ const style = {
   borderRadius: 1,
 };
 
-
 const EditCategoryModal = ({ open, handleClose, restaurantId, categoryId, menuItems }) => {
-  console.log(menuItems);
   const [selectedItem, setSelectedItem] = useState('');
   const [itemDetails, setItemDetails] = useState({});
   const [newDescription, setNewDescription] = useState('');
@@ -33,7 +30,6 @@ const EditCategoryModal = ({ open, handleClose, restaurantId, categoryId, menuIt
 
   useEffect(() => {
     const details = menuItems.find(item => item.name === selectedItem);
-    console.log(details)
     setItemDetails(details);
   }, [selectedItem, menuItems]);
 
@@ -75,7 +71,6 @@ const EditCategoryModal = ({ open, handleClose, restaurantId, categoryId, menuIt
     const userInfo = JSON.parse(localStorage.getItem('userInfo')); 
     try {
       console.log('Updating the following item:', selectedItem);
-      console.log(itemDetails._id)
       const response = await axios.patch(
         `http://localhost:5000/menus/${restaurantId}/menu/categories/${categoryId}/items/${itemDetails._id}/update`, 
         {
