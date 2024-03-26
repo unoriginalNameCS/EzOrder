@@ -68,9 +68,6 @@ const CustomerSelectScreen = () => {
     const restaurant = restaurants.find(
       (rest) => rest.name === selectedRestaurant
     );
-    console.log(
-      `So the user has chosen ${restaurant.name} with the ID of ${restaurant._id} and the table number ${selectedTable}`
-    );
 
     const response = await fetch(
       `http://localhost:5000/tables/${restaurant._id}/select`,

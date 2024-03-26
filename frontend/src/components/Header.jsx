@@ -51,14 +51,14 @@ const Header = () => {
     }
   }
 
-  // if role === staff, then get customer table requests
-  // @TODO will need to be adjusted to wait staff
+  // if role === wait staff, then get customer table requests
   useEffect(() => {
     if (!userInfo) {
       return
     }
-    if (userInfo.role === "staff") {
+    if (userInfo.role === "wait staff") {
         const interval = setInterval(() => {
+          console.log(newRequests)
           getTableRequests();
         }, 5000);
         return () => {
@@ -86,22 +86,13 @@ const Header = () => {
             <Nav className="ms-auto">
               {userInfo ? (
                 <>
-                  {" "}
-                  {/* @TODO: will need to be changed to 'wait staff' whenever backend is fixed for registering staff */}
-                  {userInfo.role === "staff" && (
+                  { /* if userInfo.role === wait staff then show */}
+                  {userInfo.role === "wait staff" && (
                     <>
                       <LinkContainer to="/table/assistance">
                         <Nav.Link>
-                          {newRequests.length > 0 ? (
-                            <>
-                              {/* If there is pending requests, then show the icon as red */}
-                              <FaHandPaper style={{ color: "red" }} />
-                            </>
-                          ) : (
-                            <>
-                              <FaHandPaper />
-                            </>
-                          )}
+                          {/* If pending requests is greater than 0 then make the colour red */}
+                          <FaHandPaper style={newRequests.length > 0 ? {color: "red"} : {}} />
                           Table Requests
                         </Nav.Link>
                       </LinkContainer>

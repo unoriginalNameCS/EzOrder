@@ -36,11 +36,10 @@ const TableRequestsScreen = () => {
       <h2>Pending Table Requests</h2>
       <ListGroup>
         {newRequests.map((req) => 
-        <>
-          <ListGroup.Item variant="danger">
+          <ListGroup.Item variant="danger" key={req._id}>
             Table {req.tableNum} has requested assistance.
           </ListGroup.Item>
-        </>)}
+        )}
       </ListGroup>
     </>
   );

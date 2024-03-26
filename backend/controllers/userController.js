@@ -174,9 +174,7 @@ const updateUserProfile = asyncHandler(async (req, res) => {
 // @access  Public
 const registerStaff = asyncHandler(async (req, res) => {
   const { name, email, password, role } = req.body;
-  console.log(name, email, password, role);
   const managerId = req.user._id; // Assuming manager's ID is in req.user._id
-  console.log(managerId);
   // Find the restaurant associated with the manager
   try {
     const manager = await User.findById(managerId);
@@ -193,12 +191,18 @@ const registerStaff = asyncHandler(async (req, res) => {
       throw new Error('User already exists');
     }
 
+    // check if given invalid role 
+    if (role !== 'wait staff' && role !== 'kitchen staff') {
+      res.status(400)
+      throw new Error(`Invalid role, roles can only be 'wait staff' or 'kitchen staff, when registering staff.`)
+    }
+
     // create staff user
     const user = await User.create({
       name,
       email,
       password,
-      role, // 'staff'
+      role, // 'kitchen staff' || 'wait staff'
       restaurant: manager.restaurant, // Assign to the same restaurant as the manager
     });
 

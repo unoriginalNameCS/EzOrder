@@ -17,6 +17,7 @@ import EditButton from '../components/EditButton';
 import SideNav from '../components/SideNav';
 import { Grid } from '@mui/material';
 import { useTheme } from '@mui/material';
+import MenuItem from '@mui/material/MenuItem';
 const style = {
   position: 'absolute',
   top: '50%',
@@ -211,12 +212,24 @@ export default function StaffScrren() {
               <TextField
                 required
                 id='outlined-required'
+                select
                 label='role'
                 value={role}
-                onChange={(e) => setRole(e.target.value)}
                 sx={{ margin: 1 }}
-              />
-
+              >
+                <MenuItem 
+                  value='kitchen staff'
+                  onClick={() => setRole('kitchen staff')}
+                >
+                  Kitchen Staff
+                </MenuItem>
+                <MenuItem 
+                  value='wait staff'
+                  onClick={() => setRole('wait staff')}
+                >
+                  Wait Staff
+                </MenuItem>
+              </TextField>
               <Button
                 variant='contained'
                 color='primary'
