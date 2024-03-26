@@ -58,7 +58,6 @@ const Header = () => {
     }
     if (userInfo.role === "wait staff") {
         const interval = setInterval(() => {
-          console.log(newRequests)
           getTableRequests();
         }, 5000);
         return () => {
