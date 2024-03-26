@@ -84,8 +84,32 @@ const CustomerSelectScreen = () => {
     );
 
     const data = await response.json();
+    // Successfully selected the table
     if (response.status === 200) {
       toast.success(`Successfully selected table number ${selectedTable}`);
+
+      // get all restaurant details of the chosen restaurant
+      const chosenRestaurant = restaurants.find(
+        (rest) => rest.name === selectedRestaurant
+      );
+
+      // get all table details of the successfully chosen table
+      const chosenTable = tables.find(
+        (table) => table.number === selectedTable
+      );
+
+      // Store customerInfo in an object
+      const customerInfo = {
+        restaurantName: chosenRestaurant.name,
+        restaurantId: chosenRestaurant._id,
+        tableId: chosenTable._id,
+        tableNumber: chosenTable.number
+      };
+
+      // Store customerInfo in localStorage
+      localStorage.setItem('customerInfo', JSON.stringify(customerInfo))
+      console.log(customerInfo)
+
     } else {
       toast.error(data?.message);
       console.log(data?.message);
