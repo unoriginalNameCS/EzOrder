@@ -1,5 +1,6 @@
 import express from 'express';
 import { addCategory, addItem, getCategories, getMenu, getMenuItemDetails, getMenuItems, updateCategoriesOrder, updateMenuItemDetails, updateMenuItemsOrder, getMenuCategory } from '../controllers/menuController.js';
+import { getCustomerMenu, getCustomerCategories, getCustomerMenuCategory, getCustomerMenuItems, getCustomerMenuItemDetails } from '../controllers/customerMenuController.js'
 import { protect } from '../middleware/authMiddleware.js';
 
 const router = express.Router();
@@ -12,6 +13,16 @@ router.post('/:restaurantId/menu/categories/:categoryId/items/add', protect, add
 router.put('/:restaurantId/menu/categories/order', protect, updateCategoriesOrder);
 router.put('/:restaurantId/menu/categories/:categoryId/items/order', protect, updateMenuItemsOrder);
 router.get('/:restaurantId/menu/categories/:categoryId/', protect, getMenuCategory);
+router.get('/:restaurantId/menu/categories/:categoryId/items/:itemId', protect, getMenuItemDetails)
 router.patch('/:restaurantId/menu/categories/:categoryId/items/:itemId/update', protect, updateMenuItemDetails);
+
+// Customer Menu Routes
+router.get('/:restaurantId/:tableId/menu', getCustomerMenu);
+router.get('/:restaurantId/:tableId/menu/categories', getCustomerCategories);
+router.get('/:restaurantId/:tableId/menu/categories/:categoryId', getCustomerMenuCategory);
+router.get('/:restaurantId/:tableId/menu/categories/:categoryId/items', getCustomerMenuItems);
+router.get('/:restaurantId/:tableId/menu/categories/:categoryId/items/:itemId', getCustomerMenuItemDetails);
+
+
 
 export default router;
