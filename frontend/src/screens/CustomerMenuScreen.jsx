@@ -1,19 +1,23 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import Grid from '@mui/material/Grid';
+import { Modal, Box, Typography, TextField, Button, IconButton } from '@mui/material';
 import SideNav from '../components/SideNav';
 import MenuCard from '../components/MenuCard';
 import { useTheme } from '@mui/material/styles';
 
 import CustomerCategoriesBar from '../components/CustomerCategoriesBar';
+import CustomerItemModal from '../components/CustomerItemModal'; // Import the CustomerItemModal component
 
 const CustomerMenuScreen = () => {
   const theme = useTheme();
   const [menuItems, setMenuItems] = useState([]); 
   const [menuCategories, setMenuCategories] = useState([]);
   const [selectedCategoryId, setSelectedCategoryId] = useState('');
+  const [itemModalOpen, setItemModalOpen] = useState(false); // State for controlling the modal
 
-  
+  const [selectedItemId, setSelectedItemId] = useState('');
+
   const customerInfo = JSON.parse(localStorage.getItem('customerInfo'));
   const restaurantId = customerInfo.restaurantId;
   const tableId = customerInfo.tableId;
@@ -22,6 +26,15 @@ const CustomerMenuScreen = () => {
   const onCategorySelected = (categoryId) => {
     setSelectedCategoryId(categoryId);
     fetchMenuItems(categoryId);
+  };
+
+  const handleOpenItemModal = (itemId) => {
+    setSelectedItemId(itemId);
+    setItemModalOpen(true);
+  };
+
+  const handleCloseItemModal = () => {
+    setItemModalOpen(false);
   };
 
   const fetchMenuCategories = async () => {
@@ -55,10 +68,20 @@ const CustomerMenuScreen = () => {
       });
 
       setMenuItems(data); 
+      console.log(menuItems )
     } catch (error) {
       console.error('There was an error fetching the menu items:', error.response?.data || error.message);
     }
   };
+
+  // const handleItemClick = (itemId) => {
+  //   setSelectedItemId(itemId);
+  //   setIsModalOpen(true); // Open the modal
+  // };
+  // const onItemSelected = (itemId) => {
+  //   setSelectedItemId(itemId);
+  //   fetchMenuItem(itemId);
+  // };
 
   useEffect(() => {
     fetchMenuCategories();
@@ -73,23 +96,33 @@ const CustomerMenuScreen = () => {
   return (
     <div style={{ display: 'flex' }}>
       <SideNav />
-      <Grid container style={{ flexGrow: 1, padding: theme.spacing(3), marginLeft: '200px' }}> {/* Adjust marginLeft to the width of SideNav */}
+      <Grid container style={{ flexGrow: 1, padding: theme.spacing(3), marginLeft: '200px' }}>
         <Grid item xs={12} style={{ padding: theme.spacing(1) }}>
           <CustomerCategoriesBar restaurantId={restaurantId} customerInfo={customerInfo} onCategorySelected={onCategorySelected}/>
         </Grid>  
-          
         {menuItems.map((item, index) => (
           <Grid item xs={12} sm={12} md={12} lg={6} key={index} style={{ padding: theme.spacing(1) }}>
-            <MenuCard
-              title={item.name}
-              description={item.description}
-              price={item.price.toFixed(2)}
-              imageUrl={item.imageUrl || 'https://via.placeholder.com/140'} 
-              tags={item.ingredients} // 
-            />
+            <Button onClick={() => handleOpenItemModal(item._id)} style={{ width: '100%', padding: 0 }}>
+              <MenuCard
+                title={item.name}
+                description={item.description}
+                price={item.price.toFixed(2)}
+                imageUrl={item.imageUrl || 'https://via.placeholder.com/140'} 
+                tags={item.ingredients}
+              />
+            </Button>
           </Grid>
         ))}
-      </Grid>      
+      </Grid>    
+      {/* Render the modal */}
+      <CustomerItemModal
+        open={itemModalOpen}
+        handleClose={handleCloseItemModal}
+        customerInfo={customerInfo}
+        categoryId={selectedCategoryId}
+        itemId={selectedItemId}
+        // onItemSelected={onItemSelected}
+      />
     </div>
   );
 };
