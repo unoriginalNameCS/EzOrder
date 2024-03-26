@@ -19,6 +19,10 @@ const requestSchema = mongoose.Schema(
     tableNum: {
       type: Number,
       required: true,
+    },
+    requestedBill: {
+      type: Boolean,
+      required: true,
     }
   }
 );

@@ -82,19 +82,26 @@ const addTable = asyncHandler(async (req, res) => {
 // @access  Public
 const requestAssistance = asyncHandler(async (req, res) => {
   const { restaurantId, tableId } = req.params
-
+  const { requestedBill } = req.body
+  
   const table = await Table.findById(tableId)
   if (!table) {
     res.status(404);
     throw new Error('Table not found')
   }
 
-  console.log(table)
+  const restaurant = await Restaurant.findById(restaurantId)
+  if (!restaurant) {
+    res.status(404);
+    throw new Error('Restaurant not found')
+  }
+
   const request = await Request.create({
     restaurant: restaurantId,
     table: tableId,
     state: 'pending',
     tableNum: table.number,
+    requestedBill, requestedBill
   });
 
   if (request) {
