@@ -74,9 +74,7 @@ const getCompletedOrders = asyncHandler(async (req, res) => {
 
   const completedOrders = await Order.find({ restaurant : restaurantId, state: "serve" } ).sort('time');
   if (completedOrders) {
-    res.status(201).json({
-      completedOrders
-    });
+    res.status(201).json(completedOrders);
   } else {
     res.status(404);
     throw new Error('No Ready To Serve Orders')
@@ -91,9 +89,7 @@ const getPreparingOrders = asyncHandler(async (req, res) => {
 
   const preparingOrders = await Order.find({ restaurant : restaurantId, state: "preparing" } ).sort('time');
   if (preparingOrders) {
-    res.status(201).json({
-      preparingOrders
-    });
+    res.status(201).json(preparingOrders);
   } else {
     res.status(404);
     throw new Error('No Orders Being Prepared')
@@ -108,9 +104,7 @@ const getPendingOrders = asyncHandler(async (req, res) => {
 
   const pendingOrders = await Order.find({ restaurant : restaurantId, state: "pending" }).sort('time');
   if (pendingOrders) {
-    res.status(201).json({
-      pendingOrders
-    });
+    res.status(201).json(pendingOrders);
   } else {
     res.status(404);
     throw new Error('No Orders Are Pending')

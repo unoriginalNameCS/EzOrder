@@ -1,5 +1,5 @@
 import { Navbar, Nav, Container, NavDropdown } from "react-bootstrap";
-import { FaSignInAlt, FaSignOutAlt, FaHandPaper } from "react-icons/fa";
+import { FaSignInAlt, FaSignOutAlt, FaHandPaper, FaMortarPestle} from "react-icons/fa";
 import { LinkContainer } from "react-router-bootstrap";
 import { useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
@@ -11,6 +11,7 @@ const Header = () => {
   const userInfo = JSON.parse(localStorage.getItem("userInfo"));
   const { loggedIn, setLoggedIn } = useContext(UserContext);
   const [newRequests, setNewRequests] = useState([]);
+  const [newCompletedOrders, setNewCompletedOrders] = useState([]);
 
   const logoutHandler = async () => {
     const response = await fetch("http://localhost:5000/api/users/logout", {
@@ -51,6 +52,27 @@ const Header = () => {
     }
   }
 
+  async function getCompletedOrders() {
+    const response = await fetch(
+      `http://localhost:5000/orders/${userInfo.restaurant}/completedOrders`,
+      {
+        method: "GET",
+        headers: {
+          "Content-type": "application/json",
+        },
+      }
+    );
+    const data = await response.json();
+
+    // if 200 there is data, there is customer requests pending
+    if (response.status === 200) {
+      setNewCompletedOrders(data);
+    } else if (response.status === 204) {
+      // if 204, then no content (there is no customer requests pending)
+      console.log("204", data);
+    }
+  }
+
   // if role === wait staff, then get customer table requests
   useEffect(() => {
     if (!userInfo) {
@@ -59,6 +81,7 @@ const Header = () => {
     if (userInfo.role === "wait staff") {
         const interval = setInterval(() => {
           getTableRequests();
+          getCompletedOrders();
         }, 5000);
         return () => {
           clearInterval(interval);
@@ -93,6 +116,13 @@ const Header = () => {
                           {/* If pending requests is greater than 0 then make the colour red */}
                           <FaHandPaper style={newRequests.length > 0 ? {color: "red"} : {}} />
                           Table Requests
+                        </Nav.Link>
+                      </LinkContainer>
+                      <LinkContainer to="readyToServeOrders">
+                        <Nav.Link>
+                          {/* If pending requests is greater than 0 then make the colour red */}
+                          <FaMortarPestle style={newCompletedOrders.length > 0 ? {color: "red"} : {}} />
+                          Orders Ready
                         </Nav.Link>
                       </LinkContainer>
                     </>
