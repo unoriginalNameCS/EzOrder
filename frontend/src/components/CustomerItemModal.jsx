@@ -51,46 +51,41 @@ const CustomerItemModal = ({ open, handleClose, customerInfo, categoryId, itemId
 
   return (
     <Modal
-      open={open}
-      onClose={handleClose}
-      aria-labelledby="modal-modal-title"
-      aria-describedby="modal-modal-description"
+  open={open}
+  onClose={handleClose}
+  aria-labelledby="modal-modal-title"
+  aria-describedby="modal-modal-description"
+>
+  <Box sx={modalStyle}>
+    <Typography id="modal-modal-title" variant="h4" component="h2" style={{ fontWeight: 'bold' }}>
+      {menuItem.name}
+    </Typography>
+    <img src={menuItem.imageUrl} alt={menuItem.name} style={{ width: '100%', marginTop: '10px' }} />
+    <Box sx={{ mt: 2, p: 2, border: '1px solid #ccc', borderRadius: '4px' }}>
+      <Typography id="modal-modal-description">
+        {menuItem.description}
+      </Typography>
+    </Box>
+    <Typography sx={{ mt: 2, fontWeight: 'bold' }}>
+      Price: {menuItem.price}
+    </Typography>
+    <Typography sx={{ mt: 2 }}>
+      Ingredients: {menuItem.ingredients.join(', ')}
+    </Typography>
+    <IconButton
+      aria-label="close"
+      onClick={handleClose}
+      sx={{
+        position: 'absolute',
+        right: 8,
+        top: 8,
+        color: (theme) => theme.palette.grey[500],
+      }}
     >
-      <Box sx={modalStyle}>
-        <Typography id="modal-modal-title" variant="h6" component="h2">
-          {menuItem.name}
-        </Typography>
-        <Typography id="modal-modal-description" sx={{ mt: 2 }}>
-          {menuItem.description}
-        </Typography>
-        <Typography sx={{ mt: 2 }}>
-          Price: {menuItem.price}
-        </Typography>
-        <Typography sx={{ mt: 2 }}>
-          Ingredients: {menuItem.ingredients}
-        </Typography>
-        <img src={menuItem.imageUrl} alt={menuItem.name} style={{ width: '100%', marginTop: '10px' }} />
-        {/* <Button
-          variant="contained"
-          startIcon={<CloudUploadIcon />}
-          sx={{ mt: 2 }}
-        >
-          Add to Cart
-        </Button> */}
-        <IconButton
-          aria-label="close"
-          onClick={handleClose}
-          sx={{
-            position: 'absolute',
-            right: 8,
-            top: 8,
-            color: (theme) => theme.palette.grey[500],
-          }}
-        >
-          <CloseIcon />
-        </IconButton>
-      </Box>
-    </Modal>
+      <CloseIcon />
+    </IconButton>
+  </Box>
+</Modal>
   );
 };
 
