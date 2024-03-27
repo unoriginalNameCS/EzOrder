@@ -5,6 +5,7 @@ import { Modal, Box, Typography, TextField, Button, IconButton } from '@mui/mate
 import SideNav from '../components/SideNav';
 import MenuCard from '../components/MenuCard';
 import { useTheme } from '@mui/material/styles';
+import { useNavigate } from 'react-router-dom';
 
 import CustomerCategoriesBar from '../components/CustomerCategoriesBar';
 import CustomerItemModal from '../components/CustomerItemModal'; // Import the CustomerItemModal component
@@ -14,14 +15,15 @@ const CustomerMenuScreen = () => {
   const [menuItems, setMenuItems] = useState([]); 
   const [menuCategories, setMenuCategories] = useState([]);
   const [selectedCategoryId, setSelectedCategoryId] = useState('');
+  const [requesting, setRequesting] = useState(false);
+  const [requestingBill, setRequestingBill] = useState(false);
   const [itemModalOpen, setItemModalOpen] = useState(false); // State for controlling the modal
-
+  
   const [selectedItemId, setSelectedItemId] = useState('');
 
   const customerInfo = JSON.parse(localStorage.getItem('customerInfo'));
   const restaurantId = customerInfo.restaurantId;
   const tableId = customerInfo.tableId;
-
 
   const onCategorySelected = (categoryId) => {
     setSelectedCategoryId(categoryId);
@@ -74,6 +76,56 @@ const CustomerMenuScreen = () => {
     }
   };
 
+  const requestAssistance = async () => {
+    try {
+      const url = `http://localhost:5000/tables/${restaurantId}/${tableId}/assistance`;
+
+      const response = await fetch(url, {
+        method: 'POST',
+        headers: {
+          'Content-type': 'application/json',
+        },
+        body: JSON.stringify({
+          requestedBill: false
+        })
+      })
+  
+      const data = await response.json();
+      console.log(data);
+
+      if (response.status === 201) {
+        setRequesting(true);
+      }
+    } catch (error) {
+      console.error('There was an error fetching the menu items:', error.response?.data || error.message);
+    }
+  };
+
+  const requestBill = async () => {
+    try {
+      const url = `http://localhost:5000/tables/${restaurantId}/${tableId}/assistance`;
+
+      const response = await fetch(url, {
+        method: 'POST',
+        headers: {
+          'Content-type': 'application/json',
+        },
+        body: JSON.stringify({
+          requestedBill: true
+        })
+      })
+  
+      const data = await response.json();
+      console.log(data);
+
+      if (response.status === 201) {
+        setRequestingBill(true);
+      }
+    } catch (error) {
+      console.error('There was an error fetching the menu items:', error.response?.data || error.message);
+    }
+  };
+
   // const handleItemClick = (itemId) => {
   //   setSelectedItemId(itemId);
   //   setIsModalOpen(true); // Open the modal
@@ -113,6 +165,35 @@ const CustomerMenuScreen = () => {
             </Button>
           </Grid>
         ))}
+        {!requesting ? <Button 
+          variant='contained'
+          color='primary'
+          sx={{margin: 1}}
+          onClick={() => requestAssistance()} style={{ width: '25%', padding: 10, marginLeft: '500px'}}>
+          Request Assistance
+        </Button> : 
+        <Grid container style={{ width:'30%',
+          padding: theme.spacing(3),
+          backgroundColor: '#5ced80',
+          alignItems:"center",
+          justifyContent:"center" }}>
+          Requesting Assistance
+        </Grid>}
+        {!requestingBill ? <Button 
+          variant='contained'
+          color='primary'
+          sx={{margin: 1}}
+          onClick={() => requestBill()} style={{ width: '25%', padding: 10, marginLeft: '500px'}}>
+          Request Bill
+        </Button> : 
+        <Grid container style={{  width: '25%',
+          padding: theme.spacing(3), 
+          backgroundColor: '#5ced80',
+          marginLeft: '300px',
+          alignItems:"center",
+          justifyContent:"center" }}>
+          Requesting Bill
+        </Grid>}
       </Grid>    
       {/* Render the modal */}
       <CustomerItemModal
