@@ -74,10 +74,9 @@ const getCompletedOrders = asyncHandler(async (req, res) => {
 
   const completedOrders = await Order.find({ restaurant : restaurantId, state: "serve" } ).sort('time');
   if (completedOrders) {
-    res.status(201).json(completedOrders);
+    res.status(200).json(completedOrders);
   } else {
-    res.status(404);
-    throw new Error('No Ready To Serve Orders')
+    res.status(204).json(completedOrders);
   }
 })
 

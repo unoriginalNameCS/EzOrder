@@ -118,7 +118,7 @@ const Header = () => {
                           Table Requests
                         </Nav.Link>
                       </LinkContainer>
-                      <LinkContainer to="readyToServeOrders">
+                      <LinkContainer to="/readyToServeOrders">
                         <Nav.Link>
                           {/* If pending requests is greater than 0 then make the colour red */}
                           <FaUtensils style={newCompletedOrders.length > 0 ? {color: "red"} : {}} />

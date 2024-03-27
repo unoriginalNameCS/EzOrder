@@ -130,10 +130,10 @@ const sendOrder = asyncHandler(async (req, res) => {
     throw new Error('Restaurant not found')
   }
 
-  if (table.cart.length == 0) {
-    res.status(400);
-    throw new Error('Cannot send an order with an empty cart')
-  }
+  // if (table.cart.length == 0) {
+  //   res.status(400);
+  //   throw new Error('Cannot send an order with an empty cart')
+  // }
 
   const order = await Order.create({
     restaurant: restaurantId,
