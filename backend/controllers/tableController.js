@@ -20,7 +20,7 @@ const tableSelect = asyncHandler(async (req, res) => {
     throw new Error('Table is occupied');
   } else {
     // set table occupied to true now that its being selected
-    //table.occupied = true
+    table.occupied = true
     // save the updated table in the database
     const updatedTable = await table.save();
     res.status(200).json(updatedTable);

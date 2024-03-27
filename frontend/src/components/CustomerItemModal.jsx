@@ -37,7 +37,7 @@ const CustomerItemModal = ({ open, handleClose, customerInfo, categoryId, itemId
 
       setMenuItem(data); 
     } catch (error) {
-      console.error('There was an error fetching the categories:', error.response?.data || error.message);
+      console.error('There was an error fetching the item:', error.response?.data || error.message);
     }
   }, [restaurantId, tableId, categoryId, itemId]);
 
@@ -70,7 +70,7 @@ const CustomerItemModal = ({ open, handleClose, customerInfo, categoryId, itemId
       Price: {menuItem.price}
     </Typography>
     <Typography sx={{ mt: 2 }}>
-      Ingredients: {menuItem.ingredients.join(', ')}
+      Ingredients: {menuItem.ingredients}
     </Typography>
     <IconButton
       aria-label="close"

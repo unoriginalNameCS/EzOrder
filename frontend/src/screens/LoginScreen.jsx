@@ -33,13 +33,7 @@ const Login = () => {
     if (response.status === 200) {
       localStorage.setItem('userInfo', JSON.stringify(data))
       toast.success('Successfully signed in')
-      const userInfo = JSON.parse(localStorage.getItem('userInfo'));
-      const isCustomer = userInfo.role === 'customer';
-      if (isCustomer) {
-        navigate('/customer');
-      } else {
-        navigate('/')
-      }
+      navigate('/')
       setLoggedIn(!loggedIn)
     } else {
       toast.error(data?.message)
