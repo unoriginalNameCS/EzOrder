@@ -1,9 +1,9 @@
-import { Navbar, Nav, Container, NavDropdown } from "react-bootstrap";
-import { FaSignInAlt, FaSignOutAlt, FaHandPaper, FaMortarPestle} from "react-icons/fa";
+import { useContext, useEffect, useState } from "react";
+import { Container, Nav, NavDropdown, Navbar } from "react-bootstrap";
+import { FaHandPaper, FaSignInAlt, FaSignOutAlt, FaUtensils } from "react-icons/fa";
 import { LinkContainer } from "react-router-bootstrap";
 import { useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
-import { useEffect, useState, useContext } from "react";
 import { UserContext } from "../UserContext";
 
 const Header = () => {
@@ -121,7 +121,7 @@ const Header = () => {
                       <LinkContainer to="readyToServeOrders">
                         <Nav.Link>
                           {/* If pending requests is greater than 0 then make the colour red */}
-                          <FaMortarPestle style={newCompletedOrders.length > 0 ? {color: "red"} : {}} />
+                          <FaUtensils style={newCompletedOrders.length > 0 ? {color: "red"} : {}} />
                           Orders Ready
                         </Nav.Link>
                       </LinkContainer>

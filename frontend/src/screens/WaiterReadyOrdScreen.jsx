@@ -37,7 +37,7 @@ const ReadyToServeOrdersScreen = () => {
       <ListGroup>
         {newCompletedOrders.map((order) => 
           <ListGroup.Item variant="danger" key={order._id}>
-            Order is ready to serve to ${order.table.number}.
+            Order is ready to serve to ${order.tableNum}.
           </ListGroup.Item>
         )}
       </ListGroup>
