@@ -2,7 +2,8 @@ import React, { useState } from 'react';
 import { Modal, Box, Typography, TextField, Button, IconButton } from '@mui/material';
 import CloseIcon from '@mui/icons-material/Close';
 import CloudUploadIcon from '@mui/icons-material/CloudUpload';
-import { styled, useTheme } from '@mui/material/styles';
+import CheckCircleIcon from '@mui/icons-material/CheckCircle';
+import { styled } from '@mui/material/styles';
 import axios from 'axios';
 
 
@@ -36,12 +37,43 @@ const NewItemModal = ({ open, handleClose, restaurantId, categoryId }) => {
     description: '',
     price: '',
     ingredients: '',
-    position: ''
+    imageUrl: ''
   });
+  const [newImageUrl, setNewImageUrl] = useState('');
 
   const handleChange = (e) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
   };
+
+  const handleImageChange = async (e) => {
+    const file = e.target.files[0];
+    if (!file) {
+      console.error('No file selected.');
+      return;
+    }
+
+    try {
+      const dataUrl = await convertFileToDataUrl(file);
+      console.log(dataUrl)
+      setNewImageUrl(dataUrl);
+      setFormData({ ...formData, imageUrl: dataUrl });
+    } catch (error) {
+      console.error(error);
+    }
+  }
+
+  function convertFileToDataUrl(file) {
+    return new Promise((resolve, reject) => {
+      const reader = new FileReader();
+      reader.onload = () => {
+        resolve(reader.result);
+      }
+      reader.onerror = (error) => {
+        reject(error);
+      }
+      reader.readAsDataURL(file);
+    });
+  }
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -56,7 +88,7 @@ const NewItemModal = ({ open, handleClose, restaurantId, categoryId }) => {
           description: formData.description,
           price: parseInt(formData.price), 
           ingredients: formData.ingredients.split(',').map(ingredient => ingredient.trim()), 
-          imageUrl: "",
+          imageUrl: formData.imageUrl
         },
         {
           headers: {
@@ -151,21 +183,26 @@ const NewItemModal = ({ open, handleClose, restaurantId, categoryId }) => {
             sx={{ mb: 3 }}
           /> */}
             <Button
-              component="label"
-              role={undefined}
-              variant="outlined"
-              tabIndex={-1}
-              startIcon={<CloudUploadIcon />}
+            component="label"
+            role={undefined}
+            variant={newImageUrl ? "contained" : "outlined" }
+            color={newImageUrl ? "success" : "primary"}
+            tabIndex={-1}
+            startIcon={newImageUrl ? <CheckCircleIcon /> : <CloudUploadIcon /> }
             >
-              Upload Image
+              {newImageUrl ? "Upload Success" : "Upload Image"}
               <VisuallyHiddenInput 
                 type="file"
+                label="Image"
+                name='image'
+                accept='.jpeg, .png, .jpg'
+                onChange={handleImageChange}
               />
             </Button>
             <Button
               type="submit"
               variant="contained"
-              sx={{marginLeft: '4.25rem' }}
+              sx={newImageUrl ? {marginLeft: '2.75rem'} : {marginLeft: '4.25rem' }}
             >
               Confirm
             </Button>
