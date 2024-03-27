@@ -102,7 +102,7 @@ const CustomerMenuScreen = () => {
         </Grid>  
         {menuItems.map((item, index) => (
           <Grid item xs={12} sm={12} md={12} lg={6} key={index} style={{ padding: theme.spacing(1) }}>
-            <Button onClick={() => handleOpenItemModal(item._id)} style={{ width: '100%', padding: 0 }}>
+            <Button onClick={() => handleOpenItemModal(item._id)} style={{ width: '100%', padding: 0, textTransform: "none", textAlign: "left"}}>
               <MenuCard
                 title={item.name}
                 description={item.description}
