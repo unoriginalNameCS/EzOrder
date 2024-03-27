@@ -1,5 +1,16 @@
 import express from 'express';
-import { tableSelect, getTableNumbers, addTable, requestAssistance, addItem, removeItem, getCart, getOrders, getPendingRequestsForAssistance, updateRequestsForAssistance, getAllRestaurants } from '../controllers/tableController.js';
+import {
+    addItem,
+    addTable,
+    getAllRestaurants,
+    getCart, getOrders, getPendingRequestsForAssistance,
+    getTableNumbers,
+    removeItem,
+    requestAssistance,
+    sendOrder,
+    tableSelect,
+    updateRequestsForAssistance
+} from '../controllers/tableController.js';
 
 const router = express.Router();
 
@@ -14,5 +25,6 @@ router.get('/:restaurantId/:tableId/orders', getOrders);
 router.get('/:restaurantId/assistance', getPendingRequestsForAssistance)
 router.patch('/assistance', updateRequestsForAssistance)
 router.get('/restaurants', getAllRestaurants);
+router.post('/:restaurantId/:tableId/sendOrder', sendOrder);
 
 export default router;

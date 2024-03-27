@@ -1,9 +1,9 @@
 import asyncHandler from 'express-async-handler';
+import MenuItem from '../models/itemModel.js';
+import Order from '../models/orderModel.js';
+import Request from '../models/requestModel.js';
 import Restaurant from '../models/restaurantModel.js';
 import Table from '../models/tableModel.js';
-import Request from '../models/requestModel.js';
-import MenuItem from '../models/itemModel.js';
-import { gridColumnLookupSelector } from '@mui/x-data-grid';
 
 // @desc    Sets a table status to occupied
 // @route   POST /tables/:restaurantId/select
@@ -98,7 +98,6 @@ const requestAssistance = asyncHandler(async (req, res) => {
 
   const request = await Request.create({
     restaurant: restaurantId,
-    table: tableId,
     state: 'pending',
     tableNum: table.number,
     requestedBill, requestedBill
@@ -106,6 +105,52 @@ const requestAssistance = asyncHandler(async (req, res) => {
 
   if (request) {
     res.status(201).json(request);
+  } else {
+      res.status(400);
+      throw new Error('invalid');
+  }
+})
+
+// @desc    sendOrder
+// @route   POST /orders/:restaurantId/:tableId/sendOrder
+// @access  Public
+const sendOrder = asyncHandler(async (req, res) => {
+  const { restaurantId, tableId } = req.params
+  const { notes } = req.body
+  
+  const table = await Table.findById(tableId)
+  if (!table) {
+    res.status(404);
+    throw new Error('Table not found')
+  }
+
+  const restaurant = await Restaurant.findById(restaurantId)
+  if (!restaurant) {
+    res.status(404);
+    throw new Error('Restaurant not found')
+  }
+
+  if (table.cart.length == 0) {
+    res.status(400);
+    throw new Error('Cannot send an order with an empty cart')
+  }
+
+  const order = await Order.create({
+    restaurant: restaurantId,
+    tableNum: table.number,
+    items: table.cart,
+    time: new Date(),
+    notes,
+    state: "pending"
+  });
+
+  if (order) {
+
+    // Empties the cart
+    table.cart = [];
+    await table.save();
+
+    res.status(201).json(order);
   } else {
       res.status(400);
       throw new Error('invalid');
@@ -285,5 +330,7 @@ const getAllRestaurants = asyncHandler(async (req, res) => {
 });
 
   export {
-  tableSelect, getTableNumbers, addTable, requestAssistance, addItem, removeItem, getCart, getOrders, getPendingRequestsForAssistance, updateRequestsForAssistance, getAllRestaurants,
-  };
+  addItem, addTable, getAllRestaurants, getCart, getOrders,
+  getPendingRequestsForAssistance, getTableNumbers, removeItem, requestAssistance, sendOrder, tableSelect, updateRequestsForAssistance
+};
+

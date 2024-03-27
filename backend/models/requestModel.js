@@ -7,10 +7,6 @@ const requestSchema = mongoose.Schema(
       ref: 'Restaurant',
       required: true
     },
-    table: {
-      type: mongoose.Schema.Types.ObjectId,
-      ref: 'Table',
-    },
     state: {
       type: String,
       required: true,
