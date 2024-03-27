@@ -4,8 +4,8 @@ import { getCompletedOrders, getOrders, getPendingOrders, getPreparingOrders, se
 const router = express.Router();
 
 router.get('/:restaurantId/orders', getOrders);
-router.put('/:restaurantId/orders', setOrderInProgress);
-router.put('/:restaurantId/orders', setOrderPrepared);
+router.put('/:restaurantId/:orderId/inProgress', setOrderInProgress);
+router.put('/:restaurantId/:orderId/prepared', setOrderPrepared);
 router.get('/:restaurantId/orders/:orderId', viewOrderNotes);
 router.get('/:restaurantId/pendingOrders', getPendingOrders);
 router.get('/:restaurantId/preparingOrders', getPreparingOrders);

@@ -26,6 +26,9 @@ const SideNav = () => {
     marginRight: '0.75rem'
   };
 
+  const userInfo = JSON.parse(localStorage.getItem('userInfo'));
+  const isCustomer = userInfo.role === 'customer';
+
   return (
     <Sidebar
       rootStyles={{
@@ -52,23 +55,37 @@ const SideNav = () => {
             },
           },
         }}
-      >
+      > 
+        {isCustomer ? 
+        (<MenuItem component={<Link to="/orders" />}> 
+          <HiOutlineClipboardList style={iconStyle}/>
+          <span style={textStyle}> MY ORDERS</span>
+        </MenuItem>) :
         <MenuItem component={<Link to="/orders" />}> 
           <HiOutlineClipboardList style={iconStyle}/>
           <span style={textStyle}>ORDERS</span>
-        </MenuItem>
+        </MenuItem>}
+
+        {isCustomer ?
+        <MenuItem component={<Link to="/customermenu" />}> 
+          <BiFoodMenu style={iconStyle}/>
+          <span style={textStyle}>MENU</span>
+        </MenuItem> :
         <MenuItem component={<Link to="/menu" />}> 
           <BiFoodMenu style={iconStyle}/>
           <span style={textStyle}>MENU</span>
-        </MenuItem>
+        </MenuItem>}
+        
+        {!isCustomer && 
         <MenuItem component={<Link to="/staff" />}>
           <AiOutlineUser style={iconStyle}/>
           <span style={textStyle}>STAFF</span>
-        </MenuItem>
+        </MenuItem>}
+        {!isCustomer && 
         <MenuItem component={<Link to="/settings" />}>
           <FiSettings style={iconStyle}/>
           <span style={textStyle}>SETTINGS</span>
-        </MenuItem>
+        </MenuItem>}
       </Menu>
     </Sidebar>
   ) 

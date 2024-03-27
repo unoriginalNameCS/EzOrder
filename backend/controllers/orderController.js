@@ -18,8 +18,8 @@ const getOrders = asyncHandler(async (req, res) => {
   }
 })
 
-// @desc    gets all orders
-// @route   GET /orders/:restaurantId/orders
+// @desc    set order in progress
+// @route   PUT /:restaurantId/:orderId/inProgress
 // @access  Public
 const setOrderInProgress = asyncHandler(async (req, res) => {
   const { restaurantId, orderId } = req.params;
@@ -38,6 +38,10 @@ const setOrderInProgress = asyncHandler(async (req, res) => {
   res.status(201).json(order);
 })
 
+
+// @desc    set order prepared
+// @route   PUT /:restaurantId/:orderId/prepared
+// @access  Public
 const setOrderPrepared = asyncHandler(async (req, res) => {
   const { restaurantId, orderId } = req.params;
 
