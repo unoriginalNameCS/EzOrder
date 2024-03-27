@@ -26,8 +26,8 @@ const SideNav = () => {
     marginRight: '0.75rem'
   };
 
-  const userInfo = JSON.parse(localStorage.getItem('userInfo'));
-  const isCustomer = userInfo.role === 'customer';
+  const customerInfo = JSON.parse(localStorage.getItem('customerInfo'));
+  const isCustomer = !!customerInfo;
 
   return (
     <Sidebar

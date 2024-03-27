@@ -19,7 +19,7 @@ const userSchema = mongoose.Schema(
     role: {
       type: String,
       required: true,
-      enum: ['manager', 'wait staff', 'customer', 'kitchen staff'] // To add more later
+      enum: ['manager', 'wait staff', 'kitchen staff']
     },
     restaurant: {
       type: mongoose.Schema.Types.ObjectId,
