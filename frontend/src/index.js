@@ -16,6 +16,7 @@ import TableSelectionScreen from './screens/TableSelectionScreen';
 import WaiterTableReqScreen from './screens/WaiterTableReqScreen';
 import CustomerSelectScreen from './screens/CustomerSelectScreen';
 import CustomerMenuScreen from './screens/CustomerMenuScreen';
+import WaiterReadyOrderScreen from './screens/WaiterReadyOrdScreen'
 
 const router = createBrowserRouter(createRoutesFromElements(
   <Route path='/' element={<App />}>
@@ -32,6 +33,7 @@ const router = createBrowserRouter(createRoutesFromElements(
       <Route path='/tasks' element={<TasksScreen />}/>
       <Route path='/staff' element={<StaffScreen/>}/>
       <Route path='table/assistance' element={<WaiterTableReqScreen />} />
+      <Route path='/readyToServeOrders' element = {<WaiterReadyOrderScreen />} />
     </Route>
   </Route>
 ))
