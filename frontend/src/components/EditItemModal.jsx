@@ -1,10 +1,13 @@
 import React, { useState, useEffect } from 'react';
 import { Modal, Box, Typography, TextField, Button, IconButton } from '@mui/material';
+import { styled } from '@mui/material/styles';
 import CloseIcon from '@mui/icons-material/Close';
 import InputLabel from '@mui/material/InputLabel';
 import MenuItem from '@mui/material/MenuItem';
 import FormControl from '@mui/material/FormControl';
 import Select from '@mui/material/Select';
+import CloudUploadIcon from '@mui/icons-material/CloudUpload';
+import CheckCircleIcon from '@mui/icons-material/CheckCircle';
 
 import axios from 'axios';
 
@@ -20,6 +23,18 @@ const style = {
   borderRadius: 1,
 };
 
+const VisuallyHiddenInput = styled('input')({
+  clip: 'rect(0 0 0 0)',
+  clipPath: 'inset(50%)',
+  height: 1,
+  overflow: 'hidden',
+  position: 'absolute',
+  bottom: 0,
+  left: 0,
+  whiteSpace: 'nowrap',
+  width: 1,
+});
+
 const EditCategoryModal = ({ open, handleClose, restaurantId, categoryId, menuItems }) => {
   const [selectedItem, setSelectedItem] = useState('');
   const [itemDetails, setItemDetails] = useState({});
@@ -27,6 +42,7 @@ const EditCategoryModal = ({ open, handleClose, restaurantId, categoryId, menuIt
   const [newIngredients, setNewIngredients] = useState('');
   const [newPrice, setNewPrice] = useState('');
   const [newPosition, setNewPosition] = useState('');
+  const [newImageUrl, setNewImageUrl] = useState('');
 
   useEffect(() => {
     const details = menuItems.find(item => item.name === selectedItem);
@@ -66,6 +82,39 @@ const EditCategoryModal = ({ open, handleClose, restaurantId, categoryId, menuIt
     setNewPosition(event.target.value);
   };
 
+  const handleImageChange = async (e) => {
+    const file = e.target.files[0];
+    if (!file) {
+      console.error('No file selected.');
+      return;
+    }
+
+    try {
+      const dataUrl = await convertFileToDataUrl(file);
+      console.log(dataUrl)
+      setNewImageUrl(dataUrl);
+      setItemDetails(prevDetails => ({
+        ...prevDetails,
+        imageUrl: dataUrl,
+      }))
+    } catch (error) {
+      console.error(error);
+    }
+  }
+
+  function convertFileToDataUrl(file) {
+    return new Promise((resolve, reject) => {
+      const reader = new FileReader();
+      reader.onload = () => {
+        resolve(reader.result);
+      }
+      reader.onerror = (error) => {
+        reject(error);
+      }
+      reader.readAsDataURL(file);
+    });
+  }
+
   const handleSubmit = async (e) => {
     e.preventDefault();
     const userInfo = JSON.parse(localStorage.getItem('userInfo')); 
@@ -89,6 +138,7 @@ const EditCategoryModal = ({ open, handleClose, restaurantId, categoryId, menuIt
       setNewDescription('');
       setNewIngredients('');
       setNewPrice('');
+      setNewImageUrl('');
       setNewPosition('');
 
       handleClose(); 
@@ -202,15 +252,32 @@ const EditCategoryModal = ({ open, handleClose, restaurantId, categoryId, menuIt
                 ))}
               </Select>
             </FormControl>
+            <Button
+            component="label"
+            role={undefined}
+            variant={newImageUrl ? "contained" : "outlined" }
+            color={newImageUrl ? "success" : "primary"}
+            tabIndex={-1}
+            startIcon={newImageUrl ? <CheckCircleIcon /> : <CloudUploadIcon /> }
+            >
+              {newImageUrl ? "Upload Success" : "Upload Image"}
+              <VisuallyHiddenInput 
+                type="file"
+                label="Image"
+                name='image'
+                accept='.jpeg, .png, .jpg'
+                onChange={handleImageChange}
+              />
+            </Button>
+            <Button
+              type="submit"
+              variant="contained"
+              sx={newImageUrl ? {marginLeft: '2.75rem'} : {marginLeft: '4.25rem' }}
+            >
+              Confirm
+            </Button>
           </>
           ) : <></>}
-          <Button
-            type="submit"
-            variant="contained"
-            fullWidth
-          >
-            Confirm
-          </Button>
         </Box>
       </Box>
     </Modal>

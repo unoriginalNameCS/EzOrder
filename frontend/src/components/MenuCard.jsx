@@ -31,7 +31,7 @@ const ImageContainer = styled(CardMedia)(({ theme }) => ({
 const StyledImage = styled('img')(({ theme }) => ({
   maxHeight: '100%',
   maxWidth: '100%',
-  objectFit: 'contain', 
+  objectFit: 'cover', 
   borderRadius: theme.shape.borderRadius,
 }));
 
