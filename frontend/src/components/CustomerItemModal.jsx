@@ -20,12 +20,6 @@ const CustomerItemModal = ({ open, handleClose, customerInfo, categoryId, itemId
   const [menuItem, setMenuItem] = useState({});
   const tableId = customerInfo.tableId;
   const restaurantId = customerInfo.restaurantId;
-
-//   const handleItemClick = (itemId) => {
-//     if(onItemSelected) {
-//       onItemSelected(itemId);
-//     }
-//   };
   
   const fetchMenuItem = useCallback(async () => {
     try {
@@ -48,6 +42,30 @@ const CustomerItemModal = ({ open, handleClose, customerInfo, categoryId, itemId
   useEffect(() => {
     fetchMenuItem();
   }, [fetchMenuItem]);
+
+  const handleAddToCart = async (e) => {
+
+    e.preventDefault();
+
+    try {
+      console.log('Sending the following data:');
+      console.log(itemId);
+      const response = await axios.post(
+        `http://localhost:5000/tables/${restaurantId}/${tableId}/${itemId}/addItem`,
+        {
+          notes: "",
+          quantity: 1
+        }
+      );
+      console.log('Item added:', response.data); 
+      handleClose(); 
+    } catch (error) {
+      console.error('There was an error adding the item:', error.response?.data || error.message);
+    }
+
+    // Handle adding the item to the cart here
+    console.log('Item added to cart:', menuItem);
+  };
 
   return (
     <Modal
@@ -72,6 +90,13 @@ const CustomerItemModal = ({ open, handleClose, customerInfo, categoryId, itemId
     <Typography sx={{ mt: 2 }}>
       Ingredients: {menuItem.ingredients}
     </Typography>
+    <Button
+      variant="contained"
+      onClick={handleAddToCart}
+      sx={{ mt: 2 }}
+    >
+      Add to Cart
+    </Button>
     <IconButton
       aria-label="close"
       onClick={handleClose}
