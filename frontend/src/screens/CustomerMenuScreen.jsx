@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import Grid from '@mui/material/Grid';
+import { toast } from 'react-toastify'
 import { Modal, Box, Typography, TextField, Button, IconButton } from '@mui/material';
 import SideNav from '../components/SideNav';
 import MenuCard from '../components/MenuCard';
@@ -15,8 +16,6 @@ const CustomerMenuScreen = () => {
   const [menuItems, setMenuItems] = useState([]); 
   const [menuCategories, setMenuCategories] = useState([]);
   const [selectedCategoryId, setSelectedCategoryId] = useState('');
-  const [requesting, setRequesting] = useState(false);
-  const [requestingBill, setRequestingBill] = useState(false);
   const [itemModalOpen, setItemModalOpen] = useState(false); // State for controlling the modal
   
   const [selectedItemId, setSelectedItemId] = useState('');
@@ -94,7 +93,7 @@ const CustomerMenuScreen = () => {
       console.log(data);
 
       if (response.status === 201) {
-        setRequesting(true);
+        toast.success('Requesting Assistance');
       }
     } catch (error) {
       console.error('There was an error fetching the menu items:', error.response?.data || error.message);
@@ -119,7 +118,7 @@ const CustomerMenuScreen = () => {
       console.log(data);
 
       if (response.status === 201) {
-        setRequestingBill(true);
+        toast.success('Requesting Bill');
       }
     } catch (error) {
       console.error('There was an error fetching the menu items:', error.response?.data || error.message);
@@ -165,35 +164,20 @@ const CustomerMenuScreen = () => {
             </Button>
           </Grid>
         ))}
-        {!requesting ? <Button 
+        {<Button 
           variant='contained'
           color='primary'
           sx={{margin: 1}}
-          onClick={() => requestAssistance()} style={{ width: '25%', padding: 10, marginLeft: '500px'}}>
+          onClick={() => requestAssistance()} style={{ width: '25%', padding: 10}}>
           Request Assistance
-        </Button> : 
-        <Grid container style={{ width:'30%',
-          padding: theme.spacing(3),
-          backgroundColor: '#5ced80',
-          alignItems:"center",
-          justifyContent:"center" }}>
-          Requesting Assistance
-        </Grid>}
-        {!requestingBill ? <Button 
+        </Button>}
+        {<Button 
           variant='contained'
           color='primary'
           sx={{margin: 1}}
-          onClick={() => requestBill()} style={{ width: '25%', padding: 10, marginLeft: '500px'}}>
+          onClick={() => requestBill()} style={{ width: '25%', padding: 10}}>
           Request Bill
-        </Button> : 
-        <Grid container style={{  width: '25%',
-          padding: theme.spacing(3), 
-          backgroundColor: '#5ced80',
-          marginLeft: '300px',
-          alignItems:"center",
-          justifyContent:"center" }}>
-          Requesting Bill
-        </Grid>}
+        </Button>}
       </Grid>    
       {/* Render the modal */}
       <CustomerItemModal
