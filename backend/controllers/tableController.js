@@ -272,20 +272,19 @@ const removeItem = asyncHandler(async (req, res) => {
 const getCart = asyncHandler(async (req, res) => {
   const { restaurantId, tableId } = req.params;
 
-  try {
-    // Find the table by ID and restaurant
-    const table = await Table.findOne({ _id: tableId, restaurant: restaurantId })
-      .populate('cart.menuItem');
+  // Find the table by ID and restaurant
+  const table = await Table.findOne({ _id: tableId, restaurant: restaurantId });
 
-    if (!table) {
-      res.status(404).json({ message: 'Table not found' });
-      return;
-    }
+  if (!table) {
+    res.status(404).json({ message: 'Table not found' });
+    return;
+  }
 
-    // Return the cart items
-    res.status(200).json({ cart: table.cart });
-  } catch (error) {
-    res.status(500).json({ error: error.message });
+  // Return the cart items
+  if (table.cart.length > 0) {
+    res.status(200).json(table.cart); 
+  } else {
+    res.status(204).json(table.cart);  
   }
 })
 
@@ -294,22 +293,22 @@ const getCart = asyncHandler(async (req, res) => {
 // @access  Public
 const getOrders = asyncHandler(async (req, res) => {
   const { restaurantId, tableId } = req.params;
+  // Find the table by ID and restaurant
+  const table = await Table.findOne({ _id: tableId, restaurant: restaurantId });
 
-  try {
-    // Find the table by ID and restaurant
-    const table = await Table.findOne({ _id: tableId, restaurant: restaurantId })
-      .populate('order_list');
-
-    if (!table) {
-      res.status(404).json({ message: 'Table not found' });
-      return;
-    }
-
-    // Return the order_list
-    res.status(200).json({ order_list: table.order_list });
-  } catch (error) {
-    res.status(500).json({ error: error.message });
+  if (!table) {
+    res.status(404).json({ message: 'Table not found' });
+    return;
   }
+
+  // Return the order_list
+  if (table.order_list.length > 0) {
+    res.status(200).json(table.order_list);  
+  } else {
+    // Retuern empty list
+    res.status(204).json(table.order_list);   
+  }
+  
 });
 
 // @desc  Get a list of all restaurants

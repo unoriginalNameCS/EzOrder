@@ -4,7 +4,7 @@ import { Sidebar, Menu, MenuItem } from 'react-pro-sidebar';
 
 import { FiSettings } from "react-icons/fi";
 import { HiOutlineClipboardList } from "react-icons/hi";
-import { BiFoodMenu } from "react-icons/bi";
+import { BiFoodMenu, BiCart } from "react-icons/bi";
 import { AiOutlineUser } from "react-icons/ai";
 
 import EzOrderLogo from "./assets/EzOrder.svg"
@@ -75,6 +75,13 @@ const SideNav = () => {
           <BiFoodMenu style={iconStyle}/>
           <span style={textStyle}>MENU</span>
         </MenuItem>}
+
+        {isCustomer &&
+        <MenuItem component = {<Link to="/cart" />}>
+          <BiCart style={iconStyle}/>
+          <span style={textStyle}>CART</span>
+        </MenuItem>
+        }
         
         {!isCustomer && 
         <MenuItem component={<Link to="/staff" />}>
