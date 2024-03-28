@@ -17,6 +17,7 @@ const CustomerMenuScreen = () => {
   const [menuCategories, setMenuCategories] = useState([]);
   const [selectedCategoryId, setSelectedCategoryId] = useState('');
   const [itemModalOpen, setItemModalOpen] = useState(false); // State for controlling the modal
+  const navigate = useNavigate();
   
   const [selectedItemId, setSelectedItemId] = useState('');
 
@@ -37,6 +38,20 @@ const CustomerMenuScreen = () => {
   const handleCloseItemModal = () => {
     setItemModalOpen(false);
   };
+
+  // remove customerInfo from localStorage and redirect back to home
+  const handleExit = () => {
+    // can add some logic checks if we want such as
+    /* if hasNotRequestedBill & hasNotOrdered 
+        toast.error(Request the bill first) 
+        else {
+          removeItem
+          navigate()
+        }  
+      */
+    localStorage.removeItem('customerInfo')
+    navigate("/")
+  }
 
   const fetchMenuCategories = async () => {
     try {
@@ -177,6 +192,13 @@ const CustomerMenuScreen = () => {
           sx={{margin: 1}}
           onClick={() => requestBill()} style={{ width: '25%', padding: 10}}>
           Request Bill
+        </Button>}
+        {<Button 
+          variant='contained'
+          color='primary'
+          sx={{margin: 1}}
+          onClick={() => handleExit()} style={{ width: '25%', padding: 10}}>
+          Exit
         </Button>}
       </Grid>    
       {/* Render the modal */}
