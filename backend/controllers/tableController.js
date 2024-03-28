@@ -7,7 +7,7 @@ import Table from '../models/tableModel.js';
 import CartItem from '../models/cartItemModel.js';
 
 // @desc    Sets a table status to occupied
-// @route   POST /tables/:restaurantId/select
+// @route   PUT /tables/:restaurantId/select
 // @access  Public
 const tableSelect = asyncHandler(async (req, res) => {
   const { restaurantId } = req.params;
@@ -27,6 +27,28 @@ const tableSelect = asyncHandler(async (req, res) => {
     res.status(200).json(updatedTable);
   }
 });
+
+// @desc    Sets a table status to unoccupied
+// @route   PUT /tables/:restaurantId/deselect
+// @access  Public
+const tableDeselect = asyncHandler(async (req, res) => {
+  const { restaurantId } = req.params;
+  const { tableNumber } = req.body;
+  
+  const table = await Table.findOne({ number:tableNumber, restaurant : restaurantId });
+  //check if table is occupied
+  // changed error code to 400 from 401 as 401 is unauthorised
+  if (!table.occupied) {
+    res.status(400);
+    throw new Error('Table is already unoccupied');
+  } else {
+    // set table occupied to true now that its being selected
+    table.occupied = false
+    // save the updated table in the database
+    const updatedTable = await table.save();
+    res.status(200).json(updatedTable);
+  }
+})
 
 // @desc    gets all table numbers
 // @route   GET /tables/:restaurantId/numbers
@@ -344,6 +366,6 @@ const getAllRestaurants = asyncHandler(async (req, res) => {
 
   export {
   addItem, addTable, getAllRestaurants, getCart, getOrders,
-  getPendingRequestsForAssistance, getTableNumbers, removeItem, requestAssistance, sendOrder, tableSelect, updateRequestsForAssistance
+  getPendingRequestsForAssistance, getTableNumbers, removeItem, requestAssistance, sendOrder, tableSelect, updateRequestsForAssistance, tableDeselect,
 };
 

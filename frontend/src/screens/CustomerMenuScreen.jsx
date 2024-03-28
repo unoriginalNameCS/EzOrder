@@ -39,6 +39,31 @@ const CustomerMenuScreen = () => {
     setItemModalOpen(false);
   };
 
+
+  // De-selects the table that the customer is at
+  const clearTable = async () => {
+    const response = await fetch(
+      `http://localhost:5000/tables/${customerInfo.restaurantId}/deselect`,
+      {
+        method: "PUT",
+        headers: {
+          "Content-type": "application/json",
+        },
+        body: JSON.stringify({
+          tableNumber: customerInfo.tableNumber,
+        }),
+      }
+    );
+    const data = await response.json();
+    if (response.status === 200) {
+      // successfully deselected the table
+      toast.success('Bye for now')
+    } else {
+      toast.error(data?.message);
+      console.log(data?.message);
+    }
+  }
+
   // remove customerInfo from localStorage and redirect back to home
   const handleExit = () => {
     // can add some logic checks if we want such as
@@ -49,6 +74,8 @@ const CustomerMenuScreen = () => {
           navigate()
         }  
       */
+    // de-select the table
+    clearTable();
     localStorage.removeItem('customerInfo')
     navigate("/")
   }
