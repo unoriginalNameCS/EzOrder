@@ -19,7 +19,20 @@ const CartScreen = () => {
     try {
       const url = `http://localhost:5000/tables/${restaurantId}/${tableId}/cart`;
       const { data } = await axios.get(url);
-      setCartItems(data);
+      
+      const cartItems = data.map((cartItem) => ({
+        _id: cartItem.menuItem._id,
+        name: cartItem.menuItem.name,
+        description: cartItem.menuItem.description,
+        price: cartItem.menuItem.price,
+        ingredients: cartItem.menuItem.ingredients,
+        notes: cartItem.notes,
+        quantity: cartItem.quantity,
+        imageUrl: cartItem.menuItem.imageUrl
+      }));
+      console.log(cartItems)
+      setCartItems(cartItems);
+
       console.log(data.length);
     } catch (error) {
       console.error('There was an error fetching the cart items:', error.response?.data || error.message);
@@ -42,16 +55,16 @@ const CartScreen = () => {
             <Typography>Your cart is empty.</Typography>
             ) : (
             cartItems.map((item) => (
-                <Box key={item._id} sx={{ mt: 2 }}>
-                <Typography>Name: {item.name}</Typography>
-                <Typography>Description: {item.description}</Typography>
-                <Typography>Price: {item.price}</Typography>
-                <Typography>Ingredients: {item.ingredients}</Typography>
-                <Typography>Notes: {item.notes}</Typography>
-                <Typography>Quantity: {item.quantity}</Typography>
-                <img src={item.imageUrl} alt={item.name} style={{ width: '100%', marginTop: '10px' }} />
-                </Box>
-            ))
+            <Box key={item._id} sx={{ mt: 2 }}>
+              <Typography>Name: {item.name}</Typography>
+              <Typography>Description: {item.description}</Typography>
+              <Typography>Price: {item.price}</Typography>
+              <Typography>Ingredients: {item.ingredients}</Typography>
+              <Typography>Notes: {item.notes}</Typography>
+              <Typography>Quantity: {item.quantity}</Typography>
+              <img src={item.imageUrl} alt={item.name} style={{ width: '100%', marginTop: '10px' }} />
+            </Box>
+          ))
             )}
         </Paper>
         </Grid>

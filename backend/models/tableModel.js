@@ -17,10 +17,16 @@ const tableSchema = mongoose.Schema(
       required: true
     },
     cart: [{
-      type: mongoose.Schema.Types.ObjectId,
-      ref: 'MenuItem',
+      menuItem: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'MenuItem',
+        required: true
+      },
       notes: String,
-      quantity: Number
+      quantity: {
+        type: Number,
+        default: 1 // Default quantity is 1
+      }
     }],
     order_list: [{
       type: mongoose.Schema.Types.ObjectId,
