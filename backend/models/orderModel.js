@@ -13,9 +13,7 @@ const orderSchema = mongoose.Schema(
     },
     items: [{
       type: mongoose.Schema.Types.ObjectId,
-      ref: 'MenuItem',
-      notes: String,
-      quantity: Number
+      ref: 'CartItem',
     }],
     time: {
       type: Date,

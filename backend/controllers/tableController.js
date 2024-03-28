@@ -4,6 +4,7 @@ import Order from '../models/orderModel.js';
 import Request from '../models/requestModel.js';
 import Restaurant from '../models/restaurantModel.js';
 import Table from '../models/tableModel.js';
+import CartItem from '../models/cartItemModel.js';
 
 // @desc    Sets a table status to occupied
 // @route   POST /tables/:restaurantId/select
@@ -130,10 +131,10 @@ const sendOrder = asyncHandler(async (req, res) => {
     throw new Error('Restaurant not found')
   }
 
-  // if (table.cart.length == 0) {
-  //   res.status(400);
-  //   throw new Error('Cannot send an order with an empty cart')
-  // }
+  if (table.cart.length == 0) {
+    res.status(400);
+    throw new Error('Cannot send an order with an empty cart')
+  }
 
   const order = await Order.create({
     restaurant: restaurantId,
@@ -223,17 +224,22 @@ const addItem = asyncHandler(async (req, res) => {
       throw new Error('Menu item not found');
     }
 
-    // Add the item to the cart
-    table.cart.push({
-      menuItem: itemId,
+    const cartItem = await CartItem.create({
+      menuItem,
       notes,
-      quantity,
-    });
+      quantity
+    })
 
-    // Save the updated table
-    await table.save();
+    if (cartItem) {
+      // Add the item to the cart
+      table.cart.push(cartItem);
 
-    res.status(200).json({ message: 'Item added to cart successfully' });
+      // Save the updated table
+      await table.save();
+
+      res.status(200).json({ message: 'Item added to cart successfully' });  
+    }
+
   } catch (error) {
     res.status(500).json({ error: error.message });
   }
@@ -272,21 +278,29 @@ const removeItem = asyncHandler(async (req, res) => {
 const getCart = asyncHandler(async (req, res) => {
   const { restaurantId, tableId } = req.params;
 
-  // Find the table by ID and restaurant
-  const table = await Table.findOne({ _id: tableId, restaurant: restaurantId });
+  // Find the table by ID and restaurant and populate the menuItem details
+  const table = await Table.findOne({ _id: tableId, restaurant: restaurantId }).populate({
+    path: 'cart', populate: {path: 'menuItem', model: 'MenuItem'}});
+
 
   if (!table) {
     res.status(404).json({ message: 'Table not found' });
     return;
   }
 
-  // Return the cart items
-  if (table.cart.length > 0) {
-    res.status(200).json(table.cart); 
+  const cart = table.cart.map(item => ({
+    menuItem: item.menuItem, // This will include all menuItem details
+    notes: item.notes,
+    quantity: item.quantity
+  }));
+
+  // Return the populated cart items
+  if (cart.length > 0) {
+    res.status(200).json(cart); 
   } else {
-    res.status(204).json(table.cart);  
+    res.status(204).json(cart);  
   }
-})
+});
 
 // @desc    Get the order_list for a specific table
 // @route   GET /tables/:restaurantId/:tableId/orders

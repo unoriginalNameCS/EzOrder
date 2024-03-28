@@ -4,6 +4,7 @@ import CloseIcon from '@mui/icons-material/Close';
 import CloudUploadIcon from '@mui/icons-material/CloudUpload';
 import { styled, useTheme } from '@mui/material/styles';
 import axios from 'axios';
+import { FaPlus, FaMinus } from 'react-icons/fa';
 
 const modalStyle = {
     position: 'absolute',
@@ -18,8 +19,21 @@ const modalStyle = {
 
 const CustomerItemModal = ({ open, handleClose, customerInfo, categoryId, itemId }) => {
   const [menuItem, setMenuItem] = useState({});
+  const [quantity, setQuantity] = useState(1);
+  const [notes, setNotes] = useState('');
   const tableId = customerInfo.tableId;
   const restaurantId = customerInfo.restaurantId;
+
+  const handleQuantityChange = (type) => {
+    setQuantity((prevQuantity) => {
+      if (type === 'decrease' && prevQuantity > 1) {
+        return prevQuantity - 1;
+      } else if (type === 'increase') {
+        return prevQuantity + 1;
+      }
+      return prevQuantity;
+    });
+  };
   
   const fetchMenuItem = useCallback(async () => {
     try {
@@ -48,13 +62,12 @@ const CustomerItemModal = ({ open, handleClose, customerInfo, categoryId, itemId
     e.preventDefault();
 
     try {
-      console.log('Sending the following data:');
-      console.log(itemId);
+      console.log(notes);
       const response = await axios.post(
         `http://localhost:5000/tables/${restaurantId}/${tableId}/${itemId}/addItem`,
         {
-          notes: "",
-          quantity: 1
+          notes: notes,
+          quantity: quantity
         }
       );
       console.log('Item added:', response.data); 
@@ -75,10 +88,10 @@ const CustomerItemModal = ({ open, handleClose, customerInfo, categoryId, itemId
   aria-describedby="modal-modal-description"
 >
   <Box sx={modalStyle}>
-    <Typography id="modal-modal-title" variant="h4" component="h2" style={{ fontWeight: 'bold' }}>
+    <Typography id="modal-modal-title" variant="h6" component="h2" style={{ fontWeight: 'bold' }}>
       {menuItem.name}
     </Typography>
-    <img src={menuItem.imageUrl} alt={menuItem.name} style={{ width: '100%', marginTop: '10px' }} />
+    <img src={menuItem.imageUrl} alt={menuItem.name} style={{ width: '50%', marginTop: '10px' }} />
     <Box sx={{ mt: 2, p: 2, border: '1px solid #ccc', borderRadius: '4px' }}>
       <Typography id="modal-modal-description">
         {menuItem.description}
@@ -90,11 +103,29 @@ const CustomerItemModal = ({ open, handleClose, customerInfo, categoryId, itemId
     <Typography sx={{ mt: 2 }}>
       Ingredients: {menuItem.ingredients}
     </Typography>
+    <TextField
+      label="Notes"
+      multiline
+      rows={4}
+      value={notes}
+      onChange={(e) => setNotes(e.target.value)}
+      variant="outlined"
+      fullWidth
+      sx={{ mt: 2 }}
+    />
+    <Box sx={{ display: 'flex', alignItems: 'center', mt: 2 }}>
+      <IconButton onClick={() => handleQuantityChange('decrease')}>
+        <FaMinus />
+      </IconButton>
+      <Typography sx={{ mx: 2 }}>{quantity}</Typography>
+      <IconButton onClick={() => handleQuantityChange('increase')}>
+        <FaPlus />
+      </IconButton>
+    </Box>
     <Button
       variant="contained"
       onClick={handleAddToCart}
-      sx={{ mt: 2 }}
-    >
+      sx={{ mt: 2 }}>
       Add to Cart
     </Button>
     <IconButton
