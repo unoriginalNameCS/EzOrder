@@ -9,12 +9,14 @@ import {
     requestAssistance,
     sendOrder,
     tableSelect,
-    updateRequestsForAssistance
+    updateRequestsForAssistance,
+    tableDeselect,
 } from '../controllers/tableController.js';
 
 const router = express.Router();
 
 router.put('/:restaurantId/select', tableSelect);
+router.put('/:restaurantId/deselect', tableDeselect);
 router.get('/:restaurantId/numbers', getTableNumbers);
 router.post('/:restaurantId/add', addTable);
 router.post('/:restaurantId/:tableId/assistance', requestAssistance);

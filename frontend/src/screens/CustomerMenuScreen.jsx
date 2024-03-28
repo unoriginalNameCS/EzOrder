@@ -17,6 +17,7 @@ const CustomerMenuScreen = () => {
   const [menuCategories, setMenuCategories] = useState([]);
   const [selectedCategoryId, setSelectedCategoryId] = useState('');
   const [itemModalOpen, setItemModalOpen] = useState(false); // State for controlling the modal
+  const navigate = useNavigate();
   
   const [selectedItemId, setSelectedItemId] = useState('');
 
@@ -37,6 +38,47 @@ const CustomerMenuScreen = () => {
   const handleCloseItemModal = () => {
     setItemModalOpen(false);
   };
+
+
+  // De-selects the table that the customer is at
+  const clearTable = async () => {
+    const response = await fetch(
+      `http://localhost:5000/tables/${customerInfo.restaurantId}/deselect`,
+      {
+        method: "PUT",
+        headers: {
+          "Content-type": "application/json",
+        },
+        body: JSON.stringify({
+          tableNumber: customerInfo.tableNumber,
+        }),
+      }
+    );
+    const data = await response.json();
+    if (response.status === 200) {
+      // successfully deselected the table
+      toast.success('Bye for now')
+    } else {
+      toast.error(data?.message);
+      console.log(data?.message);
+    }
+  }
+
+  // remove customerInfo from localStorage and redirect back to home
+  const handleExit = () => {
+    // can add some logic checks if we want such as
+    /* if hasNotRequestedBill & hasNotOrdered 
+        toast.error(Request the bill first) 
+        else {
+          removeItem
+          navigate()
+        }  
+      */
+    // de-select the table
+    clearTable();
+    localStorage.removeItem('customerInfo')
+    navigate("/")
+  }
 
   const fetchMenuCategories = async () => {
     try {
@@ -177,6 +219,13 @@ const CustomerMenuScreen = () => {
           sx={{margin: 1}}
           onClick={() => requestBill()} style={{ width: '25%', padding: 10}}>
           Request Bill
+        </Button>}
+        {<Button 
+          variant='contained'
+          color='primary'
+          sx={{margin: 1}}
+          onClick={() => handleExit()} style={{ width: '25%', padding: 10}}>
+          Exit
         </Button>}
       </Grid>    
       {/* Render the modal */}
