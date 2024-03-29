@@ -73,9 +73,7 @@ const getTableNumbers = asyncHandler(async (req, res) => {
 // @desc  add table
 // @route  POST /tables/:restaurantId/add
 // @access Public
-const addTable = asyncHandler(async (req, res) => {
-  const { number } = req.body;
-  
+const addTable = asyncHandler(async (req, res) => {  
   // search db for restaurant
   const { restaurantId } = req.params;
   const restaurant = await Restaurant.findOne( { _id: restaurantId });
@@ -85,6 +83,9 @@ const addTable = asyncHandler(async (req, res) => {
       `Restaurant don't exist.`
     );
   }
+  // Find last table based on number
+  const lastTable = await Table.findOne({ restaurant : restaurantId }).sort({number: -1})
+  const number = lastTable ? lastTable.number + 1 : 1;
 
   const table = await Table.create({
     number,
@@ -349,6 +350,29 @@ const getOrders = asyncHandler(async (req, res) => {
   
 });
 
+// @desc    Get the order_list for a specific table
+// @route   GET /tables/:restaurantId/tables
+// @access  Public
+const getTables = asyncHandler(async (req, res) => {
+  const { restaurantId } = req.params;
+  // Find the table by ID and restaurant
+  const tables = await Table.find({ restaurant: restaurantId });
+  console.log(tables);
+
+  if (!tables) {
+    res.status(404).json({ message: 'Tables not found' });
+    return;
+  }
+
+  // Return the order_list
+  if (tables.length > 0) {
+    res.status(200).json(tables);  
+  } else {
+    // Return empty list
+    res.status(204).json(tables);   
+  }
+});
+
 // @desc  Get a list of all restaurants
 // @route GET /tables/restaurants
 // @access Public
@@ -368,6 +392,7 @@ const getAllRestaurants = asyncHandler(async (req, res) => {
 
   export {
   addItem, addTable, getAllRestaurants, getCart, getOrders,
-  getPendingRequestsForAssistance, getTableNumbers, removeItem, requestAssistance, sendOrder, tableSelect, updateRequestsForAssistance, tableDeselect,
+  getPendingRequestsForAssistance, getTableNumbers, removeItem, 
+  requestAssistance, sendOrder, tableSelect, updateRequestsForAssistance, tableDeselect, getTables
 };
 
