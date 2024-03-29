@@ -31,6 +31,7 @@ const CartScreen = () => {
 
   const handleRemove = async (cartItemId) => {
     try {
+      console.log(cartItemId);
       await axios.delete(`http://localhost:5000/tables/${restaurantId}/${tableId}/${cartItemId}/removeItem`);
       refreshCartItems();
     } catch (error) {
@@ -46,19 +47,19 @@ const CartScreen = () => {
     fetchCartItems();
   }, []);
 
-  useEffect(() => {
-    fetchCartItems();
-  }, [fetchCartItems()]);
-
   return (
     <div style={{ display: 'flex' }}>
       <SideNav />
-      <Grid container style={{ flexGrow: 1, padding: theme.spacing(3), marginLeft: '200px' }}>
+      <Grid container style={{ flexGrow: 1, padding: theme.spacing(3), marginLeft: '200px' }}> 
         <Typography variant="h6" component="h2">
           Cart Items
         </Typography>
         {cartItems.length === 0 ? (
-          <Typography>Your cart is empty.</Typography>
+          <Grid item xs={12}>
+            <Typography>
+              Your cart is empty.
+            </Typography>
+          </Grid>
         ) : (
           cartItems.map((item) => (
             <Grid item xs={12} key={item._id} style={{ padding: theme.spacing(1) }}>

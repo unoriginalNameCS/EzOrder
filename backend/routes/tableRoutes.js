@@ -21,7 +21,7 @@ router.get('/:restaurantId/numbers', getTableNumbers);
 router.post('/:restaurantId/add', addTable);
 router.post('/:restaurantId/:tableId/assistance', requestAssistance);
 router.post('/:restaurantId/:tableId/:itemId/addItem', addItem);
-router.delete('/:restaurantId/:tableId/:itemId/removeItem', removeItem);
+router.delete('/:restaurantId/:tableId/:cartItemId/removeItem', removeItem);
 router.get('/:restaurantId/:tableId/cart', getCart);
 router.get('/:restaurantId/:tableId/orders', getOrders);
 router.get('/:restaurantId/assistance', getPendingRequestsForAssistance)
