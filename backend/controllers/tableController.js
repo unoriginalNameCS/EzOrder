@@ -239,30 +239,48 @@ const addItem = asyncHandler(async (req, res) => {
       throw new Error('Table not found');
     }
 
-    // Assuming you have a MenuItem model and want to add it to the cart
-    const menuItem = await MenuItem.findById(itemId);
+    // Check if the item already exists in the cart
+    // const existingCartItem = table.cart.find(item => String(item) === String(itemId) && item.notes === notes);
+    const tableCart = await Table.findOne({ _id: tableId, restaurant: restaurantId }).populate('cart');
 
-    if (!menuItem) {
-      res.status(404);
-      throw new Error('Menu item not found');
+    var existingCartItem = "";
+    for (const cartItem of tableCart.cart) {
+      console.log(cartItem)
+      if (String(cartItem.menuItem) == String(itemId) && cartItem.notes == notes) {
+        var existingCartItem = cartItem;
+      }
     }
 
-    const cartItem = await CartItem.create({
-      menuItem,
-      notes,
-      quantity
-    })
+    if (existingCartItem) {
+      // If the item already exists, update its quantity
+      existingCartItem.quantity += quantity;
+      await existingCartItem.save();
+      res.status(200).json({ message: 'Quantity updated successfully' });
+    } else {
+      // Assuming you have a MenuItem model and want to add it to the cart
+      const menuItem = await MenuItem.findById(itemId);
 
-    if (cartItem) {
-      // Add the item to the cart
-      table.cart.push(cartItem);
+      if (!menuItem) {
+        res.status(404);
+        throw new Error('Menu item not found');
+      }
 
-      // Save the updated table
-      await table.save();
+      const cartItem = await CartItem.create({
+        menuItem,
+        notes,
+        quantity
+      });
 
-      res.status(200).json({ message: 'Item added to cart successfully' });  
+      if (cartItem) {
+        // Add the item to the cart
+        table.cart.push(cartItem);
+
+        // Save the updated table
+        await table.save();
+
+        res.status(200).json({ message: 'Item added to cart successfully' });  
+      }
     }
-
   } catch (error) {
     res.status(500).json({ error: error.message });
   }

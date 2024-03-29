@@ -56,7 +56,7 @@ const CartScreen = () => {
     fetchCartItems();
   }, []);
 
-  const total_price = cartItems.reduce((total, item) => total + item.menuItem.price * item.quantity, 0).toFixed(2);
+  const total_price = cartItems ? cartItems.reduce((total, item) => total + item.menuItem.price * item.quantity, 0).toFixed(2) : 0;
 
   return (
     <div style={{ display: 'flex' }}>
@@ -92,7 +92,7 @@ const CartScreen = () => {
         {cartItems.length > 0 && (
           <Grid item xs={12} style={{ padding: theme.spacing(1) }}>
             <Button variant="contained" onClick={handleSendOrder}>
-              Checkout - {total_price}
+              Checkout - ${total_price}
             </Button>
           </Grid>
         )}
