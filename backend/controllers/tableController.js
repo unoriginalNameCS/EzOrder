@@ -240,9 +240,17 @@ const addItem = asyncHandler(async (req, res) => {
     }
 
     // Check if the item already exists in the cart
-    const existingCartItem = table.cart.findOne(item => String(item.menuItem) === String(itemId) && item.notes === notes);
-    console.log(existingCartItem)
-    console.log("hi")
+    // const existingCartItem = table.cart.find(item => String(item) === String(itemId) && item.notes === notes);
+    const tableCart = await Table.findOne({ _id: tableId, restaurant: restaurantId }).populate('cart');
+
+    var existingCartItem = "";
+    for (const cartItem of tableCart.cart) {
+      console.log(cartItem)
+      if (String(cartItem.menuItem) == String(itemId) && cartItem.notes == notes) {
+        var existingCartItem = cartItem;
+      }
+    }
+
     if (existingCartItem) {
       // If the item already exists, update its quantity
       existingCartItem.quantity += quantity;
