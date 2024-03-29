@@ -5,17 +5,35 @@ import CloudUploadIcon from '@mui/icons-material/CloudUpload';
 import { styled, useTheme } from '@mui/material/styles';
 import axios from 'axios';
 import { FaPlus, FaMinus } from 'react-icons/fa';
+import { BiCart } from "react-icons/bi";
+
+
 
 const modalStyle = {
-    position: 'absolute',
-    top: '50%',
-    left: '50%',
-    transform: 'translate(-50%, -50%)',
-    width: 400,
-    bgcolor: 'background.paper',
-    boxShadow: 24,
-    p: 4,
-  };
+  position: 'absolute',
+  top: '50%',
+  left: '50%',
+  transform: 'translate(-50%, -50%)',
+  width: 400,
+  bgcolor: 'background.paper',
+  boxShadow: 24,
+  p: 4,
+};
+
+const Ingredients = styled('div')(({ theme }) => ({
+  display: 'flex',
+  gap: theme.spacing(1), 
+  marginTop: theme.spacing(1),
+}));
+
+const Tag = styled(Typography)(({ theme }) => ({
+  color: 'white',
+  backgroundColor: '#83AE0B',
+  borderRadius: theme.shape.borderRadius,
+  borderColor: '#83AE0B',
+  padding: theme.spacing(0.5, 1),
+  fontSize: '0.5rem',
+}));
 
 const CustomerItemModal = ({ open, handleClose, customerInfo, categoryId, itemId }) => {
   const [menuItem, setMenuItem] = useState({});
@@ -50,12 +68,12 @@ const CustomerItemModal = ({ open, handleClose, customerInfo, categoryId, itemId
   }, [restaurantId, tableId, categoryId, itemId]);
 
   useEffect(() => {
-    fetchMenuItem();
-  }, []);
-
-  useEffect(() => {
-    fetchMenuItem();
-  }, [fetchMenuItem]);
+    if (categoryId && itemId) {
+      setQuantity(1);
+      setNotes('')
+      fetchMenuItem();
+    }
+  }, [categoryId, itemId]);
 
   const handleAddToCart = async (e) => {
 
@@ -88,25 +106,26 @@ const CustomerItemModal = ({ open, handleClose, customerInfo, categoryId, itemId
   aria-describedby="modal-modal-description"
 >
   <Box sx={modalStyle}>
-    <Typography id="modal-modal-title" variant="h6" component="h2" style={{ fontWeight: 'bold' }}>
-      {menuItem.name}
-    </Typography>
-    <img src={menuItem.imageUrl} alt={menuItem.name} style={{ width: '50%', marginTop: '10px' }} />
-    <Box sx={{ mt: 2, p: 2, border: '1px solid #ccc', borderRadius: '4px' }}>
-      <Typography id="modal-modal-description">
-        {menuItem.description}
+  <Box sx={{ textAlign: 'center' }}>
+      <Typography id="modal-modal-title" variant="h6" component="h2" style={{ fontWeight: 'bold' }}>
+        {menuItem.name}
       </Typography>
+      <img src={menuItem.imageUrl} alt={menuItem.name} style={{ width: '100%', marginTop: '10px' }} />
     </Box>
-    <Typography sx={{ mt: 2, fontWeight: 'bold' }}>
-      Price: {menuItem.price}
+    <Typography id="modal-modal-description" variant="body2" sx={{ fontSize: '12px' }}>
+      {menuItem.description}
     </Typography>
-    <Typography sx={{ mt: 2 }}>
-      Ingredients: {menuItem.ingredients}
-    </Typography>
+    {menuItem && menuItem.ingredients && (
+      <Ingredients>
+        {menuItem.ingredients.map((tag, index) => (
+          <Tag key={index}>{tag}</Tag>
+        ))}
+      </Ingredients>  
+    )}
     <TextField
       label="Notes"
       multiline
-      rows={4}
+      rows={2}
       value={notes}
       onChange={(e) => setNotes(e.target.value)}
       variant="outlined"
@@ -122,24 +141,16 @@ const CustomerItemModal = ({ open, handleClose, customerInfo, categoryId, itemId
         <FaPlus />
       </IconButton>
     </Box>
-    <Button
-      variant="contained"
-      onClick={handleAddToCart}
-      sx={{ mt: 2 }}>
-      Add to Cart
-    </Button>
-    <IconButton
-      aria-label="close"
-      onClick={handleClose}
-      sx={{
-        position: 'absolute',
-        right: 8,
-        top: 8,
-        color: (theme) => theme.palette.grey[500],
-      }}
-    >
-      <CloseIcon />
-    </IconButton>
+    <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', mt: 2 }}>
+      <Button variant="contained" onClick={handleClose} sx={{ display: 'flex', alignItems: 'center' }}>
+        <CloseIcon fontSize="small" sx={{ marginRight: '0.5rem' }}/>
+        Close
+      </Button>
+      <Button variant="contained" onClick={handleAddToCart} sx={{ display: 'flex', alignItems: 'center' }}>
+        <BiCart sx={{ marginRight: '0.5rem' }}/>
+        Add to Cart - ${(menuItem.price * quantity).toFixed(2)}
+      </Button>
+    </Box>
   </Box>
 </Modal>
   );

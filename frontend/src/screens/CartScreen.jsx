@@ -5,7 +5,7 @@ import SideNav from '../components/SideNav';
 import Grid from '@mui/material/Grid';
 import { useTheme } from '@mui/material/styles';
 import { FaMinus } from 'react-icons/fa';
-
+import CartCard from '../components/CartCard';
 
 
 const CartScreen = () => {
@@ -44,35 +44,39 @@ const CartScreen = () => {
 
   useEffect(() => {
     fetchCartItems();
-  }, [fetchCartItems]);
+  }, []);
+
+  useEffect(() => {
+    fetchCartItems();
+  }, [fetchCartItems()]);
 
   return (
     <div style={{ display: 'flex' }}>
       <SideNav />
       <Grid container style={{ flexGrow: 1, padding: theme.spacing(3), marginLeft: '200px' }}>
-        <Paper elevation={3} sx={{ p: 4 }}>
-          <Typography variant="h6" component="h2">
-            Cart Items
-          </Typography>
-          {cartItems.length === 0 ? (
-            <Typography>Your cart is empty.</Typography>
-          ) : (
-            cartItems.map((item) => (
-              <Box key={item._id} sx={{ mt: 2, position: 'relative' }}>
-                <IconButton onClick={() => handleRemove(item._id)} style={{ position: 'absolute', top: 0, right: 0 }}>
-                  <FaMinus />
-                </IconButton>
-                <Typography>Name: {item.menuItem.name}</Typography>
-                <Typography>Description: {item.menuItem.description}</Typography>
-                <Typography>Price: {item.menuItem.price}</Typography>
-                <Typography>Ingredients: {item.menuItem.ingredients}</Typography>
-                <Typography>Notes: {item.notes}</Typography>
-                <Typography>Quantity: {item.quantity}</Typography>
-                <img src={item.menuItem.imageUrl} alt={item.menuItem.name} style={{ width: '50%', marginTop: '10px' }} />
-              </Box>
-            ))
-          )}
-        </Paper>
+        <Typography variant="h6" component="h2">
+          Cart Items
+        </Typography>
+        {cartItems.length === 0 ? (
+          <Typography>Your cart is empty.</Typography>
+        ) : (
+          cartItems.map((item) => (
+            <Grid item xs={12} key={item._id} style={{ padding: theme.spacing(1) }}>
+              <CartCard
+                title={item.menuItem.name}
+                description={item.menuItem.description}
+                price={(item.menuItem.price * item.quantity).toFixed(2)}
+                imageUrl={item.menuItem.imageUrl || 'https://via.placeholder.com/140'} 
+                tags={item.menuItem.ingredients}
+                notes={item.notes}
+                quantity={item.quantity}
+              />
+              <IconButton onClick={() => handleRemove(item._id)}>
+                <FaMinus/>
+              </IconButton>
+            </Grid>
+          ))
+        )}
       </Grid>
     </div>
   );
