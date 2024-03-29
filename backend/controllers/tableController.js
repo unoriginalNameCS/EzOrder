@@ -283,7 +283,8 @@ const removeItem = asyncHandler(async (req, res) => {
     }
 
     // Remove the item from the cart based on cart_item_id
-    table.cart = table.cart.filter((cartItem) => cartItem._id.toString() !== cartItemId);
+
+    table.cart = table.cart.filter((cartItem) => cartItem._id.toString() != cartItemId);
 
     // Save the updated table
     await table.save();
@@ -311,6 +312,7 @@ const getCart = asyncHandler(async (req, res) => {
   }
 
   const cart = table.cart.map(item => ({
+    _id: item._id,
     menuItem: item.menuItem, // This will include all menuItem details
     notes: item.notes,
     quantity: item.quantity

@@ -9,12 +9,9 @@ const getOrders = asyncHandler(async (req, res) => {
 
   const orders = await Order.find({ restaurant : restaurantId }).sort('time');
   if (orders) {
-    res.status(201).json({
-      orders
-    });
+    res.status(200).json(orders);
   } else {
-    res.status(404);
-    throw new Error('No Orders')
+    res.status(204).json(orders);
   }
 })
 
@@ -67,7 +64,7 @@ const viewOrderNotes = asyncHandler(async (req, res) => {
     res.status(404);
     throw new Error('No order found');
   }
-  res.status(201).json(order.notes);
+  res.status(200).json(order.notes);
 })
 
 // @desc    gets all completed orders
@@ -92,10 +89,9 @@ const getPreparingOrders = asyncHandler(async (req, res) => {
 
   const preparingOrders = await Order.find({ restaurant : restaurantId, state: "preparing" } ).sort('time');
   if (preparingOrders) {
-    res.status(201).json(preparingOrders);
+    res.status(200).json(preparingOrders);
   } else {
-    res.status(404);
-    throw new Error('No Orders Being Prepared')
+    res.status(204).json(preparingOrders);
   }
 })
 
@@ -107,10 +103,9 @@ const getPendingOrders = asyncHandler(async (req, res) => {
 
   const pendingOrders = await Order.find({ restaurant : restaurantId, state: "pending" }).sort('time');
   if (pendingOrders) {
-    res.status(201).json(pendingOrders);
+    res.status(200).json(pendingOrders);
   } else {
-    res.status(404);
-    throw new Error('No Orders Are Pending')
+    res.status(204).json(pendingOrders);
   }
 })
 
