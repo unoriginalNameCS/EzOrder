@@ -89,7 +89,8 @@ const SideNav = () => {
           <span style={textStyle}>STAFF</span>
         </MenuItem>}
         {!isCustomer && 
-        <MenuItem component={<Link to="/settings" />}>
+        <MenuItem component={<Link to="/tableEdits" />}>
+          {/* change this to settings and make a menu for settings */}
           <FiSettings style={iconStyle}/>
           <span style={textStyle}>SETTINGS</span>
         </MenuItem>}

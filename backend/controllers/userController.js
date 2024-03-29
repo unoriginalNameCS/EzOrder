@@ -113,23 +113,21 @@ const getUserProfile = asyncHandler(async (req, res) => {
 });
 
 // @desc    Get user details
-// @route   GET /api/users/profiles
+// @route   GET /api/users/:/restaurantId/profiles
 // @access  Private
 // since @access is Private, req body contains restaurant._Id from protect method in userRoutes.js
 const getUserProfiles = asyncHandler(async (req, res) => {
-  console.log(req.headers);
   // const restaurantId = req.params.restaurantId
   const { restaurantid } = req.headers;
-  console.log(restaurantid);
   try {
     const users = await User.find({ restaurant: restaurantid });
-    console.log(users);
     if (users.length > 0) {
       // Extract only the desired fields (_id, name, and email)
       const extractedUsers = users.map((user) => ({
         id: user._id,
         name: user.name,
         email: user.email,
+        role: user.role,
       }));
 
       res.status(200).json(extractedUsers);
@@ -196,6 +194,8 @@ const registerStaff = asyncHandler(async (req, res) => {
       res.status(400)
       throw new Error(`Invalid role, roles can only be 'wait staff' or 'kitchen staff, when registering staff.`)
     }
+
+    console.log('creating staff');
 
     // create staff user
     const user = await User.create({
