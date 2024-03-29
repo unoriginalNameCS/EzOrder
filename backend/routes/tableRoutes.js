@@ -11,7 +11,10 @@ import {
     tableSelect,
     updateRequestsForAssistance,
     tableDeselect,
+    getTables
 } from '../controllers/tableController.js';
+import { protect } from '../middleware/authMiddleware.js';
+
 
 const router = express.Router();
 
@@ -19,6 +22,7 @@ router.put('/:restaurantId/select', tableSelect);
 router.put('/:restaurantId/deselect', tableDeselect);
 router.get('/:restaurantId/numbers', getTableNumbers);
 router.post('/:restaurantId/add', addTable);
+router.get('/:restaurantId/tables', getTables)
 router.post('/:restaurantId/:tableId/assistance', requestAssistance);
 router.post('/:restaurantId/:tableId/:itemId/addItem', addItem);
 router.delete('/:restaurantId/:tableId/:cartItemId/removeItem', removeItem);

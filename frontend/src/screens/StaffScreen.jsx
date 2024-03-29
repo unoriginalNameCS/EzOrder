@@ -88,7 +88,6 @@ export default function StaffScrren() {
           setRole('');
           setPassword('');
           setOpen1(false);
-          navigate('/staff');
         }
       });
   };
@@ -122,8 +121,8 @@ export default function StaffScrren() {
           setOpen2(false);
         }
       });
-    navigate(0);
   };
+  
   useEffect(() => {
     axios
       .get(`http://localhost:5000/api/users/profiles`, {
@@ -138,6 +137,22 @@ export default function StaffScrren() {
         setRows(res.data);
       });
   }, []);
+
+  useEffect(() => {
+    axios
+      .get(`http://localhost:5000/api/users/profiles`, {
+        headers: {
+          _id: JSON.parse(localStorage.getItem('userInfo'))._id,
+          Authorization: JSON.parse(localStorage.getItem('userInfo')).token,
+          restaurantId,
+        },
+      })
+      .then((res) => {
+        console.log(res);
+        setRows(res.data);
+      });
+  }, [open1, open2]);
+
   return (
     <>
       <SideNav />
@@ -153,6 +168,7 @@ export default function StaffScrren() {
                   <TableCell>ID</TableCell>
                   <TableCell align='right'>Name</TableCell>
                   <TableCell align='right'>Email&nbsp;</TableCell>
+                  <TableCell align='right'>Role&nbsp;</TableCell>
                 </TableRow>
               </TableHead>
               <TableBody>
@@ -166,6 +182,7 @@ export default function StaffScrren() {
                     </TableCell>
                     <TableCell align='right'>{row.name}</TableCell>
                     <TableCell align='right'>{row.email}</TableCell>
+                    <TableCell align='right'>{row.role}</TableCell>
                     <TableCell align='right'></TableCell>
                   </TableRow>
                 ))}
