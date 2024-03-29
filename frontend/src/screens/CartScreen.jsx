@@ -1,5 +1,5 @@
 import React, { useEffect, useCallback, useState } from 'react';
-import { Box, Typography, Paper, Container, IconButton } from '@mui/material';
+import { Box, Typography, Paper, Container, Button, IconButton } from '@mui/material';
 import axios from 'axios';
 import SideNav from '../components/SideNav';
 import Grid from '@mui/material/Grid';
@@ -36,6 +36,15 @@ const CartScreen = () => {
       refreshCartItems();
     } catch (error) {
       console.error('Error removing item:', error.response?.data || error.message);
+    }
+  };
+
+  const handleSendOrder = async () => {
+    try {
+      await axios.post(`http://localhost:5000/tables/${restaurantId}/${tableId}/sendOrder`);
+      refreshCartItems();
+    } catch (error) {
+      console.error('Could not send order', error.response?.data || error.message);
     }
   };
 
@@ -77,6 +86,13 @@ const CartScreen = () => {
               </IconButton>
             </Grid>
           ))
+        )}
+        {cartItems.length > 0 && (
+          <Grid item xs={12} style={{ padding: theme.spacing(1) }}>
+            <Button variant="contained" onClick={handleSendOrder}>
+              Send Order
+            </Button>
+          </Grid>
         )}
       </Grid>
     </div>
