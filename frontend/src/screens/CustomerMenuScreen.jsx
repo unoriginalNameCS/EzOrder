@@ -167,15 +167,6 @@ const CustomerMenuScreen = () => {
     }
   };
 
-  // const handleItemClick = (itemId) => {
-  //   setSelectedItemId(itemId);
-  //   setIsModalOpen(true); // Open the modal
-  // };
-  // const onItemSelected = (itemId) => {
-  //   setSelectedItemId(itemId);
-  //   fetchMenuItem(itemId);
-  // };
-
   useEffect(() => {
     fetchMenuCategories();
   }, []);
