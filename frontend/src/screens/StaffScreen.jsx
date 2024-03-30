@@ -13,11 +13,12 @@ import TableContainer from '@mui/material/TableContainer';
 import TableHead from '@mui/material/TableHead';
 import TableRow from '@mui/material/TableRow';
 import Paper from '@mui/material/Paper';
-import EditButton from '../components/EditButton';
 import SideNav from '../components/SideNav';
 import { Grid } from '@mui/material';
 import { useTheme } from '@mui/material';
 import MenuItem from '@mui/material/MenuItem';
+import EditModal from '../components/EditModal';
+
 const style = {
   position: 'absolute',
   top: '50%',
@@ -48,17 +49,12 @@ function getCookie(name) {
 export default function StaffScrren() {
   const [rows, setRows] = useState([]);
   const [open1, setOpen1] = useState(false);
-  const [open2, setOpen2] = useState(false);
-  const [id, setId] = useState('');
   const [name, setName] = useState('');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [role, setRole] = useState('');
   const handleOpen1 = () => setOpen1(true);
   const handleClose1 = () => setOpen1(false);
-  const handleOpen2 = () => setOpen2(true);
-  const handleClose2 = () => setOpen2(false);
-  const navigate = useNavigate();
   const restaurantId = JSON.parse(localStorage.getItem('userInfo')).restaurant;
   const theme = useTheme();
   const handleCreate = () => {
@@ -91,38 +87,6 @@ export default function StaffScrren() {
         }
       });
   };
-  const handleEdit = (id) => {
-    console.log(id);
-    axios
-      .put(
-        'http://localhost:5000/api/users/profile',
-        {
-          id,
-          name,
-          password,
-          email,
-        },
-        {
-          headers: {
-            _id: JSON.parse(localStorage.getItem('userInfo'))._id,
-            Authorization: JSON.parse(localStorage.getItem('userInfo')).token,
-            restaurantId,
-          },
-        }
-      )
-      .then((res) => {
-        console.log(res.status);
-        if (res.status === 200) {
-          console.log('success');
-          setEmail('');
-          setName('');
-          setRole('');
-          setPassword('');
-          setOpen2(false);
-        }
-      });
-  };
-  
   useEffect(() => {
     axios
       .get(`http://localhost:5000/api/users/profiles`, {
@@ -151,7 +115,7 @@ export default function StaffScrren() {
         console.log(res);
         setRows(res.data);
       });
-  }, [open1, open2]);
+  }, [open1]);
 
   return (
     <>
@@ -169,6 +133,7 @@ export default function StaffScrren() {
                   <TableCell align='right'>Name</TableCell>
                   <TableCell align='right'>Email&nbsp;</TableCell>
                   <TableCell align='right'>Role&nbsp;</TableCell>
+                  <TableCell align='right'>Edit&nbsp;</TableCell>
                 </TableRow>
               </TableHead>
               <TableBody>
@@ -183,6 +148,9 @@ export default function StaffScrren() {
                     <TableCell align='right'>{row.name}</TableCell>
                     <TableCell align='right'>{row.email}</TableCell>
                     <TableCell align='right'>{row.role}</TableCell>
+                    <TableCell align='right'>
+                      <EditModal id={row.id}></EditModal>
+                    </TableCell>
                     <TableCell align='right'></TableCell>
                   </TableRow>
                 ))}
@@ -234,13 +202,13 @@ export default function StaffScrren() {
                 value={role}
                 sx={{ margin: 1 }}
               >
-                <MenuItem 
+                <MenuItem
                   value='kitchen staff'
                   onClick={() => setRole('kitchen staff')}
                 >
                   Kitchen Staff
                 </MenuItem>
-                <MenuItem 
+                <MenuItem
                   value='wait staff'
                   onClick={() => setRole('wait staff')}
                 >
@@ -255,54 +223,6 @@ export default function StaffScrren() {
               >
                 Create
               </Button>
-            </Box>
-          </Modal>
-          <Button variant='text' color='primary' onClick={handleOpen2}>
-            Edit
-          </Button>{' '}
-          <Modal
-            open={open2}
-            onClose={handleClose2}
-            aria-labelledby='modal-modal-title'
-            aria-describedby='modal-modal-description'
-          >
-            <Box sx={style}>
-              <Typography variant='h6' color='initial' sx={{ margin: 1 }}>
-                Edit Staff
-              </Typography>
-              <TextField
-                required
-                id='outlined-required'
-                label='id'
-                value={id}
-                onChange={(e) => setId(e.target.value)}
-                sx={{ margin: 1 }}
-              />
-              <TextField
-                required
-                id='outlined-required'
-                label='name'
-                value={name}
-                onChange={(e) => setName(e.target.value)}
-                sx={{ margin: 1 }}
-              />
-              <TextField
-                required
-                id='outlined-required'
-                label='email'
-                value={email}
-                onChange={(e) => setEmail(e.target.value)}
-                sx={{ margin: 1 }}
-              />
-              <TextField
-                required
-                id='outlined-required'
-                label='password'
-                value={password}
-                onChange={(e) => setPassword(e.target.value)}
-                sx={{ margin: 1 }}
-              />
-              <EditButton handleEdit={handleEdit} id={id}></EditButton>
             </Box>
           </Modal>
         </div>
