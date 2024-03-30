@@ -11,7 +11,8 @@ import {
     tableSelect,
     updateRequestsForAssistance,
     tableDeselect,
-    getTables
+    getTables,
+    getOrdersItems
 } from '../controllers/tableController.js';
 import { protect } from '../middleware/authMiddleware.js';
 
@@ -28,6 +29,7 @@ router.post('/:restaurantId/:tableId/:itemId/addItem', addItem);
 router.delete('/:restaurantId/:tableId/:cartItemId/removeItem', removeItem);
 router.get('/:restaurantId/:tableId/cart', getCart);
 router.get('/:restaurantId/:tableId/orders', getOrders);
+router.get('/:restaurantId/:tableId/orders/items', getOrdersItems);
 router.get('/:restaurantId/assistance', getPendingRequestsForAssistance)
 router.patch('/assistance', updateRequestsForAssistance)
 router.get('/restaurants', getAllRestaurants);

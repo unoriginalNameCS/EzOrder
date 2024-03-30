@@ -41,7 +41,9 @@ const CartScreen = () => {
 
   const handleSendOrder = async () => {
     try {
-      await axios.post(`http://localhost:5000/tables/${restaurantId}/${tableId}/sendOrder`);
+      await axios.post(`http://localhost:5000/tables/${restaurantId}/${tableId}/sendOrder`, {
+        
+      });
       refreshCartItems();
     } catch (error) {
       console.error('Could not send order', error.response?.data || error.message);

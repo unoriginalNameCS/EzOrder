@@ -5,7 +5,6 @@ import Request from '../models/requestModel.js';
 import Restaurant from '../models/restaurantModel.js';
 import Table from '../models/tableModel.js';
 import CartItem from '../models/cartItemModel.js';
-
 // @desc    Sets a table status to occupied
 // @route   PUT /tables/:restaurantId/select
 // @access  Public
@@ -167,13 +166,13 @@ const sendOrder = asyncHandler(async (req, res) => {
     notes,
     state: "pending"
   });
-
   if (order) {
-
     // Empties the cart
     table.cart = [];
+    // Add cart to order
+    table.order_list.push(order)
     await table.save();
-
+    
     res.status(201).json(order);
   } else {
       res.status(400);
@@ -351,7 +350,7 @@ const getCart = asyncHandler(async (req, res) => {
 const getOrders = asyncHandler(async (req, res) => {
   const { restaurantId, tableId } = req.params;
   // Find the table by ID and restaurant
-  const table = await Table.findOne({ _id: tableId, restaurant: restaurantId });
+  const table = await Table.findOne({ _id: tableId, restaurant: restaurantId })
 
   if (!table) {
     res.status(404).json({ message: 'Table not found' });
@@ -364,6 +363,56 @@ const getOrders = asyncHandler(async (req, res) => {
   } else {
     // Retuern empty list
     res.status(204).json(table.order_list);   
+  }
+  
+});
+
+// @desc    Get all ordered items for a table
+// @route   GET /tables/:restaurantId/:tableId/orders/items
+// @access  Public
+const getOrdersItems = asyncHandler(async (req, res) => {
+  const { restaurantId, tableId } = req.params;
+  // Find the table by ID and restaurant
+  const table = await Table.findOne({ _id: tableId, restaurant: restaurantId }).populate({
+    path: 'order_list',
+    populate: {
+        path: 'items',
+        model: 'CartItem' // Assuming 'CartItem' is the name of the model for items
+    }
+  });
+
+
+  if (!table) {
+    res.status(404).json({ message: 'Table not found' });
+    return;
+  }
+
+  let items = []
+  console.log(table.order_list)
+  for (let order of table.order_list) {
+    for (let item of order.items) {
+      items.push({id: item.menuItem, quantity: item.quantity})
+    }
+  }
+  let ids = items.map(item => item.id)
+  try {
+    // Populate the menuItemIds array with the MenuItems matching the provided IDs
+    const menuItems = await MenuItem.find({ _id: { $in: ids } });
+    let orderedItems = menuItems.map(x => x.name)
+    // Now populate the itemsArray with MenuItems according to their 'name' property
+    const populatedItemsArray = items.map(item => {
+      const menuItem = menuItems.find(menuItem => menuItem._id.toString() === item.id.toString());
+      return { menuItem, quantity: item.quantity };
+    });
+      // Return the order_list
+    if (orderedItems.length > 0) {
+      res.status(200).json(populatedItemsArray);  
+    } else {
+      // Retuern empty list
+      res.status(204).json(orderedItems);   
+    }
+  } catch (error) {
+      console.error('Error populating MenuItems:', error);
   }
   
 });
@@ -411,6 +460,6 @@ const getAllRestaurants = asyncHandler(async (req, res) => {
   export {
   addItem, addTable, getAllRestaurants, getCart, getOrders,
   getPendingRequestsForAssistance, getTableNumbers, removeItem, 
-  requestAssistance, sendOrder, tableSelect, updateRequestsForAssistance, tableDeselect, getTables
+  requestAssistance, sendOrder, tableSelect, updateRequestsForAssistance, tableDeselect, getTables, getOrdersItems
 };
 

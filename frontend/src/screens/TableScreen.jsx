@@ -78,7 +78,6 @@ const TableScreen = () => {
                     >
                       <TableCell component='th' scope='row'>{table.number}</TableCell>
                       <TableCell align='right'>{table.occupied.toString()}</TableCell>
-                      <TableCell align='right'></TableCell>
                     </TableRow>
                   ))}
                 </TableBody>  
