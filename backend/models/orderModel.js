@@ -19,7 +19,7 @@ const orderSchema = mongoose.Schema(
       type: Date,
       required: true
     },
-    notes : {
+    notes : { // This isn't used, please delete this after DemoB
       type: String
     },
     state: {

@@ -1,5 +1,6 @@
 import asyncHandler from 'express-async-handler';
 import Order from '../models/orderModel.js';
+import CartItem from '../models/cartItemModel.js'
 
 // @desc    gets all orders
 // @route   GET /orders/:restaurantId/orders
@@ -12,6 +13,28 @@ const getOrders = asyncHandler(async (req, res) => {
     res.status(200).json(orders);
   } else {
     res.status(204).json(orders);
+  }
+})
+
+// @desc    gets all orders
+// @route   GET /orders/:restaurantId/orders/:orderId
+// @access  Public
+const getOrder = asyncHandler(async (req, res) => {
+  const { restaurantId, orderId } = req.params
+
+  const order = await Order.findOne({ _id: orderId, restaurant : restaurantId }).populate({
+    path: 'items', model: 'CartItem', populate: {path: 'menuItem', model: 'MenuItem'}});
+
+    let totalQuantity = 0;
+    order.items.forEach((cartItem) => {
+      totalQuantity += cartItem.quantity;
+    });
+
+  
+  if (order) {
+    res.status(200).json({order: order, totalQuantity: totalQuantity});
+  } else {
+    res.status(500).json({ message: 'Error fetching order', error });
   }
 })
 
@@ -56,6 +79,7 @@ const setOrderPrepared = asyncHandler(async (req, res) => {
   res.status(201).json(order);
 })
 
+// This function is pointless, do not use, delete after DemoB
 const viewOrderNotes = asyncHandler(async (req, res) => {
   const { restaurantId, orderId } = req.params;
 
@@ -109,5 +133,5 @@ const getPendingOrders = asyncHandler(async (req, res) => {
   }
 })
 
-export { getCompletedOrders, getOrders, getPendingOrders, getPreparingOrders, setOrderInProgress, setOrderPrepared, viewOrderNotes };
+export { getCompletedOrders, getOrders, getPendingOrders, getPreparingOrders, setOrderInProgress, setOrderPrepared, viewOrderNotes, getOrder };
 
