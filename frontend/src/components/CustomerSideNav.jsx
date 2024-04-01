@@ -53,21 +53,17 @@ const SideNav = () => {
           },
         }}
       >
-        <MenuItem component={<Link to="/kitchen" />}> 
+        <MenuItem component={<Link to="/orders" />}> 
           <HiOutlineClipboardList style={iconStyle}/>
-          <span style={textStyle}>KITCHEN</span>
+          <span style={textStyle}>MY ORDERS</span>
         </MenuItem>
-        <MenuItem component={<Link to="/menu" />}> 
+        <MenuItem component={<Link to="/customermenu" />}> 
           <BiFoodMenu style={iconStyle}/>
           <span style={textStyle}>MENU</span>
         </MenuItem>
-        <MenuItem component={<Link to="/staff" />}>
+        <MenuItem component={<Link to="/cart" />}>
           <AiOutlineUser style={iconStyle}/>
-          <span style={textStyle}>STAFF</span>
-        </MenuItem>
-        <MenuItem component={<Link to="/settings" />}>
-          <FiSettings style={iconStyle}/>
-          <span style={textStyle}>SETTINGS</span>
+          <span style={textStyle}>CART</span>
         </MenuItem>
       </Menu>
     </Sidebar>

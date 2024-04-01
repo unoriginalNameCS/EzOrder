@@ -3,7 +3,7 @@ import axios from 'axios';
 import Grid from '@mui/material/Grid';
 import { toast } from 'react-toastify'
 import { Modal, Box, Typography, TextField, Button, IconButton } from '@mui/material';
-import SideNav from '../components/SideNav';
+import CustomerSideNav from '../components/CustomerSideNav';
 import MenuCard from '../components/MenuCard';
 import { useTheme } from '@mui/material/styles';
 import { useNavigate } from 'react-router-dom';
@@ -179,7 +179,7 @@ const CustomerMenuScreen = () => {
 
   return (
     <div style={{ display: 'flex' }}>
-      <SideNav />
+      <CustomerSideNav />
       <Grid container style={{ flexGrow: 1, padding: theme.spacing(3), marginLeft: '200px' }}>
         <Grid item xs={12} style={{ padding: theme.spacing(1) }}>
           <CustomerCategoriesBar restaurantId={restaurantId} customerInfo={customerInfo} onCategorySelected={onCategorySelected}/>
