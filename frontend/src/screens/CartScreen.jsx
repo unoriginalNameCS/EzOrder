@@ -1,7 +1,7 @@
 import React, { useEffect, useCallback, useState } from 'react';
 import { Box, Typography, Paper, Container, Button, IconButton } from '@mui/material';
 import axios from 'axios';
-import SideNav from '../components/SideNav';
+import CustomerSideNav from '../components/CustomerSideNav';
 import Grid from '@mui/material/Grid';
 import { useTheme } from '@mui/material/styles';
 import { FaMinus } from 'react-icons/fa';
@@ -62,7 +62,7 @@ const CartScreen = () => {
 
   return (
     <div style={{ display: 'flex' }}>
-      <SideNav />
+      <CustomerSideNav />
       <Grid container style={{ flexGrow: 1, padding: theme.spacing(3), marginLeft: '200px' }}> 
         <Typography variant="h6" component="h2">
           Cart Items

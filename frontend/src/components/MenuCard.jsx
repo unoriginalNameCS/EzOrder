@@ -46,7 +46,7 @@ const ContentContainer = styled(Box)(({ theme }) => ({
 
 const Title = styled(Typography)({
   fontSize: '1rem',
-  fontWeight: 'bold',
+  fontWeight: 400,
 });
 
 const Price = styled(Typography)(({ theme }) => ({
@@ -85,7 +85,7 @@ const MenuCard = ({ title, description, price, imageUrl, tags }) => {
   return (
     <ItemCard>
       <ImageContainer theme={theme}>
-        <StyledImage src={imageUrl} alt="Salmon Nigiri" />
+        <StyledImage src={imageUrl} alt="Image" />
       </ImageContainer>
       <ContentContainer>
         <CardContent>

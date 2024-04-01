@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import SideNav from '../components/SideNav';
+import CustomerSideNav from '../components/CustomerSideNav';
 import axios from 'axios';
 import { useTheme } from '@mui/material';
 import { Grid, Typography } from '@mui/material';
@@ -24,7 +24,7 @@ export default function OrderScreen() {
   console.log(items)
   return (
     <>
-        <SideNav/>
+        <CustomerSideNav/>
       <Grid container style={{ flexGrow: 1, marginLeft: '200px' , padding: theme.spacing(3)}}> 
         <Typography variant="h6" component="h2">
           Ordered Items
