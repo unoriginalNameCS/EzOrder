@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
-import Grid from '@mui/material/Grid';
+import Box from '@mui/material/Box';
+import Masonry from '@mui/lab/Masonry';
 import SideNav from '../components/SideNav';
 import axios from 'axios';
 import { styled, useTheme } from '@mui/material/styles';
@@ -32,16 +33,16 @@ const KitchenScreen = () => {
     return (
       <div style={{ display: 'flex' }}>
         <SideNav />
-        <Grid container style={{ flexGrow: 1, padding: theme.spacing(3), marginLeft: '160px' }}> {/* Adjust marginLeft to the width of SideNav */}
-          {orderList.map((order, index) => {
-            const orderDetails = order.order
-          return (
-            <Grid item xs={12} sm={8} md={6} lg={4} key={index} style={{ padding: theme.spacing(2) }}>
+        <Box style={{ padding: theme.spacing(3), marginLeft: '160px' }}> {/* Adjust marginLeft to the width of SideNav */}
+          <Masonry sequential columns={{xs: 2, sm: 3}} spacing={3}>
+            {orderList.map((order, index) => {
+              const orderDetails = order.order
+            return (
               <OrderCard orderNumber={index + 1} tableNumber={orderDetails.tableNum} time={orderDetails.time} items={orderDetails.items} totalQuantity={order.totalQuantity}/>
-            </Grid>
-          );
-          })}
-        </Grid>
+            );
+            })}
+          </Masonry>
+        </Box>
       </div>
     )
   }
