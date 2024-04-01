@@ -347,7 +347,7 @@ const getCart = asyncHandler(async (req, res) => {
 // @desc    Get the order_list for a specific table
 // @route   GET /tables/:restaurantId/:tableId/orders
 // @access  Public
-const getOrders = asyncHandler(async (req, res) => {
+const  getOrders = asyncHandler(async (req, res) => {
   const { restaurantId, tableId } = req.params;
   // Find the table by ID and restaurant
   const table = await Table.findOne({ _id: tableId, restaurant: restaurantId })
@@ -391,7 +391,7 @@ const getOrdersItems = asyncHandler(async (req, res) => {
   console.log(table.order_list)
   for (let order of table.order_list) {
     for (let item of order.items) {
-      items.push({id: item.menuItem, quantity: item.quantity})
+      items.push({id: item.menuItem, quantity: item.quantity, notes: item.notes})
     }
   }
   let ids = items.map(item => item.id)
@@ -402,7 +402,7 @@ const getOrdersItems = asyncHandler(async (req, res) => {
     // Now populate the itemsArray with MenuItems according to their 'name' property
     const populatedItemsArray = items.map(item => {
       const menuItem = menuItems.find(menuItem => menuItem._id.toString() === item.id.toString());
-      return { menuItem, quantity: item.quantity };
+      return { menuItem, quantity: item.quantity, notes: item.notes};
     });
       // Return the order_list
     if (orderedItems.length > 0) {

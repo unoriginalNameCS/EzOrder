@@ -44,6 +44,7 @@ export default function OrderScreen() {
                 price={(item.menuItem.price * item.quantity).toFixed(2)}
                 imageUrl={item.menuItem.imageUrl || 'https://via.placeholder.com/140'} 
                 tags={item.menuItem.ingredients}
+                notes={item.notes}
                 quantity={item.quantity}
               />
             </Grid>
