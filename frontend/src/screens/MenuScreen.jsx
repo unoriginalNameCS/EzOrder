@@ -131,12 +131,14 @@ const MenuScreen = () => {
             variant="contained"
             onClick={handleOpenNewItemModal}
             sx={{marginRight: '0.75rem'}}
+            disabled={selectedCategoryId === ''}
           >
             New Item
           </StyledButton>
           <StyledButton
             variant="contained"
             onClick={handleOpenEditItemModal}
+            disabled={menuItems.length === 0}
           >
             Edit Item
           </StyledButton>

@@ -122,6 +122,7 @@ import ReorderIcon from '@mui/icons-material/Reorder';
             variant='outlined'
             theme={theme}
             onClick={handleOpenEditCategoryModal}
+            disabled={menuCategories.length === 0}
           >
             <ReorderIcon/>
           </EditButton>
