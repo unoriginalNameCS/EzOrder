@@ -60,7 +60,6 @@ const MenuScreen = () => {
 
   const onCategorySelected = (categoryId) => {
     setSelectedCategoryId(categoryId);
-    fetchMenuItems(categoryId);
   };
 
   const fetchMenuCategories = async () => {
@@ -103,7 +102,7 @@ const MenuScreen = () => {
 
   useEffect(() => {
     if (selectedCategoryId) {
-      fetchMenuItems(selectedCategoryId);
+      fetchMenuItems();
     }
   }, [selectedCategoryId]);
 

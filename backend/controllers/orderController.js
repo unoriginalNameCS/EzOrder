@@ -6,29 +6,27 @@ import CartItem from '../models/cartItemModel.js'
 // @route   GET /orders/:restaurantId/orders
 // @access  Public
 const getOrders = asyncHandler(async (req, res) => {
-  const { restaurantId } = req.params
+  const { restaurantId} = req.params;
+  const { state } = req.query;
 
-  const orders = await Order.find({ restaurant : restaurantId }).sort('time');
+  const orders = await Order.find({ restaurant : restaurantId, state: state }).sort('-time');
 
   // Populate each order with detailed information
   const populatedOrders = await Promise.all(
     orders.map(async (order) => {
-      const populatedOrder = await Order.findOne({ _id: order._id, restaurant: restaurantId }).populate({
+      const populatedOrder = await Order.findOne({ _id: order._id, restaurant: restaurantId}).populate({
         path: 'items',
         model: 'CartItem',
         populate: { path: 'menuItem', model: 'MenuItem' },
       });
-
       // Calculate total quantity for the order
       let totalQuantity = 0;
       populatedOrder.items.forEach((cartItem) => {
         totalQuantity += cartItem.quantity;
       });
-
       return { order: populatedOrder, totalQuantity };
     })
   );
-
   if (populatedOrders) {
     res.status(200).json(populatedOrders);  
   } else {
@@ -154,4 +152,3 @@ const getPendingOrders = asyncHandler(async (req, res) => {
 })
 
 export { getCompletedOrders, getOrders, getPendingOrders, getPreparingOrders, setOrderInProgress, setOrderPrepared, viewOrderNotes, getOrder };
-

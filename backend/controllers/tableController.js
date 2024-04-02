@@ -139,7 +139,6 @@ const requestAssistance = asyncHandler(async (req, res) => {
 // @access  Public
 const sendOrder = asyncHandler(async (req, res) => {
   const { restaurantId, tableId } = req.params
-  const { notes } = req.body
   
   const table = await Table.findById(tableId)
   if (!table) {
@@ -158,13 +157,16 @@ const sendOrder = asyncHandler(async (req, res) => {
     throw new Error('Cannot send an order with an empty cart')
   }
 
+  const lastOrder = await Order.findOne({ restaurant : restaurantId }).sort({orderNum: -1})
+  const number = lastOrder ? lastOrder.orderNum + 1 : 1;
+
   const order = await Order.create({
     restaurant: restaurantId,
     tableNum: table.number,
     items: table.cart,
     time: new Date(),
-    notes,
-    state: "pending"
+    state: "pending",
+    orderNum: number
   });
   if (order) {
     // Empties the cart
@@ -462,4 +464,3 @@ const getAllRestaurants = asyncHandler(async (req, res) => {
   getPendingRequestsForAssistance, getTableNumbers, removeItem, 
   requestAssistance, sendOrder, tableSelect, updateRequestsForAssistance, tableDeselect, getTables, getOrdersItems
 };
-
