@@ -77,7 +77,7 @@ function formatDate(d) {
 }
 
 
-const OrderCard = ({orderNumber, tableNumber, time, items, state, totalQuantity, orderId}) => {
+const OrderCard = ({orderNumber, tableNumber, time, items, state, totalQuantity, orderId, onOrderUpdate}) => {
   const theme = useTheme();
     return (
         <Order>
@@ -128,7 +128,7 @@ const OrderCard = ({orderNumber, tableNumber, time, items, state, totalQuantity,
                 }} />
               </Fragment>
             ))}
-            <ProgressButton orderId={orderId} state={state}/>
+            <ProgressButton orderId={orderId} state={state} onOrderUpdate={onOrderUpdate}/>
           </CardContent>
         </Order>
     )

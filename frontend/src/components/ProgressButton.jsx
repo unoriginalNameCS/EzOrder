@@ -5,7 +5,7 @@ import DoneIcon from '@mui/icons-material/Done';
 import TimerOutlinedIcon from '@mui/icons-material/TimerOutlined';
 import axios from 'axios';
 
-const ProgressButton = ({orderId, state}) => {
+const ProgressButton = ({orderId, state, onOrderUpdate}) => {
   const theme = useTheme();
   const [orderStatus, setOrderStatus] = useState(state);
 
@@ -18,10 +18,11 @@ const ProgressButton = ({orderId, state}) => {
     try {
       console.log(url);
       await axios.put(url);
-
+      onOrderUpdate();
     } catch (error) {
       console.error('There was an error setting the progress:', error.response?.data || error.message);
     }
+    
   };
 
   const handleProgress = () => {
