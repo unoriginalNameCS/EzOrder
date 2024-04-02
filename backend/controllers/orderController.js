@@ -8,7 +8,7 @@ import CartItem from '../models/cartItemModel.js'
 const getOrders = asyncHandler(async (req, res) => {
   const { restaurantId } = req.params
 
-  const orders = await Order.find({ restaurant : restaurantId }).sort('time');
+  const orders = await Order.find({ restaurant : restaurantId }).sort('-time');
 
   // Populate each order with detailed information
   const populatedOrders = await Promise.all(

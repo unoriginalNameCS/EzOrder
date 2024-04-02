@@ -1,11 +1,12 @@
 import * as React from 'react';
-import { useState, useEffect } from 'react';
+import { Fragment } from 'react';
 import Card from '@mui/material/Card';
 import CardContent from '@mui/material/CardContent';
 import CardMedia from '@mui/material/CardMedia';
 import Typography from '@mui/material/Typography';
 import Box from '@mui/material/Box';
 import { styled, useTheme } from '@mui/material/styles';
+import ProgressButton from './ProgressButton';
 
 const Order = styled(Card)(({ theme }) => ({
   display: 'inline-flex',
@@ -15,6 +16,14 @@ const Order = styled(Card)(({ theme }) => ({
   border: `1.5px solid ${theme.palette.divider}`,
   overflow: 'hidden',
   flexDirection: 'column'
+}));
+
+const ScrollContainer = styled(Box)(({ theme }) => ({
+  display: 'flex',
+  flexDirection: 'column',
+  gap: theme.spacing(2),
+  maxHeight: '240px', // This height should accommodate exactly two items; adjust as needed
+  overflowY: 'auto', // Enables vertical scrolling
 }));
 
 const ItemContainer = styled(Box)(({ theme }) => ({
@@ -68,7 +77,7 @@ function formatDate(d) {
 }
 
 
-const OrderCard = ({orderNumber, tableNumber, time, items, state, totalQuantity}) => {
+const OrderCard = ({orderNumber, tableNumber, time, items, state, totalQuantity, orderId}) => {
   const theme = useTheme();
     return (
         <Order>
@@ -88,7 +97,7 @@ const OrderCard = ({orderNumber, tableNumber, time, items, state, totalQuantity}
               {formatDate(time)}
             </Subtext>
             {items.map((item, index) => (
-              <>
+              <Fragment key={index}>
                   <ItemContainer>
                     <ImageContainer theme={theme}>
                       <StyledImage src={item.menuItem.imageUrl} alt="Image" />
@@ -100,7 +109,7 @@ const OrderCard = ({orderNumber, tableNumber, time, items, state, totalQuantity}
                       <Subtext variant="subtitle2" sx={{}}>
                         {item.notes ? item.notes : '\u00A0'} 
                       </Subtext>
-                      <Box display="flex" justifyContent="space-between" marginTop={'0.875rem'}>
+                      <Box display="flex" justifyContent="space-between" marginTop={'0.55rem'}>
                         <Title variant="h5" sx={{fontSize: '0.875rem'}}>
                           $5.00
                         </Title>
@@ -117,11 +126,9 @@ const OrderCard = ({orderNumber, tableNumber, time, items, state, totalQuantity}
                   width: '100%', // Line width
                   alignSelf: 'center', // Aligns the line in the center if needed
                 }} />
-              </>
-
-              
+              </Fragment>
             ))}
-
+            <ProgressButton orderId={orderId} state={state}/>
           </CardContent>
         </Order>
     )

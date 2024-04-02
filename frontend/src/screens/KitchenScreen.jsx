@@ -33,12 +33,21 @@ const KitchenScreen = () => {
     return (
       <div style={{ display: 'flex' }}>
         <SideNav />
-        <Box style={{ padding: theme.spacing(3), marginLeft: '160px' }}> {/* Adjust marginLeft to the width of SideNav */}
-          <Masonry sequential columns={{xs: 2, sm: 3}} spacing={3}>
+        <Box sx={{ width: '100%', minHeight: '100vh'}} style={{ padding: theme.spacing(3), marginLeft: '160px' }}> {/* Adjust marginLeft to the width of SideNav */}
+          <Masonry sequential columns={{xs: 1, sm: 3}} spacing={3}>
             {orderList.map((order, index) => {
               const orderDetails = order.order
             return (
-              <OrderCard orderNumber={index + 1} tableNumber={orderDetails.tableNum} time={orderDetails.time} items={orderDetails.items} totalQuantity={order.totalQuantity}/>
+              <OrderCard 
+                key={index}
+                orderNumber={orderList.length - index} 
+                tableNumber={orderDetails.tableNum} 
+                time={orderDetails.time} 
+                items={orderDetails.items} 
+                totalQuantity={order.totalQuantity}
+                orderId={orderDetails._id}
+                state={orderDetails.state}
+              />
             );
             })}
           </Masonry>
