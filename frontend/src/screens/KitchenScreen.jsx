@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import Box from '@mui/material/Box';
-import Masonry from '@mui/lab/Masonry';
+import { Masonry } from '@mui/lab';
 import SideNav from '../components/SideNav';
 import axios from 'axios';
 import { styled, useTheme } from '@mui/material/styles';
