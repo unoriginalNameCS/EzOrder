@@ -9,10 +9,6 @@ import { Typography } from '@mui/material';
 
 const KitchenScreen = () => {
   const theme = useTheme();
-
-  const [pendingOrders, setPendingOrders] = useState([]);
-  const [preparingOrders, setPreparingOrders] = useState([]);
-  const [completedOrders, setCompletedOrders] = useState([]);
   const [orderList, setOrderList] = useState([]); 
 
   const userInfo = JSON.parse(localStorage.getItem('userInfo'));
@@ -20,24 +16,17 @@ const KitchenScreen = () => {
 
   const fetchOrderList = async () => {
     try {
-      const pendingUrl = `http://localhost:5000/orders/${restaurantId}/pendingOrders`;
-      const preparingUrl = `http://localhost:5000/orders/${restaurantId}/preparingOrders`;
-      const completedUrl = `http://localhost:5000/orders/${restaurantId}/completedOrders`;
+      const baseUrl = `http://localhost:5000/orders/${restaurantId}/orders`;
   
-      // Fetch all orders concurrently
+      // Fetch all orders concurrently with different query parameters
       const [pendingResponse, preparingResponse, completedResponse] = await Promise.all([
-        axios.get(pendingUrl),
-        axios.get(preparingUrl),
-        axios.get(completedUrl),
+        axios.get(baseUrl, { params: { state: 'pending' } }),
+        axios.get(baseUrl, { params: { state: 'preparing' } }),
+        axios.get(baseUrl, { params: { state: 'serve' } }),
       ]);
-  
-      // Update the states accordingly
-      setPendingOrders(pendingResponse.data);
-      setPreparingOrders(preparingResponse.data);
-      setCompletedOrders(completedResponse.data);
-  
-      // Concatenate all orders and update orderList
+      console.log(pendingResponse.data);
       setOrderList([...pendingResponse.data, ...preparingResponse.data, ...completedResponse.data]);
+
     } catch (error) {
       console.error('There was an error fetching the orders:', error.response?.data || error.message);
     }
@@ -65,7 +54,7 @@ const KitchenScreen = () => {
             return (
               <OrderCard 
                 key={orderDetails._id}
-                orderNumber={orderList.length - index} 
+                orderNumber={orderDetails.orderNum} 
                 tableNumber={orderDetails.tableNum} 
                 time={orderDetails.time} 
                 items={orderDetails.items} 

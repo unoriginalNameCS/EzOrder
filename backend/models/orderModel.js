@@ -19,13 +19,14 @@ const orderSchema = mongoose.Schema(
       type: Date,
       required: true
     },
-    notes : { // This isn't used, please delete this after DemoB
-      type: String
-    },
     state: {
       type: String,
       required: true,
       enum: ['pending', 'preparing', 'serve']
+    },
+    orderNum: {
+      type: Number,
+      required: true
     }
   }
 );

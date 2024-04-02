@@ -6,29 +6,27 @@ import CartItem from '../models/cartItemModel.js'
 // @route   GET /orders/:restaurantId/orders
 // @access  Public
 const getOrders = asyncHandler(async (req, res) => {
-  const { restaurantId } = req.params
+  const { restaurantId} = req.params;
+  const { state } = req.query;
 
-  const orders = await Order.find({ restaurant : restaurantId }).sort('-time');
+  const orders = await Order.find({ restaurant : restaurantId, state: state }).sort('-time');
 
   // Populate each order with detailed information
   const populatedOrders = await Promise.all(
     orders.map(async (order) => {
-      const populatedOrder = await Order.findOne({ _id: order._id, restaurant: restaurantId }).populate({
+      const populatedOrder = await Order.findOne({ _id: order._id, restaurant: restaurantId}).populate({
         path: 'items',
         model: 'CartItem',
         populate: { path: 'menuItem', model: 'MenuItem' },
       });
-
       // Calculate total quantity for the order
       let totalQuantity = 0;
       populatedOrder.items.forEach((cartItem) => {
         totalQuantity += cartItem.quantity;
       });
-
       return { order: populatedOrder, totalQuantity };
     })
   );
-
   if (populatedOrders) {
     res.status(200).json(populatedOrders);  
   } else {
@@ -117,99 +115,40 @@ const viewOrderNotes = asyncHandler(async (req, res) => {
 const getCompletedOrders = asyncHandler(async (req, res) => {
   const { restaurantId } = req.params;
 
-  const completedOrders = await Order.find({ restaurant : restaurantId, state: "serve" } ).sort('-time');
-
-  // Populate each order with detailed information
-  const populatedOrders = await Promise.all(
-    completedOrders.map(async (order) => {
-      const populatedOrder = await Order.findOne({ _id: order._id, restaurant: restaurantId }).populate({
-        path: 'items',
-        model: 'CartItem',
-        populate: { path: 'menuItem', model: 'MenuItem' },
-      });
-
-      // Calculate total quantity for the order
-      let totalQuantity = 0;
-      populatedOrder.items.forEach((cartItem) => {
-        totalQuantity += cartItem.quantity;
-      });
-
-      return { order: populatedOrder, totalQuantity };
-    })
-  );
-
-  if (populatedOrders) {
-    res.status(200).json(populatedOrders);  
+  const completedOrders = await Order.find({ restaurant : restaurantId, state: "serve" } ).sort('time');
+  if (completedOrders) {
+    res.status(200).json(completedOrders);
   } else {
-    res.status(204).json(populatedOrders);
+    res.status(204).json(completedOrders);
   }
 })
 
-// @desc    gets all preparing orders
+// @desc    gets all completed orders
 // @route   GET /orders/:restaurantId/preparingOrders
 // @access  Public
 const getPreparingOrders = asyncHandler(async (req, res) => {
   const { restaurantId } = req.params;
 
-  const preparingOrders = await Order.find({ restaurant : restaurantId, state: "preparing" } ).sort('-time');
-  // Populate each order with detailed information
-  const populatedOrders = await Promise.all(
-    preparingOrders.map(async (order) => {
-      const populatedOrder = await Order.findOne({ _id: order._id, restaurant: restaurantId }).populate({
-        path: 'items',
-        model: 'CartItem',
-        populate: { path: 'menuItem', model: 'MenuItem' },
-      });
-
-      // Calculate total quantity for the order
-      let totalQuantity = 0;
-      populatedOrder.items.forEach((cartItem) => {
-        totalQuantity += cartItem.quantity;
-      });
-
-      return { order: populatedOrder, totalQuantity };
-    })
-  );
-
-  if (populatedOrders) {
-    res.status(200).json(populatedOrders);  
+  const preparingOrders = await Order.find({ restaurant : restaurantId, state: "preparing" } ).sort('time');
+  if (preparingOrders) {
+    res.status(200).json(preparingOrders);
   } else {
-    res.status(204).json(populatedOrders);
+    res.status(204).json(preparingOrders);
   }
 })
 
-// @desc    gets all pending orders
+// @desc    gets all completed orders
 // @route   GET /orders/:restaurantId/pendingOrders
 // @access  Public
 const getPendingOrders = asyncHandler(async (req, res) => {
   const { restaurantId } = req.params;
 
-  const pendingOrders = await Order.find({ restaurant : restaurantId, state: "pending" }).sort('-time');
-  // Populate each order with detailed information
-  const populatedOrders = await Promise.all(
-    pendingOrders.map(async (order) => {
-      const populatedOrder = await Order.findOne({ _id: order._id, restaurant: restaurantId }).populate({
-        path: 'items',
-        model: 'CartItem',
-        populate: { path: 'menuItem', model: 'MenuItem' },
-      });
-
-      // Calculate total quantity for the order
-      let totalQuantity = 0;
-      populatedOrder.items.forEach((cartItem) => {
-        totalQuantity += cartItem.quantity;
-      });
-
-      return { order: populatedOrder, totalQuantity };
-    })
-  );
-
-  if (populatedOrders) {
-    res.status(200).json(populatedOrders);  
+  const pendingOrders = await Order.find({ restaurant : restaurantId, state: "pending" }).sort('time');
+  if (pendingOrders) {
+    res.status(200).json(pendingOrders);
   } else {
-    res.status(204).json(populatedOrders);
+    res.status(204).json(pendingOrders);
   }
 })
 
 export { getCompletedOrders, getOrders, getPendingOrders, getPreparingOrders, setOrderInProgress, setOrderPrepared, viewOrderNotes, getOrder };
-

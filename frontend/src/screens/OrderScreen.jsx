@@ -26,7 +26,7 @@ export default function OrderScreen() {
     <>
         <CustomerSideNav/>
       <Grid container style={{ flexGrow: 1, marginLeft: '200px' , padding: theme.spacing(3)}}> 
-        <Typography variant="h6" component="h2">
+        <Typography variant="h5" component="h2" sx={{fontWeight: 800, mb: 1}}>
           Ordered Items
         </Typography>
         {items.length === 0 ? (
@@ -50,7 +50,7 @@ export default function OrderScreen() {
             </Grid>
           ))
         )}
-              <Typography variant="h4" color="initial">Total Price: {totalPrice} </Typography>
+          <Typography variant="h5" color="initial" sx={{fontWeight: 400, mt: 1}}>Total: ${totalPrice.toFixed(2)} </Typography>
       </Grid>
     </>
 
