@@ -19,6 +19,9 @@ const orderSchema = mongoose.Schema(
       type: Date,
       required: true
     },
+    serveTime: {
+      type: Date,
+    },
     state: {
       type: String,
       required: true,

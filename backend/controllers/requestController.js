@@ -8,7 +8,7 @@ const getRequests = asyncHandler(async (req, res) => {
   const { restaurantId} = req.params;
   const { state } = req.query;
 
-  const requests = await Request.find({ restaurant : restaurantId, state: state }).sort('-time');
+  const requests = await Request.find({ restaurant : restaurantId, state: state }).sort('time');
 
   if (requests) {
     res.status(200).json(requests);  

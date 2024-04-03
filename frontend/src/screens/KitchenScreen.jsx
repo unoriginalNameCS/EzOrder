@@ -1,11 +1,11 @@
-import React, { useState, useEffect } from 'react';
-import Box from '@mui/material/Box';
 import { Masonry } from '@mui/lab';
-import SideNav from '../components/SideNav';
-import axios from 'axios';
-import { styled, useTheme } from '@mui/material/styles';
-import OrderCard from '../components/OrderCard';
 import { Typography } from '@mui/material';
+import Box from '@mui/material/Box';
+import { useTheme } from '@mui/material/styles';
+import axios from 'axios';
+import React, { useEffect, useState } from 'react';
+import OrderCard from '../components/OrderCard';
+import SideNav from '../components/SideNav';
 
 const KitchenScreen = () => {
   const theme = useTheme();
@@ -20,9 +20,9 @@ const KitchenScreen = () => {
   
       // Fetch all orders concurrently with different query parameters
       const [pendingResponse, preparingResponse, completedResponse] = await Promise.all([
-        axios.get(baseUrl, { params: { state: 'pending' } }),
-        axios.get(baseUrl, { params: { state: 'preparing' } }),
-        axios.get(baseUrl, { params: { state: 'serve' } }),
+        axios.get(baseUrl, { params: { state: 'pending', isWaiter: false} }),
+        axios.get(baseUrl, { params: { state: 'preparing', isWaiter: false} }),
+        axios.get(baseUrl, { params: { state: 'serve', isWaiter: false } }),
       ]);
       console.log(pendingResponse.data);
       setOrderList([...pendingResponse.data, ...preparingResponse.data, ...completedResponse.data]);
