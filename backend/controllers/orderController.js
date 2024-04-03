@@ -6,9 +6,11 @@ import Order from '../models/orderModel.js';
 // @access  Public
 const getOrders = asyncHandler(async (req, res) => {
   const { restaurantId} = req.params;
-  const { state } = req.query;
+  const { state, isWaiter } = req.query;
 
-  const orders = await Order.find({ restaurant : restaurantId, state: state }).sort('-time');
+  const timeType = isWaiter ? 'serveTime' : '-time';
+
+  const orders = await Order.find({ restaurant : restaurantId, state: state }).sort(timeType);
 
   // Populate each order with detailed information
   const populatedOrders = await Promise.all(
@@ -92,6 +94,7 @@ const setOrderPrepared = asyncHandler(async (req, res) => {
     throw new Error('Order is not preparing');
   }
   order.state = "serve";
+  order.serveTime = new Date();
   await order.save();
   res.status(201).json(order);
 })
@@ -190,4 +193,5 @@ const getPendingOrders = asyncHandler(async (req, res) => {
   }
 })
 
-export { getCompletedOrders, getOrders, getPendingOrders, getPreparingOrders, setOrderInProgress, setOrderPrepared, setOrderServed, setOrderServing, viewOrderNotes, getOrder };
+export { getCompletedOrders, getOrder, getOrders, getPendingOrders, getPreparingOrders, setOrderInProgress, setOrderPrepared, setOrderServed, setOrderServing, viewOrderNotes };
+

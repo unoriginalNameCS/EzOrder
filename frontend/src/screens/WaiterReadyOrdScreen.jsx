@@ -1,11 +1,11 @@
-import React, { useEffect, useState } from "react";
-import Box from '@mui/material/Box';
 import { Masonry } from '@mui/lab';
-import SideNav from '../components/SideNav';
-import axios from 'axios';
-import { styled, useTheme } from '@mui/material/styles';
-import OrderCard from '../components/OrderCard';
 import { Typography } from '@mui/material';
+import Box from '@mui/material/Box';
+import { useTheme } from '@mui/material/styles';
+import axios from 'axios';
+import React, { useEffect, useState } from "react";
+import OrderCard from '../components/OrderCard';
+import SideNav from '../components/SideNav';
 
 
 // This page is for wait staff to view their pending customer table requests
@@ -22,8 +22,8 @@ const ReadyToServeOrdersScreen = () => {
   
       // Fetch all orders concurrently with different query parameters
       const [pendingResponse, preparingResponse] = await Promise.all([
-        axios.get(baseUrl, { params: { state: 'serve' } }),
-        axios.get(baseUrl, { params: { state: 'serving' } }),
+        axios.get(baseUrl, { params: { state: 'serve', isWaiter: true } }),
+        axios.get(baseUrl, { params: { state: 'serving', isWaiter: true } }),
       ]);
       console.log(pendingResponse.data);
       setOrderList([...pendingResponse.data, ...preparingResponse.data]);
