@@ -1,48 +1,75 @@
 import React, { useEffect, useState } from "react";
-import ListGroup from 'react-bootstrap/ListGroup';
+import Box from '@mui/material/Box';
+import { Masonry } from '@mui/lab';
+import SideNav from '../components/SideNav';
+import axios from 'axios';
+import { styled, useTheme } from '@mui/material/styles';
+import OrderCard from '../components/OrderCard';
+import { Typography } from '@mui/material';
+
 
 // This page is for wait staff to view their pending customer table requests
 const ReadyToServeOrdersScreen = () => {
-  const [newCompletedOrders, setNewCompletedOrders] = useState([]);
-  const userInfo = JSON.parse(localStorage.getItem("userInfo"));
+  const theme = useTheme();
+  const [orderList, setOrderList] = useState([]); 
 
-  async function getCompletedOrders() {
-    const response = await fetch(
-      `http://localhost:5000/orders/${userInfo.restaurant}/completedOrders`,
-      {
-        method: "GET",
-        headers: {
-          "Content-type": "application/json",
-        },
-      }
-    );
-    const data = await response.json();
+  const userInfo = JSON.parse(localStorage.getItem('userInfo'));
+  const restaurantId = userInfo.restaurant;
 
-    // if 200 there is data, there is customer requests pending
-    if (response.status === 200) {
-      setNewCompletedOrders(data);
-    } else if (response.status === 204) {
-      // if 204, then no content (there is no customer requests pending)
-      console.log("204", data);
+  const fetchOrderList = async () => {
+    try {
+      const baseUrl = `http://localhost:5000/orders/${restaurantId}/orders`;
+  
+      // Fetch all orders concurrently with different query parameters
+      const [pendingResponse, preparingResponse] = await Promise.all([
+        axios.get(baseUrl, { params: { state: 'serve' } }),
+        axios.get(baseUrl, { params: { state: 'serving' } }),
+      ]);
+      console.log(pendingResponse.data);
+      setOrderList([...pendingResponse.data, ...preparingResponse.data]);
+
+    } catch (error) {
+      console.error('There was an error fetching the orders:', error.response?.data || error.message);
     }
-  }
+  };
 
   useEffect(() => {
-    getCompletedOrders();
+    fetchOrderList();
   }, []);
 
+  const triggerOrderUpdate = () => {
+    fetchOrderList();
+  };
+  
   return (
-    <>
-      <h2>Ready To Serve Orders</h2>
-      <ListGroup>
-        {newCompletedOrders.map((order) => 
-          <ListGroup.Item variant="danger" key={order._id}>
-            Order is ready to serve to table {order.tableNum}.
-          </ListGroup.Item>
-        )}
-      </ListGroup>
-    </>
-  );
+    <div style={{ display: 'flex' }}>
+      <SideNav />
+      <Box sx={{ width: '100%', minHeight: '100vh'}} style={{ padding: theme.spacing(3), marginLeft: '160px' }}> {/* Adjust marginLeft to the width of SideNav */}
+        <Typography variant="h5" component="div" sx={{fontWeight: 800, mb: 2}}>
+              Order List
+        </Typography>
+        <Masonry sequential columns={{xs: 1, sm: 3}} spacing={3}>
+          {orderList.map((order, index) => {
+            const orderDetails = order.order
+          return (
+            <OrderCard 
+              key={orderDetails._id}
+              orderNumber={orderDetails.orderNum} 
+              tableNumber={orderDetails.tableNum} 
+              time={orderDetails.time} 
+              items={orderDetails.items} 
+              totalQuantity={order.totalQuantity}
+              orderId={orderDetails._id}
+              state={orderDetails.state}
+              isWaiter={userInfo.role === 'wait staff'}
+              onOrderUpdate={triggerOrderUpdate} 
+            />
+          );
+          })}
+        </Masonry>
+      </Box>
+    </div>
+  )
 };
 
 export default ReadyToServeOrdersScreen;

@@ -10,7 +10,7 @@ const requestSchema = mongoose.Schema(
     state: {
       type: String,
       required: true,
-      enum: ['pending', 'assisting', 'complete']
+      enum: ['waiting', 'assisting', 'complete']
     },
     tableNum: {
       type: Number,
@@ -19,7 +19,15 @@ const requestSchema = mongoose.Schema(
     requestedBill: {
       type: Boolean,
       required: true,
-    }
+    },
+    time: {
+      type: Date,
+      required: true
+    },
+    requestNum: {
+      type: Number,
+      required: true
+    },
   }
 );
   

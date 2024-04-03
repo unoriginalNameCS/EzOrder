@@ -1,6 +1,5 @@
 import asyncHandler from 'express-async-handler';
 import Order from '../models/orderModel.js';
-import CartItem from '../models/cartItemModel.js'
 
 // @desc    gets all orders
 // @route   GET /orders/:restaurantId/orders
@@ -97,6 +96,46 @@ const setOrderPrepared = asyncHandler(async (req, res) => {
   res.status(201).json(order);
 })
 
+// @desc    set order prepared
+// @route   PUT /:restaurantId/:orderId/prepared
+// @access  Public
+const setOrderServing = asyncHandler(async (req, res) => {
+  const { restaurantId, orderId } = req.params;
+
+  const order = await Order.findOne({_id: orderId});
+  if (!order) {
+    res.status(404);
+    throw new Error('No order found');
+  }
+  if (order.state != "serve") {
+    res.status(400);
+    throw new Error('Order is not served');
+  }
+  order.state = "serving";
+  await order.save();
+  res.status(201).json(order);
+})
+
+// @desc    set order prepared
+// @route   PUT /:restaurantId/:orderId/prepared
+// @access  Public
+const setOrderServed = asyncHandler(async (req, res) => {
+  const { restaurantId, orderId } = req.params;
+
+  const order = await Order.findOne({_id: orderId});
+  if (!order) {
+    res.status(404);
+    throw new Error('No order found');
+  }
+  if (order.state != "serving") {
+    res.status(400);
+    throw new Error('Order is not being served');
+  }
+  order.state = "served";
+  await order.save();
+  res.status(201).json(order);
+})
+
 // This function is pointless, do not use, delete after DemoB
 const viewOrderNotes = asyncHandler(async (req, res) => {
   const { restaurantId, orderId } = req.params;
@@ -151,4 +190,4 @@ const getPendingOrders = asyncHandler(async (req, res) => {
   }
 })
 
-export { getCompletedOrders, getOrders, getPendingOrders, getPreparingOrders, setOrderInProgress, setOrderPrepared, viewOrderNotes, getOrder };
+export { getCompletedOrders, getOrders, getPendingOrders, getPreparingOrders, setOrderInProgress, setOrderPrepared, setOrderServed, setOrderServing, viewOrderNotes, getOrder };
