@@ -27,7 +27,6 @@ const CustomerMenuScreen = () => {
 
   const onCategorySelected = (categoryId) => {
     setSelectedCategoryId(categoryId);
-    fetchMenuItems(categoryId);
   };
 
   const handleOpenItemModal = (itemId) => {
@@ -60,7 +59,6 @@ const CustomerMenuScreen = () => {
       toast.success('Bye for now')
     } else {
       toast.error(data?.message);
-      console.log(data?.message);
     }
   }
 
@@ -99,7 +97,6 @@ const CustomerMenuScreen = () => {
   };
 
   const fetchMenuItems = async () => {
-    console.log(selectedCategoryId)
     try {
       const url = `http://localhost:5000/menus/${restaurantId}/${tableId}/menu/categories/${selectedCategoryId}/items`;
 
@@ -111,7 +108,6 @@ const CustomerMenuScreen = () => {
       });
 
       setMenuItems(data); 
-      console.log(menuItems )
     } catch (error) {
       console.error('There was an error fetching the menu items:', error.response?.data || error.message);
     }
@@ -132,7 +128,6 @@ const CustomerMenuScreen = () => {
       })
   
       const data = await response.json();
-      console.log(data);
 
       if (response.status === 201) {
         toast.success('Requesting Assistance');
@@ -157,7 +152,6 @@ const CustomerMenuScreen = () => {
       })
   
       const data = await response.json();
-      console.log(data);
 
       if (response.status === 201) {
         toast.success('Requesting Bill');

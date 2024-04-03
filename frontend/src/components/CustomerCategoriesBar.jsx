@@ -25,7 +25,6 @@ import axios from 'axios';
     const theme = useTheme();
     const [menuCategories, setMenuCategories] = useState([]);
     const tableId = customerInfo.tableId;
-    console.log(tableId);
 
     const handleCategoryClick = (categoryId) => {
       if(onCategorySelected) {
