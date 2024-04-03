@@ -6,6 +6,8 @@ const TableRequestsScreen = () => {
   const [newRequests, setNewRequests] = useState([]);
   const userInfo = JSON.parse(localStorage.getItem("userInfo"));
 
+  // Dylan please change this function to be similar to WaiterReadyOrdScreen. This screen should not work anymore
+
   async function getTableRequests() {
     const response = await fetch(
       `http://localhost:5000/tables/${userInfo.restaurant}/assistance`,

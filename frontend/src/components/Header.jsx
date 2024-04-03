@@ -5,13 +5,14 @@ import { LinkContainer } from "react-router-bootstrap";
 import { useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
 import { UserContext } from "../UserContext";
+import axios from 'axios';
 
 const Header = () => {
   const navigate = useNavigate();
-  const userInfo = JSON.parse(localStorage.getItem("userInfo"));
+  const userInfo = JSON.parse(localStorage.getItem('userInfo'));
   const { loggedIn, setLoggedIn } = useContext(UserContext);
-  const [newRequests, setNewRequests] = useState([]);
-  const [newCompletedOrders, setNewCompletedOrders] = useState([]);
+  const [requestList, setRequestList] = useState([]);
+  const [orderList, setOrderList] = useState([]);
 
   const logoutHandler = async () => {
     const response = await fetch("http://localhost:5000/api/users/logout", {
@@ -32,44 +33,36 @@ const Header = () => {
   };
 
   async function getTableRequests() {
-    const response = await fetch(
-      `http://localhost:5000/tables/${userInfo.restaurant}/assistance`,
-      {
-        method: "GET",
-        headers: {
-          "Content-type": "application/json",
-        },
-      }
-    );
-    const data = await response.json();
+    try {
+      const baseUrl = `http://localhost:5000/requests/${userInfo.restaurant}/requests`;
+  
+      // Fetch all orders concurrently with different query parameters
+      const [pendingResponse, inProgressResponse] = await Promise.all([
+        axios.get(baseUrl, { params: { state: 'waiting' } }),
+        axios.get(baseUrl, { params: { state: 'assisting' } }),
+      ]);
+      console.log(pendingResponse.data);
+      setRequestList([...pendingResponse.data, ...inProgressResponse.data]);
 
-    // if 200 there is data, there is customer requests pending
-    if (response.status === 200) {
-      setNewRequests(data);
-    } else if (response.status === 204) {
-      // if 204, then no content (there is no customer requests pending)
-      console.log("No Content 204", data);
+    } catch (error) {
+      console.error('There was an error fetching the orders:', error.response?.data || error.message);
     }
   }
 
-  async function getCompletedOrders() {
-    const response = await fetch(
-      `http://localhost:5000/orders/${userInfo.restaurant}/completedOrders`,
-      {
-        method: "GET",
-        headers: {
-          "Content-type": "application/json",
-        },
-      }
-    );
-    const data = await response.json();
+  async function getOrdersToServe() {
+    try {
+      const baseUrl = `http://localhost:5000/orders/${userInfo.restaurant}/orders`;
+  
+      // Fetch all orders concurrently with different query parameters
+      const [pendingResponse, preparingResponse] = await Promise.all([
+        axios.get(baseUrl, { params: { state: 'serve' } }),
+        axios.get(baseUrl, { params: { state: 'serving' } }),
+      ]);
+      console.log(pendingResponse.data);
+      setOrderList([...pendingResponse.data, ...preparingResponse.data]);
 
-    // if 200 there is data, there is customer requests pending
-    if (response.status === 200) {
-      setNewCompletedOrders(data);
-    } else if (response.status === 204) {
-      // if 204, then no content (there is no customer requests pending)
-      console.log("204", data);
+    } catch (error) {
+      console.error('There was an error fetching the orders:', error.response?.data || error.message);
     }
   }
 
@@ -81,7 +74,7 @@ const Header = () => {
     if (userInfo.role === "wait staff") {
         const interval = setInterval(() => {
           getTableRequests();
-          getCompletedOrders();
+          getOrdersToServe();
         }, 5000);
         return () => {
           clearInterval(interval);
@@ -114,14 +107,14 @@ const Header = () => {
                       <LinkContainer to="/table/assistance">
                         <Nav.Link>
                           {/* If pending requests is greater than 0 then make the colour red */}
-                          <FaHandPaper style={newRequests.length > 0 ? {color: "red"} : {}} />
+                          <FaHandPaper style={requestList.length > 0 ? {color: "red"} : {}} />
                           Table Requests
                         </Nav.Link>
                       </LinkContainer>
                       <LinkContainer to="/readyToServeOrders">
                         <Nav.Link>
                           {/* If pending requests is greater than 0 then make the colour red */}
-                          <FaUtensils style={newCompletedOrders.length > 0 ? {color: "red"} : {}} />
+                          <FaUtensils style={orderList.length > 0 ? {color: "red"} : {}} />
                           Orders Ready
                         </Nav.Link>
                       </LinkContainer>

@@ -5,15 +5,15 @@ import DoneIcon from '@mui/icons-material/Done';
 import TimerOutlinedIcon from '@mui/icons-material/TimerOutlined';
 import axios from 'axios';
 
-const ProgressButton = ({orderId, state, onOrderUpdate, isWaiter}) => {
+const RequestProgressButton = ({requestId, state, onOrderUpdate}) => {
   const theme = useTheme();
-  const [orderStatus, setOrderStatus] = useState(isWaiter && state === 'serve' ? 'ready' : state);
+  const [requestStatus, setRequestStatus] = useState(state);
 
   const userInfo = JSON.parse(localStorage.getItem('userInfo'));
   const restaurantId = userInfo.restaurant;
 
   const setProgress = async (route) => {
-    const url = `http://localhost:5000/orders/${restaurantId}/${orderId}/${route}`;
+    const url = `http://localhost:5000/requests/${restaurantId}/${requestId}/${route}`;
 
     try {
       console.log(url);
@@ -26,26 +26,16 @@ const ProgressButton = ({orderId, state, onOrderUpdate, isWaiter}) => {
   };
 
   const handleProgress = () => {
-    switch (orderStatus) {
-      case 'pending':
-        setOrderStatus('preparing')
-        setProgress('inProgress');
+    switch (requestStatus) {
+      case 'waiting':
+        setRequestStatus('assisting')
+        setProgress('assisting');
         break;
-      case 'preparing':
-        setOrderStatus('serve')
-        setProgress('prepared');
+      case 'assisting':
+        setRequestStatus('complete')
+        setProgress('complete');
         break;
-      case 'serve':
-        return;
-      case 'ready':
-        setOrderStatus('serving')
-        setProgress('serving');
-        break;
-      case 'serving':
-        setOrderStatus('served')
-        setProgress('served');
-        break;
-      case 'served':
+      case 'complete':
         return;
       default:
         return;
@@ -132,32 +122,18 @@ const ProgressButton = ({orderId, state, onOrderUpdate, isWaiter}) => {
   };
 
   return (
-    <div>
-    {!isWaiter ?
-      <Button
-        onClick={handleProgress}
-        style={buttonStyles[orderStatus]}
-        sx={{marginTop: '1rem'}}
-        startIcon={
-          orderStatus === 'serve'? <DoneIcon/> : <TimerOutlinedIcon/>
-        }
-      >
-        {orderStatus.toUpperCase()}
-      </Button> :
-      <Button
-        onClick={handleProgress}
-        style={buttonStyles[orderStatus]}
-        sx={{marginTop: '1rem'}}
-        startIcon={
-          orderStatus === 'served' ? <DoneIcon/> : <TimerOutlinedIcon/>
-        }
-      >
-        {orderStatus.toUpperCase()}
-      </Button>
-    }
-    </div>
+    <Button
+      onClick={handleProgress}
+      style={buttonStyles[requestStatus]}
+      sx={{marginTop: '1rem'}}
+      startIcon={
+        requestStatus === 'complete'? <DoneIcon/> : <TimerOutlinedIcon/>
+      }
+    >
+      {requestStatus.toUpperCase()}
+    </Button> 
   );
 };
   
 
-export default ProgressButton
+export default RequestProgressButton

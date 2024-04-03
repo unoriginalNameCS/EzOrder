@@ -1,18 +1,8 @@
 import express from 'express';
 import {
-    addItem,
-    addTable,
-    getAllRestaurants,
-    getCart, getOrders, getPendingRequestsForAssistance,
-    getTableNumbers,
-    removeItem,
-    requestAssistance,
-    sendOrder,
-    tableSelect,
-    updateRequestsForAssistance,
-    tableDeselect,
-    getTables,
-    getOrdersItems
+    addItem, addTable, getAllRestaurants, getCart, getOrders, getTableNumbers, removeItem,
+    requestAssistance, sendOrder, tableSelect, tableDeselect, getTables, getOrdersItems
+
 } from '../controllers/tableController.js';
 import { protect } from '../middleware/authMiddleware.js';
 
@@ -30,8 +20,6 @@ router.delete('/:restaurantId/:tableId/:cartItemId/removeItem', removeItem);
 router.get('/:restaurantId/:tableId/cart', getCart);
 router.get('/:restaurantId/:tableId/orders', getOrders);
 router.get('/:restaurantId/:tableId/orders/items', getOrdersItems);
-router.get('/:restaurantId/assistance', getPendingRequestsForAssistance)
-router.patch('/assistance', updateRequestsForAssistance)
 router.get('/restaurants', getAllRestaurants);
 router.post('/:restaurantId/:tableId/sendOrder', sendOrder);
 

@@ -22,7 +22,7 @@ const orderSchema = mongoose.Schema(
     state: {
       type: String,
       required: true,
-      enum: ['pending', 'preparing', 'serve']
+      enum: ['pending', 'preparing', 'serve', 'serving', 'served']
     },
     orderNum: {
       type: Number,

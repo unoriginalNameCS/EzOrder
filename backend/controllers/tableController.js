@@ -119,11 +119,16 @@ const requestAssistance = asyncHandler(async (req, res) => {
     throw new Error('Restaurant not found')
   }
 
+  const lastRequest = await Request.findOne({ restaurant : restaurantId }).sort({requestNum: -1})
+  const number = lastRequest ? lastRequest.orderNum + 1 : 1;
+
   const request = await Request.create({
     restaurant: restaurantId,
-    state: 'pending',
+    state: 'waiting',
     tableNum: table.number,
-    requestedBill: requestedBill
+    requestedBill: requestedBill,
+    time: new Date(),
+    requestNum: number
   });
 
   if (request) {
@@ -181,48 +186,6 @@ const sendOrder = asyncHandler(async (req, res) => {
       throw new Error('invalid');
   }
 })
-
-// @desc    Returns a list of pending requests for assistance for the given restaurant
-// @params  body: restaurantId - the objectId of the restaurant that the waiter is employed at
-// @route   GET restaurantId/assistance
-// @access  Private
-const getPendingRequestsForAssistance = asyncHandler(async (req, res) => {
-  // search for requests with restaurantId
-  const restaurant = req.params.restaurantId
-  // for given restaurantId and state has to equal 'pending'
-  const requests = await Request.find({restaurant: restaurant, state: 'pending', })
-  // no requests found for the given restaurant
-  if (!requests) {
-    // send empty array
-    res.status(204).json(requests)
-  } else {
-    // at least one request found
-    res.status(200).json(requests)
-  }
-})
-
-// @desc    Change state of request
-// @route   PATCH /tables/assistanc
-// @params  body: state - 'assisting' or 'complete'
-// @params  body: _id - the id of the request in MongoDB
-// @access  Private
-const updateRequestsForAssistance = asyncHandler(async (req, res) => {
-  const request_id = req.body.request_id
-  const state = req.body.state
-  // search db for particular request with _id
-  const request = await Request.findById(request_id)
-  if (!request) {
-    // can't find the request for assistance in the db, something went wrong
-    res.status(404)
-    throw new Error('Something went wrong, could not find the Request For Assistance')
-  } else {
-    // found the particular request in the db
-    request.state = state // update state
-    const updatedRequest = await request.save();
-    res.status(200).json(updatedRequest)
-  }
-})
-
 
 // @desc    adds item to table cart
 // @route   POST /tables/:restaurantId/:tableId/:itemId/addItem
@@ -460,7 +423,6 @@ const getAllRestaurants = asyncHandler(async (req, res) => {
 });
 
   export {
-  addItem, addTable, getAllRestaurants, getCart, getOrders,
-  getPendingRequestsForAssistance, getTableNumbers, removeItem, 
-  requestAssistance, sendOrder, tableSelect, updateRequestsForAssistance, tableDeselect, getTables, getOrdersItems
+  addItem, addTable, getAllRestaurants, getCart, getOrders, getTableNumbers, removeItem, 
+  requestAssistance, sendOrder, tableSelect, tableDeselect, getTables, getOrdersItems
 };
