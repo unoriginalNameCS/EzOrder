@@ -5,7 +5,7 @@ import DoneIcon from '@mui/icons-material/Done';
 import TimerOutlinedIcon from '@mui/icons-material/TimerOutlined';
 import axios from 'axios';
 
-const RequestProgressButton = ({requestId, state, onOrderUpdate}) => {
+const RequestProgressButton = ({requestId, state, onRequestUpdate}) => {
   const theme = useTheme();
   const [requestStatus, setRequestStatus] = useState(state);
 
@@ -18,7 +18,7 @@ const RequestProgressButton = ({requestId, state, onOrderUpdate}) => {
     try {
       console.log(url);
       await axios.put(url);
-      onOrderUpdate();
+      onRequestUpdate();
     } catch (error) {
       console.error('There was an error setting the progress:', error.response?.data || error.message);
     }
@@ -43,7 +43,7 @@ const RequestProgressButton = ({requestId, state, onOrderUpdate}) => {
   };
 
   const buttonStyles = {
-    'pending': {
+    'waiting': {
         backgroundColor: '#FFFFFF',
         color: '#F19413',
         border: `1px solid #F19413`,
@@ -57,7 +57,7 @@ const RequestProgressButton = ({requestId, state, onOrderUpdate}) => {
           boxShadow: 'none',
         },
     },
-    'preparing': {
+    'assisting': {
       backgroundColor: '#F19413',
       color: theme.palette.common.white,
       borderRadius: '0.625rem',
@@ -69,19 +69,7 @@ const RequestProgressButton = ({requestId, state, onOrderUpdate}) => {
         boxShadow: 'none',
       },
     },
-    'serve': {
-      backgroundColor: '#83AE0B',
-      color: theme.palette.common.white,
-      borderRadius: '0.625rem',
-      padding: theme.spacing(1.25, 3.25), 
-      textTransform: 'none',
-      boxShadow: 'none', 
-      '&:hover': {
-        backgroundColor: '#FFAD3C', 
-        boxShadow: 'none',
-      },
-    },
-    'ready': {
+    'complete': {
       backgroundColor: '#FFFFFF',
       color: '#F19413',
       border: `1px solid #F19413`,
@@ -95,30 +83,7 @@ const RequestProgressButton = ({requestId, state, onOrderUpdate}) => {
         boxShadow: 'none',
       },
     },
-    'serving': {
-      backgroundColor: '#F19413',
-      color: theme.palette.common.white,
-      borderRadius: '0.625rem',
-      padding: theme.spacing(1.25, 3.25), 
-      textTransform: 'none',
-      boxShadow: 'none', 
-      '&:hover': {
-        backgroundColor: '##83AE0B', 
-        boxShadow: 'none',
-      },
-    },
-    'served': {
-      backgroundColor: '#83AE0B',
-      color: theme.palette.common.white,
-      borderRadius: '0.625rem',
-      padding: theme.spacing(1.25, 3.25), 
-      textTransform: 'none',
-      boxShadow: 'none', 
-      '&:hover': {
-        backgroundColor: '#FFAD3C', 
-        boxShadow: 'none',
-      },
-    },
+
   };
 
   return (
