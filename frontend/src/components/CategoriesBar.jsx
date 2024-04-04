@@ -83,6 +83,11 @@ import ReorderIcon from '@mui/icons-material/Reorder';
     const handleCloseDeleteCategoryModal = () => {
       setDeleteCategoryModalOpen(false);
       refreshMenuCategories();
+      if (menuCategories.length == 0) {
+        handleCategoryClick('');
+      } else {
+        handleCategoryClick(menuCategories[0]._id);
+      }
     };
 
     const refreshMenuCategories = () => {
@@ -100,9 +105,6 @@ import ReorderIcon from '@mui/icons-material/Reorder';
         });
   
         setMenuCategories(data); 
-        if (data.length == 0) {
-          handleCategoryClick('');
-        }
       } catch (error) {
         console.error('There was an error fetching the categories:', error.response?.data || error.message);
       }
