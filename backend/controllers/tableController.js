@@ -120,7 +120,7 @@ const requestAssistance = asyncHandler(async (req, res) => {
   }
 
   const lastRequest = await Request.findOne({ restaurant : restaurantId }).sort({requestNum: -1})
-  const number = lastRequest ? lastRequest.orderNum + 1 : 1;
+  const number = lastRequest ? lastRequest.requestNum + 1 : 1;
 
   const request = await Request.create({
     restaurant: restaurantId,
@@ -209,7 +209,6 @@ const addItem = asyncHandler(async (req, res) => {
 
     var existingCartItem = "";
     for (const cartItem of tableCart.cart) {
-      console.log(cartItem)
       if (String(cartItem.menuItem) == String(itemId) && cartItem.notes == notes) {
         var existingCartItem = cartItem;
       }
@@ -353,7 +352,6 @@ const getOrdersItems = asyncHandler(async (req, res) => {
   }
 
   let items = []
-  console.log(table.order_list)
   for (let order of table.order_list) {
     for (let item of order.items) {
       items.push({id: item.menuItem, quantity: item.quantity, notes: item.notes})
@@ -389,7 +387,6 @@ const getTables = asyncHandler(async (req, res) => {
   const { restaurantId } = req.params;
   // Find the table by ID and restaurant
   const tables = await Table.find({ restaurant: restaurantId });
-  console.log(tables);
 
   if (!tables) {
     res.status(404).json({ message: 'Tables not found' });

@@ -25,7 +25,6 @@ const ReadyToServeOrdersScreen = () => {
         axios.get(baseUrl, { params: { state: 'serve', isWaiter: true } }),
         axios.get(baseUrl, { params: { state: 'serving', isWaiter: true } }),
       ]);
-      console.log(pendingResponse.data);
       setOrderList([...pendingResponse.data, ...preparingResponse.data]);
 
     } catch (error) {
@@ -56,7 +55,7 @@ const ReadyToServeOrdersScreen = () => {
               key={orderDetails._id}
               orderNumber={orderDetails.orderNum} 
               tableNumber={orderDetails.tableNum} 
-              time={orderDetails.time} 
+              time={orderDetails.serveTime} 
               items={orderDetails.items} 
               totalQuantity={order.totalQuantity}
               orderId={orderDetails._id}

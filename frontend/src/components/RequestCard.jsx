@@ -45,7 +45,7 @@ function formatDate(d) {
 }
 
 
-const RequestCard = ({requestNumber, tableNumber, time, state, requestId, type, onOrderUpdate}) => {
+const RequestCard = ({requestNumber, tableNumber, time, state, requestId, type, onRequestUpdate}) => {
   const theme = useTheme();
     return (
         <Request>
@@ -64,7 +64,7 @@ const RequestCard = ({requestNumber, tableNumber, time, state, requestId, type, 
             <Subtext variant="subtitle2">
               Requesting {type}
             </Subtext>
-            <RequestProgressButton orderId={requestId} state={state} onOrderUpdate={onOrderUpdate}/>
+            <RequestProgressButton requestId={requestId} state={state} onRequestUpdate={onRequestUpdate}/>
           </CardContent>
         </Request>
     )

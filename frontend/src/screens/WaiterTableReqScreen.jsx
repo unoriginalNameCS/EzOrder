@@ -1,50 +1,69 @@
 import React, { useEffect, useState } from "react";
-import ListGroup from 'react-bootstrap/ListGroup';
+import { Masonry } from '@mui/lab';
+import { Typography } from '@mui/material';
+import Box from '@mui/material/Box';
+import { useTheme } from '@mui/material/styles';
+import axios from 'axios';
+import RequestCard from '../components/RequestCard';
+import SideNav from '../components/SideNav';
 
-// This page is for wait staff to view their pending customer table requests
 const TableRequestsScreen = () => {
-  const [newRequests, setNewRequests] = useState([]);
-  const userInfo = JSON.parse(localStorage.getItem("userInfo"));
+  const theme = useTheme();
+  const [requestList, setRequestList] = useState([]); 
 
-  // Dylan please change this function to be similar to WaiterReadyOrdScreen. This screen should not work anymore
+  const userInfo = JSON.parse(localStorage.getItem('userInfo'));
+  const restaurantId = userInfo.restaurant;
 
-  async function getTableRequests() {
-    const response = await fetch(
-      `http://localhost:5000/tables/${userInfo.restaurant}/assistance`,
-      {
-        method: "GET",
-        headers: {
-          "Content-type": "application/json",
-        },
-      }
-    );
-    const data = await response.json();
+  const fetchRequestList = async () => {
+    try {
+      const baseUrl = `http://localhost:5000/requests/${restaurantId}/requests`;
+  
+      // Fetch all requests concurrently with different query parameters
+      const [pendingResponse, assistingResponse] = await Promise.all([
+        axios.get(baseUrl, { params: { state: 'waiting' } }),
+        axios.get(baseUrl, { params: { state: 'assisting' } }),
+      ]);
+      setRequestList([...pendingResponse.data, ...assistingResponse.data]);
 
-    // if 200 there is data, there is customer requests pending
-    if (response.status === 200) {
-      setNewRequests(data);
-    } else if (response.status === 204) {
-      // if 204, then no content (there is no customer requests pending)
-      console.log("204", data);
+    } catch (error) {
+      console.error('There was an error fetching the requests:', error.response?.data || error.message);
     }
-  }
+  };
 
   useEffect(() => {
-    getTableRequests();
+    fetchRequestList();
   }, []);
 
+  const triggerRequestUpdate = () => {
+    fetchRequestList();
+  };
+  
   return (
-    <>
-      <h2>Pending Table Requests</h2>
-      <ListGroup>
-        {newRequests.map((req) => 
-          <ListGroup.Item variant="danger" key={req._id}>
-            Table {req.tableNum} has requested {req.requestedBill ? <>the bill</> : <>assistance</>}.
-          </ListGroup.Item>
-        )}
-      </ListGroup>
-    </>
-  );
+    <div style={{ display: 'flex' }}>
+      <SideNav />
+      <Box sx={{ width: '100%', minHeight: '100vh'}} style={{ padding: theme.spacing(3), marginLeft: '160px' }}> {/* Adjust marginLeft to the width of SideNav */}
+        <Typography variant="h5" component="div" sx={{fontWeight: 800, mb: 2}}>
+          Request List
+        </Typography>
+        <Masonry sequential columns={{xs: 1, sm: 3}} spacing={3}>
+          {requestList.map((request, index) => {
+          return (
+            <RequestCard 
+              key={request._id}
+              requestNumber={request.requestNum} 
+              tableNumber={request.tableNum} 
+              time={request.time} 
+              state={request.state}
+              requestId={request._id}
+              type={request.requestedBill ? 'Bill' : 'Assistance'}
+              onRequestUpdate={triggerRequestUpdate} 
+            />
+          );
+          })}
+        </Masonry>
+      </Box>
+    </div>
+  )
 };
 
 export default TableRequestsScreen;
