@@ -7,6 +7,7 @@ import { Button } from '@mui/material';
 import { styled, useTheme } from '@mui/material/styles';
 import NewItemModal from '../components/NewItemModal';
 import EditItemModal from '../components/EditItemModal';
+import DeleteItemModal from '../components/DeleteItemModal';
 import CategoriesBar from '../components/CategoriesBar';
 
 const StyledButton = styled(Button)(({ theme }) => ({
@@ -27,6 +28,7 @@ const MenuScreen = () => {
   const [menuItems, setMenuItems] = useState([]); 
   const [NewItemModalOpen, setNewItemModalOpen] = useState(false);
   const [EditItemModalOpen, setEditItemModalOpen] = useState(false);
+  const [DeleteItemModalOpen, setDeleteItemModalOpen] = useState(false);
   const [menuCategories, setMenuCategories] = useState([]);
   const [selectedCategoryId, setSelectedCategoryId] = useState('');
 
@@ -51,6 +53,15 @@ const MenuScreen = () => {
 
   const handleCloseEditItemModal = () => {
     setEditItemModalOpen(false);
+    refreshMenuItems();
+  };
+
+  const handleOpenDeleteItemModal = () => {
+    setDeleteItemModalOpen(true);
+  };
+
+  const handleCloseDeleteItemModal = () => {
+    setDeleteItemModalOpen(false);
     refreshMenuItems();
   };
 
@@ -137,9 +148,17 @@ const MenuScreen = () => {
           <StyledButton
             variant="contained"
             onClick={handleOpenEditItemModal}
+            sx={{marginRight: '0.75rem'}}
             disabled={menuItems.length === 0}
           >
             Edit Item
+          </StyledButton>
+          <StyledButton
+            variant="contained"
+            onClick={handleOpenDeleteItemModal}
+            disabled={menuItems.length === 0}
+          >
+            Delete Item
           </StyledButton>
         </Grid>)}
       </Grid>
@@ -154,6 +173,14 @@ const MenuScreen = () => {
         <EditItemModal
           open={EditItemModalOpen}
           handleClose={handleCloseEditItemModal}
+          refreshItems={refreshMenuItems} 
+          restaurantId={restaurantId}
+          categoryId={selectedCategoryId}
+          menuItems={menuItems}
+        />
+        <DeleteItemModal
+          open={DeleteItemModalOpen}
+          handleClose={handleCloseDeleteItemModal}
           refreshItems={refreshMenuItems} 
           restaurantId={restaurantId}
           categoryId={selectedCategoryId}

@@ -1,6 +1,7 @@
 import asyncHandler from 'express-async-handler';
 import MenuCategory from '../models/categoryModel.js';
 import MenuItem from '../models/itemModel.js';
+import Restaurant from '../models/restaurantModel.js';
 
 // @desc  view menu
 // @route  GET /:restaurantId/menu
@@ -263,8 +264,78 @@ const updateMenuItemDetails = asyncHandler(async (req, res) => {
     res.status(200).json(updatedItem);
 });
 
+// @desc  remove menu item
+// @route  DELETE /:restaurantId/menu/categories/:categoryId/items/:itemId/remove
+// @access Private
+const removeMenuItem = asyncHandler(async (req, res) => {
+  const { restaurantId, categoryId, itemId } = req.params;
+  try {
+    const category = await MenuCategory.findOne({ _id: categoryId, restaurant: restaurantId });
+    if (!category) {
+      res.status(404);
+      throw new errorHandler('Menu category not found');
+    }
+
+    const item = await MenuItem.findOne({ _id: itemId, category: categoryId });
+    if (!item) {
+        res.status(404);
+        throw new Error('Menu item not found');
+    }
+
+    // Remove item from category
+    category.menuItems.filter((menuItem) => menuItem._id.toString() != itemId);
+    await category.save();
+
+    // Reduce position by one if greater than item position and same category
+    await MenuItem.updateMany({position: {$gt: item.position}, category: categoryId}, {$inc : { position: -1 }});
+    
+    await MenuItem.deleteOne({ _id: itemId });
+
+    res.status(200).json({ message: 'Item deleted sucessfully' });
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+});
+
+// @desc  remove menu item
+// @route  DELETE /:restaurantId/menu/categories/:categoryId/remove
+// @access Private
+const removeMenuCategory = asyncHandler(async (req, res) => {
+  const { restaurantId, categoryId } = req.params;
+
+  try {
+    const restaurant = await Restaurant.findOne({ _id: restaurantId });
+    if (!restaurant) {
+      res.status(404);
+      throw new Error('Restaurant not found');
+    }
+    
+    const category = await MenuCategory.findOne({ _id: categoryId, restaurant: restaurantId });
+    if (!category) {
+      res.status(404);
+      throw new Error('Menu category not found');
+    }
+
+    // Remove item from category
+    restaurant.menu.filter((menuCategory) => menuCategory._id.toString() != categoryId);
+    await restaurant.save();
+    
+    // Reduce position by one if greater than category position and same restaurant
+    await MenuCategory.updateMany({position: {$gt: category.position}, restaurant: restaurantId}, {$inc : { position: -1 }});
+    
+    // Delete menu items in category and category
+    await MenuItem.deleteMany({ category: categoryId });
+    await MenuCategory.deleteOne({ _id: categoryId });
+
+    res.status(200).json({ message: 'Category deleted sucessfully' });
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+});
+
 export {
   addCategory, addItem, getCategories, getMenu, getMenuItemDetails, getMenuItems, 
-  updateCategoriesOrder, updateMenuItemDetails, updateMenuItemsOrder, getMenuCategory
+  updateCategoriesOrder, updateMenuItemDetails, updateMenuItemsOrder, getMenuCategory,
+  removeMenuItem, removeMenuCategory
 };
 

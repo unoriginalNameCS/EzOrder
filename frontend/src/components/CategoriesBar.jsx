@@ -6,7 +6,9 @@ import React, { useState, useEffect, useCallback} from 'react';
 import axios from 'axios';
 import NewCategoryModal from '../components/NewCategoryModal';
 import EditCategoryModal from '../components/EditCategoryModal';
+import DeleteCategoryModal from '../components/DeleteCategoryModal';
 import AddIcon from '@mui/icons-material/Add';
+import DeleteIcon from '@mui/icons-material/Delete';
 import ReorderIcon from '@mui/icons-material/Reorder';
 
   const CategoryButton = styled(Button)(({ theme }) => ({
@@ -47,6 +49,7 @@ import ReorderIcon from '@mui/icons-material/Reorder';
     const [menuCategories, setMenuCategories] = useState([]); 
     const [newCategoryModalOpen, setNewCategoryModalOpen] = useState(false);
     const [editCategoryModalOpen, setEditCategoryModalOpen] = useState(false);
+    const [deleteCategoryModalOpen, setDeleteCategoryModalOpen] = useState(false);
     const isManager = userInfo.role === 'manager';
 
     const handleCategoryClick = (categoryId) => {
@@ -73,6 +76,15 @@ import ReorderIcon from '@mui/icons-material/Reorder';
       refreshMenuCategories();
     };
   
+    const handleOpenDeleteCategoryModal = () => {
+      setDeleteCategoryModalOpen(true);
+    };
+
+    const handleCloseDeleteCategoryModal = () => {
+      setDeleteCategoryModalOpen(false);
+      refreshMenuCategories();
+    };
+
     const refreshMenuCategories = () => {
       fetchMenuCategories();
     };
@@ -133,6 +145,13 @@ import ReorderIcon from '@mui/icons-material/Reorder';
           >
             <AddIcon/>
           </EditButton>
+          <EditButton
+            variant='outlined'
+            theme={theme}
+            onClick={handleOpenDeleteCategoryModal}
+          >
+            <DeleteIcon/>
+          </EditButton>
         </>)}
       </Box>
       <NewCategoryModal
@@ -148,6 +167,13 @@ import ReorderIcon from '@mui/icons-material/Reorder';
           restaurantId={restaurantId} 
           categories={menuCategories}
       />      
+      <DeleteCategoryModal
+          open={deleteCategoryModalOpen}
+          handleClose={handleCloseDeleteCategoryModal}
+          refreshItems={refreshMenuCategories}
+          restaurantId={restaurantId} 
+          categories={menuCategories}
+      />   
     </>
   );
 }
