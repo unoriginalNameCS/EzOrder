@@ -46,6 +46,7 @@ import ReorderIcon from '@mui/icons-material/Reorder';
 
   const CategoriesBar = ({restaurantId, userInfo, onCategorySelected}) => {
     const theme = useTheme();
+    const [currCategory, setCurrCategory] = useState('');
     const [menuCategories, setMenuCategories] = useState([]); 
     const [newCategoryModalOpen, setNewCategoryModalOpen] = useState(false);
     const [editCategoryModalOpen, setEditCategoryModalOpen] = useState(false);
@@ -55,6 +56,7 @@ import ReorderIcon from '@mui/icons-material/Reorder';
     const handleCategoryClick = (categoryId) => {
       if(onCategorySelected) {
         onCategorySelected(categoryId);
+        setCurrCategory(categoryId);
       }
     };
 
@@ -100,6 +102,14 @@ import ReorderIcon from '@mui/icons-material/Reorder';
         });
   
         setMenuCategories(data); 
+        if (data.length > 0) {
+          // If category is not in menu, then select the first category
+          if (data.filter((category) => category._id == currCategory).length == 0) {
+            handleCategoryClick(data[0]._id);
+          }
+        } else {
+          handleCategoryClick('');
+        }
       } catch (error) {
         console.error('There was an error fetching the categories:', error.response?.data || error.message);
       }

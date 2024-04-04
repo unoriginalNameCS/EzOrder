@@ -114,6 +114,8 @@ const MenuScreen = () => {
   useEffect(() => {
     if (selectedCategoryId) {
       fetchMenuItems();
+    } else {
+      setMenuItems([]);
     }
   }, [selectedCategoryId]);
 

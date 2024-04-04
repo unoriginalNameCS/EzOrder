@@ -25,11 +25,7 @@ const getCategories = asyncHandler(async (req, res) => {
   const { restaurantId } = req.params;
   const categories = await MenuCategory.find({ restaurant : restaurantId}).sort('position');
 
-  if (categories.length > 0) {
-    res.status(200).json(categories);
-  } else {
-    res.status(404).json({ message: 'No Categories' })
-  }
+  res.status(200).json(categories);
 });
 
 // @desc  add category
@@ -73,11 +69,7 @@ const getMenuItems = asyncHandler(async (req, res) => {
   const { restaurantId, categoryId } = req.params;
   const menuItems = await MenuItem.find({ category : categoryId }).sort('position');
 
-  if (menuItems.length > 0) {
-    res.status(200).json(menuItems);
-  } else {
-    res.status(200).json(menuItems);
-  }
+  res.status(200).json(menuItems);
 })
 
 // @desc  add item
