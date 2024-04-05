@@ -40,7 +40,8 @@ const DeleteCategoryModal = ({ open, handleClose, restaurantId, categories }) =>
           Authorization: `${userInfo.token}`,
         }
       });
-      handleClose(); 
+      handleClose();
+      setCategoryId('');
     } catch (error) {
       console.error('There was an error deleting the category:', error.response?.data || error.message);
     }
@@ -78,7 +79,7 @@ const DeleteCategoryModal = ({ open, handleClose, restaurantId, categories }) =>
                 label="Category"
               >
                 {categories.map((category) => (
-                  <MenuItem value={category._id}>
+                  <MenuItem value={category._id} key={category._id}>
                     {category.name}
                   </MenuItem>
                 ))}

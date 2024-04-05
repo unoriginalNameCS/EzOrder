@@ -70,7 +70,8 @@ const MenuScreen = () => {
   };
 
   const onCategorySelected = (categoryId) => {
-    setSelectedCategoryId(categoryId);
+    console.log(categoryId);
+    setSelectedCategoryId(categoryId);   
   };
 
   const fetchMenuCategories = async () => {
@@ -83,7 +84,10 @@ const MenuScreen = () => {
       });
       setMenuCategories(data);
       if (data.length > 0) {
-        setSelectedCategoryId(data[0]._id); // Set the first category as default
+        setSelectedCategoryId(data[0]._id);
+      } else {
+        setSelectedCategoryId('');
+        setMenuItems([]);
       }
     } catch (error) {
       console.error('There was an error fetching the categories:', error.response?.data || error.message);
@@ -91,7 +95,6 @@ const MenuScreen = () => {
   };
 
   const fetchMenuItems = async () => {
-    console.log(selectedCategoryId)
     try {
       const url = `http://localhost:5000/menus/${restaurantId}/menu/categories/${selectedCategoryId}/items`;
 
@@ -100,8 +103,7 @@ const MenuScreen = () => {
           Authorization: `${userInfo.token}`, 
         },
       });
-
-      setMenuItems(data); 
+      setMenuItems(data);
     } catch (error) {
       console.error('There was an error fetching the menu items:', error.response?.data || error.message);
     }
@@ -128,7 +130,7 @@ const MenuScreen = () => {
         </Grid>  
           
         {menuItems.map((item, index) => (
-          <Grid item xs={12} sm={12} md={12} lg={6} key={index} style={{ padding: theme.spacing(1) }}>
+          <Grid item xs={12} sm={12} md={12} lg={6} key={item._id} style={{ padding: theme.spacing(1) }}>
             <MenuCard
               title={item.name}
               description={item.description}
@@ -162,7 +164,8 @@ const MenuScreen = () => {
           >
             Delete Item
           </StyledButton>
-        </Grid>)}
+        </Grid>
+      )}
       </Grid>
       {isManager && (<>
         <NewItemModal

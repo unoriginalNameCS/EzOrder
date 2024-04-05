@@ -40,7 +40,8 @@ const DeleteItemModal = ({ open, handleClose, restaurantId, categoryId, menuItem
           Authorization: `${userInfo.token}`,
         }
       });
-      handleClose(); 
+      handleClose();
+      setItemId('');
     } catch (error) {
       console.error('There was an error deleting the item:', error.response?.data || error.message);
     }
@@ -78,7 +79,7 @@ const DeleteItemModal = ({ open, handleClose, restaurantId, categoryId, menuItem
                 label="Item"
               >
                 {menuItems.map((item) => (
-                  <MenuItem value={item._id}>
+                  <MenuItem key={item._id} value={item._id}>
                     {item.name}
                   </MenuItem>
                 ))}
