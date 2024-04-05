@@ -11,9 +11,10 @@ import AddIcon from '@mui/icons-material/Add';
 import DeleteIcon from '@mui/icons-material/Delete';
 import ReorderIcon from '@mui/icons-material/Reorder';
 
-  const CategoryButton = styled(Button)(({ theme }) => ({
-    backgroundColor: '#FBFBF2',
-    color: '#83AE0B',
+  const CategoryButton = styled(Button)(({ theme, selected }) => ({
+    backgroundColor: selected ? '#83AE0B' : '#FBFBF2',
+    // backgroundColor: '#FBFBF2',
+    color: selected ? '#FBFBF2': '#83AE0B',
     borderRadius: '0.5rem',
     borderColor: '#83AE0B',
     padding: theme.spacing(1.25, 3.25), 
@@ -50,9 +51,12 @@ import ReorderIcon from '@mui/icons-material/Reorder';
     const [newCategoryModalOpen, setNewCategoryModalOpen] = useState(false);
     const [editCategoryModalOpen, setEditCategoryModalOpen] = useState(false);
     const [deleteCategoryModalOpen, setDeleteCategoryModalOpen] = useState(false);
+    const [selectedCategoryId, setSelectedCategoryId] = useState('');
+    const [lastUpdatedCategory, setLastUpdatedCategory] = useState('');
     const isManager = userInfo.role === 'manager';
 
     const handleCategoryClick = (categoryId) => {
+      setSelectedCategoryId(categoryId);
       if(onCategorySelected) {
         onCategorySelected(categoryId);
       }
@@ -83,12 +87,15 @@ import ReorderIcon from '@mui/icons-material/Reorder';
     const handleCloseDeleteCategoryModal = () => {
       setDeleteCategoryModalOpen(false);
       refreshMenuCategories();
-      if (menuCategories.length == 0) {
-        handleCategoryClick('');
-      } else {
-        handleCategoryClick(menuCategories[0]._id);
-      }
     };
+
+    const addCategories = (newCategoryId) => {
+      setLastUpdatedCategory(newCategoryId);
+    }
+
+    const editCategories = (updatedCategoryId) => {
+      setLastUpdatedCategory(updatedCategoryId);
+    }
 
     const refreshMenuCategories = () => {
       fetchMenuCategories();
@@ -118,6 +125,16 @@ import ReorderIcon from '@mui/icons-material/Reorder';
       fetchMenuCategories();
     }, [fetchMenuCategories]);
 
+    useEffect(() => {
+      if (menuCategories.length > 0) {
+        setSelectedCategoryId(menuCategories[0]._id);
+        handleCategoryClick(menuCategories[0]._id);
+      } else {
+        setSelectedCategoryId('');
+        handleCategoryClick('');
+      }
+    }, [menuCategories]);
+
   return (
     <>
       <Box
@@ -130,7 +147,9 @@ import ReorderIcon from '@mui/icons-material/Reorder';
         <ButtonGroup variant="outlined" aria-label="Basic button group">
           <ButtonGroup variant="outlined" aria-label="category button group">
             {menuCategories.map((category, index) => (
-              <CategoryButton theme={theme} key={index} onClick={() => handleCategoryClick(category._id)}>{category.name}</CategoryButton>
+              <CategoryButton theme={theme} selected={category._id === selectedCategoryId} key={category._id} onClick={() => handleCategoryClick(category._id)}>
+                  {category.name}
+              </CategoryButton>
             ))}
           </ButtonGroup>
         </ButtonGroup>
@@ -154,6 +173,7 @@ import ReorderIcon from '@mui/icons-material/Reorder';
             variant='outlined'
             theme={theme}
             onClick={handleOpenDeleteCategoryModal}
+            disabled={menuCategories.length === 0}
           >
             <DeleteIcon/>
           </EditButton>
