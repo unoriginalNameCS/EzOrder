@@ -212,10 +212,10 @@ const registerStaff = asyncHandler(async (req, res) => {
     }
 
     // check if given invalid role
-    if (role !== 'wait staff' && role !== 'kitchen staff') {
+    if (role !== 'wait staff' && role !== 'kitchen staff' && role !== 'manager') {
       res.status(400);
       throw new Error(
-        `Invalid role, roles can only be 'wait staff' or 'kitchen staff, when registering staff.`
+        `Invalid role, roles can only be 'wait staff' or 'kitchen staff', 'mangager' when registering staff.`
       );
     }
 
