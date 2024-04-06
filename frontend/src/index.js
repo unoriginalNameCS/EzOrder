@@ -21,6 +21,7 @@ import CartScreen from './screens/CartScreen';
 import TableScreen from './screens/TableScreen';
 import OrderScreen from './screens/OrderScreen';
 import KitchenScreen from './screens/KitchenScreen';
+import SettingsScreen from './screens/SettingsScreen';
 
 const router = createBrowserRouter(createRoutesFromElements(
   <Route path='/' element={<App />}>
@@ -39,6 +40,7 @@ const router = createBrowserRouter(createRoutesFromElements(
       <Route path='/kitchen' element={<KitchenScreen />} />
       <Route path='/tasks' element={<TasksScreen />}/>
       <Route path='/staff' element={<StaffScreen/>}/>
+      <Route path='/settings' element={<SettingsScreen/>}/>
       <Route path='table/assistance' element={<WaiterTableReqScreen />} />
       <Route path='/readyToServeOrders' element = {<WaiterReadyOrderScreen />} />
       <Route path='/tableEdits' element = {<TableScreen />} />
