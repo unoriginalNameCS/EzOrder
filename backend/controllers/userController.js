@@ -45,9 +45,19 @@ const requestPasswordReset = asyncHandler(async (req, res) => {
     throw new Error('This email is not registered with EzOrder')
   }
 
+  // before we add in a new verification code, we will delete previous password reset attempts, ensuring the user can only reset their password with the most recent verification code
+  const previousPasswordReset = await UserResetPassword.find({email: email})
+
+
+  // if there is and previous requests, then delete them
+  previousPasswordReset.forEach(async (element) => {
+    await UserResetPassword.deleteOne({_id: element._id})
+  });
+
   // if the email does exist, then send it an email containing verification code (6 digits)
   const verify_code = Math.floor(Math.random() * 999999) + 100000;
 
+  // send the email
   const transporter = nodemailer.createTransport({
     service: 'gmail',
     auth: {
@@ -74,10 +84,16 @@ const requestPasswordReset = asyncHandler(async (req, res) => {
           email: userExists.email,
           verification_code: verify_code,
       })
-      res.status(200).json({ Message: "Email sent", requestReset });
+      res.status(201).json({ Message: "Email sent", requestReset });
     }
   });
+})
 
+// @desc    Reset password
+// @route   PUT /api/users/password/reset
+// @access  Public
+const resetPassword = asyncHandler(async (req, res) => {
+  
 })
 
 // @desc    Register a new user
