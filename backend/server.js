@@ -33,7 +33,7 @@ app.use('/menus', menuRoutes);
 app.use('/tables', tableRoutes);
 app.use('/orders', orderRoutes);
 app.use('/requests', requestRoutes);
-app.use('/restaurants', restaurantRoutes)
+app.use('/restaurants', restaurantRoutes);
 
 // errors
 app.use(notFound);
