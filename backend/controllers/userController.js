@@ -3,6 +3,7 @@ import Restaurant from '../models/restaurantModel.js';
 import User from '../models/userModel.js';
 import generateToken from '../utils/generateToken.js';
 import nodemailer from 'nodemailer';
+import UserResetPassword from '../models/userResetPasswordModel.js';
 
 // @desc    Auth user & get token
 // @route   POST /api/users/auth
@@ -62,15 +63,18 @@ const requestPasswordReset = asyncHandler(async (req, res) => {
     text: `Hi ${userExists.name},\n\nYou've requested a password reset on your account. Your verification code is: ${verify_code}.\n\nKind regards,\nEzOrder Team`
   };
   
-  transporter.sendMail(mailOptions, function (error, info) {
+  transporter.sendMail(mailOptions, async (error, info) => {
     if (error) {
       console.log(error);
       res.status(400).json(error);
     } else {
       console.log("Email sent: " + info.response);
-      // if we get here, then store it in the database somehow to check for correct verification whenever its checked
-      // @TODO
-      res.status(200).json({ Message: "Email sent", info: info.response });
+      // if we get here, then store the verification code with the user email in the database so we can check it when it is used
+      const requestReset = await UserResetPassword.create({
+          email: userExists.email,
+          verification_code: verify_code,
+      })
+      res.status(200).json({ Message: "Email sent", requestReset });
     }
   });
 
