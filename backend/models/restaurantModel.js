@@ -7,17 +7,12 @@ const restaurantSchema = mongoose.Schema(
       required: true,
       unique: true
     },
-    // logoUrl: {
-    //     type: String
-    // },
-    menu: [{
-      type: mongoose.Schema.Types.ObjectId,
-      ref: 'MenuCategory'
-    }],
-    users: [{
-      type: mongoose.Schema.Types.ObjectId,
-      ref: 'User'
-    }]
+    logoUrl: {
+        type: String
+    },
+    bannerUrl: {
+      type: String
+    },
   }
 );
 
