@@ -2,6 +2,7 @@ import asyncHandler from 'express-async-handler';
 import Restaurant from '../models/restaurantModel.js';
 import User from '../models/userModel.js';
 import generateToken from '../utils/generateToken.js';
+import nodemailer from 'nodemailer';
 
 // @desc    Auth user & get token
 // @route   POST /api/users/auth
@@ -27,6 +28,53 @@ const authUser = asyncHandler(async (req, res) => {
     throw new Error('Invalid email or password');
   }
 });
+
+// @desc    Request a password reset
+// @route   POST /api/users/password/reset
+// @access  Public
+const requestPasswordReset = asyncHandler(async (req, res) => {
+  const { email } = req.body
+
+  // check if the email exists in the database
+  // search db for user by email
+  const userExists = await User.findOne({ email });
+  // if the user does not exist in the database
+  if (!userExists) {
+    res.status(400)
+    throw new Error('This email is not registered with EzOrder')
+  }
+
+  // if the email does exist, then send it an email containing verification code (6 digits)
+  const verify_code = Math.floor(Math.random() * 999999) + 100000;
+
+  const transporter = nodemailer.createTransport({
+    service: 'gmail',
+    auth: {
+      user: process.env.EZORDER_EMAIL,
+      pass: process.env.EZORDER_PASSWORD
+    }
+  });
+  
+  const mailOptions = {
+    from: process.env.EZORDER_EMAIL,
+    to: `${email}`,
+    subject: 'Password Reset',
+    text: `Hi ${userExists.name},\n\nYou've requested a password reset on your account. Your verification code is: ${verify_code}.\n\nKind regards,\nEzOrder Team`
+  };
+  
+  transporter.sendMail(mailOptions, function (error, info) {
+    if (error) {
+      console.log(error);
+      res.status(400).json(error);
+    } else {
+      console.log("Email sent: " + info.response);
+      // if we get here, then store it in the database somehow to check for correct verification whenever its checked
+      // @TODO
+      res.status(200).json({ Message: "Email sent", info: info.response });
+    }
+  });
+
+})
 
 // @desc    Register a new user
 // @route   POST /api/users
@@ -271,4 +319,5 @@ export {
   registerUser,
   updateUserProfile,
   deleteUser,
+  requestPasswordReset
 };
