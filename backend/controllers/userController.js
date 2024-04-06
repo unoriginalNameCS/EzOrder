@@ -48,14 +48,13 @@ const requestPasswordReset = asyncHandler(async (req, res) => {
   // before we add in a new verification code, we will delete previous password reset attempts, ensuring the user can only reset their password with the most recent verification code
   const previousPasswordReset = await UserResetPassword.find({email: email})
 
-
   // if there is and previous requests, then delete them
   previousPasswordReset.forEach(async (element) => {
     await UserResetPassword.deleteOne({_id: element._id})
   });
 
   // if the email does exist, then send it an email containing verification code (6 digits)
-  const verify_code = Math.floor(Math.random() * 999999) + 100000;
+  const verify_code = Math.floor(100000 + Math.random() * 900000);
 
   // send the email
   const transporter = nodemailer.createTransport({
@@ -93,7 +92,43 @@ const requestPasswordReset = asyncHandler(async (req, res) => {
 // @route   PUT /api/users/password/reset
 // @access  Public
 const resetPassword = asyncHandler(async (req, res) => {
-  
+  const { email, verification_code, newPassword } = req.body
+
+  // get the previous password reset request
+  // there should only be one in the database for a user at a time, since everytime a new password reset is requested, the previous is deleted
+  const previousPasswordReset = await UserResetPassword.findOne({email: email})
+  // the user has not requested for password reset first
+  if (!previousPasswordReset) {
+    res.status(400)
+    throw new Error('You need to request a password reset first')
+  }
+
+  // check if the verification code provided is the same in the db
+  if (verification_code !== previousPasswordReset.verification_code) {
+    res.status(401) // unauthorised
+    throw new Error('The verification code you provided is incorrect')
+  }
+
+  // checks completed, store the new password in the database
+  // get the user from the User collection model
+  const user = await User.findOne({ email });
+
+  // update the password
+  user.password = newPassword
+
+  // save the change, this should automatically encrypt the password too from the save method in the user model
+  const updatedUser = await user.save()
+
+  // final check, check if the entered password from the body is the same as the password in the database (goes through hashing with bcrypt)
+  if (!user.matchPassword(newPassword)) {
+    res.status(500)
+    throw new Error('Something went wrong with saving the new password into the database')
+  }
+
+  // delete the password reset request from database
+  await UserResetPassword.deleteOne({_id: previousPasswordReset._id})
+
+  res.status(200).json({message: "Successfully reset password"})
 })
 
 // @desc    Register a new user
@@ -339,5 +374,6 @@ export {
   registerUser,
   updateUserProfile,
   deleteUser,
-  requestPasswordReset
+  requestPasswordReset,
+  resetPassword
 };
