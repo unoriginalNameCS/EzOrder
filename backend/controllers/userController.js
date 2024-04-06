@@ -2,6 +2,8 @@ import asyncHandler from 'express-async-handler';
 import Restaurant from '../models/restaurantModel.js';
 import User from '../models/userModel.js';
 import generateToken from '../utils/generateToken.js';
+import nodemailer from 'nodemailer';
+import UserResetPassword from '../models/userResetPasswordModel.js';
 
 // @desc    Auth user & get token
 // @route   POST /api/users/auth
@@ -27,6 +29,107 @@ const authUser = asyncHandler(async (req, res) => {
     throw new Error('Invalid email or password');
   }
 });
+
+// @desc    Request a password reset
+// @route   POST /api/users/password/reset
+// @access  Public
+const requestPasswordReset = asyncHandler(async (req, res) => {
+  const { email } = req.body
+
+  // check if the email exists in the database
+  // search db for user by email
+  const userExists = await User.findOne({ email });
+  // if the user does not exist in the database
+  if (!userExists) {
+    res.status(400)
+    throw new Error('This email is not registered with EzOrder')
+  }
+
+  // before we add in a new verification code, we will delete previous password reset attempts, ensuring the user can only reset their password with the most recent verification code
+  const previousPasswordReset = await UserResetPassword.find({email: email})
+
+  // if there is and previous requests, then delete them
+  previousPasswordReset.forEach(async (element) => {
+    await UserResetPassword.deleteOne({_id: element._id})
+  });
+
+  // if the email does exist, then send it an email containing verification code (6 digits)
+  const verify_code = Math.floor(100000 + Math.random() * 900000);
+
+  // send the email
+  const transporter = nodemailer.createTransport({
+    service: 'gmail',
+    auth: {
+      user: process.env.EZORDER_EMAIL,
+      pass: process.env.EZORDER_PASSWORD
+    }
+  });
+  
+  const mailOptions = {
+    from: process.env.EZORDER_EMAIL,
+    to: `${email}`,
+    subject: 'Password Reset',
+    text: `Hi ${userExists.name},\n\nYou've requested a password reset on your account. Your verification code is: ${verify_code}.\n\nKind regards,\nEzOrder Team`
+  };
+  
+  transporter.sendMail(mailOptions, async (error, info) => {
+    if (error) {
+      console.log(error);
+      res.status(400).json(error);
+    } else {
+      console.log("Email sent: " + info.response);
+      // if we get here, then store the verification code with the user email in the database so we can check it when it is used
+      const requestReset = await UserResetPassword.create({
+          email: userExists.email,
+          verification_code: verify_code,
+      })
+      res.status(201).json({ Message: "Email sent", requestReset });
+    }
+  });
+})
+
+// @desc    Reset password
+// @route   PUT /api/users/password/reset
+// @access  Public
+const resetPassword = asyncHandler(async (req, res) => {
+  const { email, verification_code, newPassword } = req.body
+
+  // get the previous password reset request
+  // there should only be one in the database for a user at a time, since everytime a new password reset is requested, the previous is deleted
+  const previousPasswordReset = await UserResetPassword.findOne({email: email})
+  // the user has not requested for password reset first
+  if (!previousPasswordReset) {
+    res.status(400)
+    throw new Error('You need to request a password reset first')
+  }
+
+  // check if the verification code provided is the same in the db
+  if (verification_code !== previousPasswordReset.verification_code) {
+    res.status(401) // unauthorised
+    throw new Error('The verification code you provided is incorrect')
+  }
+
+  // checks completed, store the new password in the database
+  // get the user from the User collection model
+  const user = await User.findOne({ email });
+
+  // update the password
+  user.password = newPassword
+
+  // save the change, this should automatically encrypt the password too from the save method in the user model
+  const updatedUser = await user.save()
+
+  // final check, check if the entered password from the body is the same as the password in the database (goes through hashing with bcrypt)
+  if (!user.matchPassword(newPassword)) {
+    res.status(500)
+    throw new Error('Something went wrong with saving the new password into the database')
+  }
+
+  // delete the password reset request from database
+  await UserResetPassword.deleteOne({_id: previousPasswordReset._id})
+
+  res.status(200).json({message: "Successfully reset password"})
+})
 
 // @desc    Register a new user
 // @route   POST /api/users
@@ -271,4 +374,6 @@ export {
   registerUser,
   updateUserProfile,
   deleteUser,
+  requestPasswordReset,
+  resetPassword
 };
