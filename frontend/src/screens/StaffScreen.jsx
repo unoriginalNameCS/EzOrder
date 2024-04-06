@@ -5,7 +5,6 @@ import Box from '@mui/material/Box';
 import Typography from '@mui/material/Typography';
 import Modal from '@mui/material/Modal';
 import TextField from '@mui/material/TextField';
-import { useNavigate } from 'react-router-dom';
 import Table from '@mui/material/Table';
 import TableBody from '@mui/material/TableBody';
 import TableCell from '@mui/material/TableCell';
@@ -88,6 +87,8 @@ export default function StaffScrren() {
         }
       });
   };
+
+  
   useEffect(() => {
     axios
       .get(`http://localhost:5000/api/users/profiles`, {

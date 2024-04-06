@@ -19,10 +19,9 @@ export default function DeleteStaffButton(props) {
         }
       )
       .then((res) => {
-        if (res.status === 200) {
-          navigate(0)
-        }
+        navigate(0);
       });
+    navigate(0);
   };
   return (
     <>
