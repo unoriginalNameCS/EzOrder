@@ -85,12 +85,12 @@ const registerUser = asyncHandler(async (req, res) => {
 // @route   POST /api/users/logout
 // @access  Public
 const logoutUser = (req, res) => {
-    /* res.cookie('jwt', '', {
+  /* res.cookie('jwt', '', {
       httpOnly: true,
       expires: new Date(0),
     }); */
-    // Frontend should remove userInfo from localStorage
-    res.status(200).json({ message: 'Logged out successfully' });
+  // Frontend should remove userInfo from localStorage
+  res.status(200).json({ message: 'Logged out successfully' });
 };
 
 // @desc    Get user details
@@ -167,6 +167,28 @@ const updateUserProfile = asyncHandler(async (req, res) => {
   }
 });
 
+// @desc  Update user profile
+// @route  DELETE /api/users/profile
+// @access Private
+const deleteUser = asyncHandler(async (req, res) => {
+  const id = req.params.id;
+  if (!id) {
+    res.status(403);
+    throw new Error('Did not receive id in params');
+  }
+
+  try {
+    const user = await User.findByIdAndDelete(id);
+    if (!user) {
+      console.log('Document not found.');
+      return; // or throw an error
+    }
+    res.status(200);
+  } catch (error) {
+    console.log(error);
+  }
+});
+
 // @desc    Register a new user (automatically a manager)
 // @route   POST /api/users/registerStaff
 // @access  Public
@@ -189,10 +211,12 @@ const registerStaff = asyncHandler(async (req, res) => {
       throw new Error('User already exists');
     }
 
-    // check if given invalid role 
+    // check if given invalid role
     if (role !== 'wait staff' && role !== 'kitchen staff') {
-      res.status(400)
-      throw new Error(`Invalid role, roles can only be 'wait staff' or 'kitchen staff, when registering staff.`)
+      res.status(400);
+      throw new Error(
+        `Invalid role, roles can only be 'wait staff' or 'kitchen staff, when registering staff.`
+      );
     }
 
     console.log('creating staff');
@@ -229,7 +253,6 @@ const registerStaff = asyncHandler(async (req, res) => {
 // @access  Private
 const getRestaurant = asyncHandler(async (req, res) => {
   const restaurant = await Restaurant.findById(req.user.restaurant._id);
-
   if (restaurant) {
     res.json(restaurant);
   } else {
@@ -239,11 +262,13 @@ const getRestaurant = asyncHandler(async (req, res) => {
 });
 
 export {
-  authUser, getRestaurant, getUserProfile,
+  authUser,
+  getRestaurant,
+  getUserProfile,
   getUserProfiles,
   logoutUser,
   registerStaff,
   registerUser,
-  updateUserProfile
+  updateUserProfile,
+  deleteUser,
 };
-
