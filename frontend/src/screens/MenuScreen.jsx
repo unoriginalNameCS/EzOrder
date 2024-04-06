@@ -70,7 +70,6 @@ const MenuScreen = () => {
   };
 
   const onCategorySelected = (categoryId) => {
-    console.log(categoryId);
     setSelectedCategoryId(categoryId);   
   };
 
