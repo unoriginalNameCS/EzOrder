@@ -5,11 +5,13 @@ import { Typography } from '@mui/material';
 import { TextField } from '@mui/material';
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
+import { MenuItem } from '@mui/material';
 
 export default function EditModal(props) {
   const [name, setName] = useState('');
   const [email, setEmail] = useState('');
   const [open, setOpen] = useState(false);
+  const [role, setRole] = useState('');
   const navigate = useNavigate();
   const handleOpen = () => {
     setOpen(true)
@@ -102,6 +104,33 @@ export default function EditModal(props) {
             onChange={(e) => setPassword(e.target.value)}
             sx={{ margin: 1 }}
           />
+                        <TextField
+                required
+                id='outlined-required'
+                select
+                label='role'
+                value={role}
+                sx={{ margin: 1 }}
+              >
+                <MenuItem
+                  value='kitchen staff'
+                  onClick={() => setRole('kitchen staff')}
+                >
+                  Kitchen Staff
+                </MenuItem>
+                <MenuItem
+                  value='wait staff'
+                  onClick={() => setRole('wait staff')}
+                >
+                  Wait Staff
+                </MenuItem>
+                <MenuItem
+                  value='manager'
+                  onClick={() => setRole('manager')}
+                >
+                  Manager
+                </MenuItem>
+              </TextField>
           <Button variant='text' color='primary' onClick={handleEdit}>
             Edit
           </Button>

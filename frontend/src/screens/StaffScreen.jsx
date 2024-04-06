@@ -18,6 +18,7 @@ import { Grid } from '@mui/material';
 import { useTheme } from '@mui/material';
 import MenuItem from '@mui/material/MenuItem';
 import EditModal from '../components/EditModal';
+import DeleteStaffButton from '../components/DeleteStaffButton';
 
 const style = {
   position: 'absolute',
@@ -151,7 +152,9 @@ export default function StaffScrren() {
                     <TableCell align='right'>
                       <EditModal id={row.id}></EditModal>
                     </TableCell>
-                    <TableCell align='right'></TableCell>
+                    <TableCell align='right'>
+                      <DeleteStaffButton id={row.id}></DeleteStaffButton>
+                    </TableCell>
                   </TableRow>
                 ))}
               </TableBody>
@@ -213,6 +216,9 @@ export default function StaffScrren() {
                   onClick={() => setRole('wait staff')}
                 >
                   Wait Staff
+                </MenuItem>
+                <MenuItem value='manager' onClick={() => setRole('manager')}>
+                  Manager
                 </MenuItem>
               </TextField>
               <Button
