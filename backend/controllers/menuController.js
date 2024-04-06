@@ -41,7 +41,7 @@ const addCategory = asyncHandler(async (req, res) => {
       res.status(400);
       throw new Error('Category already exists');
   }
-
+  
   // Find category with highest position (at the end)
   const highestPosCategory = await MenuCategory.findOne({ restaurant: restaurantId }).sort({ position: -1 }).limit(1);
   // If there are no categories start with 1 otherwise increment the highest pos by 1
@@ -308,10 +308,8 @@ const removeMenuCategory = asyncHandler(async (req, res) => {
       throw new Error('Menu category not found');
     }
 
-    // Remove item from category
-    restaurant.menu.filter((menuCategory) => menuCategory._id.toString() != categoryId);
-    await restaurant.save();
-    
+    console.log(category);
+
     // Reduce position by one if greater than category position and same restaurant
     await MenuCategory.updateMany({position: {$gt: category.position}, restaurant: restaurantId}, {$inc : { position: -1 }});
     

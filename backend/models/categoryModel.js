@@ -5,7 +5,6 @@ const menuCategorySchema = mongoose.Schema(
     name: { 
       type: String, 
       required: true,
-      unique: true,
     },
     position: {
       type: Number,

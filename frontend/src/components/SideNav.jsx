@@ -108,7 +108,7 @@ const SideNav = () => {
           <AiOutlineUser style={iconStyle}/>
           <span style={textStyle}>STAFF</span>
         </MenuItem>)}
-        {isManager && (<MenuItem component={<Link to="/settings" />}>
+        {isManager && (<MenuItem component={<Link to="/tableEdits" />}>
           <FiSettings style={iconStyle}/>
           <span style={textStyle}>SETTINGS</span>
         </MenuItem>)}
