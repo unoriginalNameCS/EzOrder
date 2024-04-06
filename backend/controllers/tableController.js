@@ -100,6 +100,31 @@ const addTable = asyncHandler(async (req, res) => {
   }
 })
 
+// @desc  Remove last table
+// @route  DELETE /tables/:restaurantId/remove
+// @access Public
+const removeTable = asyncHandler(async (req, res) => {
+  const { restaurantId } = req.params;
+  const restaurant = await Restaurant.findOne({ _id: restaurantId });
+  if (!restaurant) {
+    res.status(400);
+    throw new Error('Restaurant does not exist.');
+  }
+
+  // Find the last table based on number
+  const lastTable = await Table.findOne({ restaurant: restaurantId }).sort({ number: -1 });
+  if (!lastTable) {
+    res.status(404);
+    throw new Error('No tables found to delete.');
+  }
+
+  // Remove the last table
+  await Table.findByIdAndRemove(lastTable._id);
+
+  // Send a response back
+  res.status(200).json({ message: 'Last table removed successfully.' });
+});
+
 // @desc    adds request to database for assistance
 // @route   POST /tables/:restaurantId/:tableId/assistance
 // @access  Public
@@ -421,5 +446,6 @@ const getAllRestaurants = asyncHandler(async (req, res) => {
 
   export {
   addItem, addTable, getAllRestaurants, getCart, getOrders, getTableNumbers, removeItem, 
-  requestAssistance, sendOrder, tableSelect, tableDeselect, getTables, getOrdersItems
+  requestAssistance, sendOrder, tableSelect, tableDeselect, getTables, getOrdersItems,
+  removeTable
 };

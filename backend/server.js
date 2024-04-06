@@ -7,6 +7,7 @@ import tableRoutes from './routes/tableRoutes.js';
 import menuRoutes from './routes/menuRoutes.js';
 import orderRoutes from './routes/orderRoutes.js';
 import requestRoutes from './routes/requestRoutes.js'
+import restaurantRoutes from './routes/restaurantRoutes.js'
 import { notFound, errorHandler } from './middleware/errorMiddleware.js';
 import cookieParser from 'cookie-parser';
 
@@ -32,6 +33,7 @@ app.use('/menus', menuRoutes);
 app.use('/tables', tableRoutes);
 app.use('/orders', orderRoutes);
 app.use('/requests', requestRoutes);
+app.use('/restaurants', restaurantRoutes)
 
 // errors
 app.use(notFound);
