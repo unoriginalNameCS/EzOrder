@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Modal, Box, Typography, TextField, Button, IconButton } from '@mui/material';
 import CloseIcon from '@mui/icons-material/Close';
 import CloudUploadIcon from '@mui/icons-material/CloudUpload';
@@ -54,7 +54,6 @@ const NewItemModal = ({ open, handleClose, restaurantId, categoryId }) => {
 
     try {
       const dataUrl = await convertFileToDataUrl(file);
-      console.log(dataUrl)
       setNewImageUrl(dataUrl);
       setFormData({ ...formData, imageUrl: dataUrl });
     } catch (error) {
@@ -80,7 +79,6 @@ const NewItemModal = ({ open, handleClose, restaurantId, categoryId }) => {
     const userInfo = JSON.parse(localStorage.getItem('userInfo')); 
 
     try {
-      console.log('Sending the following data:', formData);
       const response = await axios.post(
         `http://localhost:5000/menus/${restaurantId}/menu/categories/${categoryId}/items/add`, 
         {
@@ -102,6 +100,19 @@ const NewItemModal = ({ open, handleClose, restaurantId, categoryId }) => {
       console.error('There was an error adding the item:', error.response?.data || error.message);
     }
   };
+
+  useEffect(() => {
+    if (!open) {
+      setFormData({
+        name: '',
+        description: '',
+        price: '',
+        ingredients: '',
+        imageUrl: ''
+      });
+      setNewImageUrl('');
+    }
+  }, [open]);
 
   return (
     <Modal

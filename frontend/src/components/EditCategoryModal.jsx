@@ -40,7 +40,6 @@ const EditCategoryModal = ({ open, handleClose, restaurantId, categories }) => {
     const userInfo = JSON.parse(localStorage.getItem('userInfo')); 
 
     try {
-      console.log('Sending the following data:', selectedCategory, newPosition);
       const response = await axios.put(
         `http://localhost:5000/menus/${restaurantId}/menu/categories/order`, 
         {
@@ -53,7 +52,6 @@ const EditCategoryModal = ({ open, handleClose, restaurantId, categories }) => {
           },
         }
       );
-      console.log('Category moved:', response.data); 
       handleClose(); 
     } catch (error) {
       console.error('There was an error ordering the category:', error.response?.data || error.message);
