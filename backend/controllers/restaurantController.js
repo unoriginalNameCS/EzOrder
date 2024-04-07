@@ -37,7 +37,7 @@ const updateRestaurantName = asyncHandler(async (req, res) => {
     throw new Error('Name already in use');
   }
 
-  const restaurant = Restaurant.findOne({ _id: restaurantId })
+  const restaurant = await Restaurant.findOne({ _id: restaurantId })
   if (!restaurant) {
     res.status(404);
     throw new Error('Restaurant not found');
@@ -47,7 +47,10 @@ const updateRestaurantName = asyncHandler(async (req, res) => {
     restaurant.name = restaurantName;
 
     const updatedRestaurant = await restaurant.save();
-    res.status(200).json(updatedRestaurant);
+    res.status(200).json({
+      message: 'Restaurant name updated successfully',
+      updatedRestaurant
+    });
   } else {
     res.status(400).json({ message: 'Restaurant name cannot be empty' });
   }

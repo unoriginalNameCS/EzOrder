@@ -6,6 +6,8 @@ import { FiSettings } from "react-icons/fi";
 import { HiOutlineClipboardList } from "react-icons/hi";
 import { BiFoodMenu } from "react-icons/bi";
 import { AiOutlineUser } from "react-icons/ai";
+import { MdTableRestaurant } from "react-icons/md";
+
 import axios from 'axios';
 import { FaHandPaper, FaSignInAlt, FaSignOutAlt, FaUtensils } from "react-icons/fa";
 
@@ -109,6 +111,10 @@ const SideNav = () => {
           <span style={textStyle}>STAFF</span>
         </MenuItem>)}
         {isManager && (<MenuItem component={<Link to="/tableEdits" />}>
+          <MdTableRestaurant style={iconStyle}/>
+          <span style={textStyle}>TABLES</span>
+        </MenuItem>)}
+        {isManager && (<MenuItem component={<Link to="/settings" />}>
           <FiSettings style={iconStyle}/>
           <span style={textStyle}>SETTINGS</span>
         </MenuItem>)}
