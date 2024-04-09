@@ -137,29 +137,6 @@ const CustomerMenuScreen = () => {
     }
   };
 
-  const requestBill = async () => {
-    try {
-      const url = `http://localhost:5000/tables/${restaurantId}/${tableId}/assistance`;
-
-      const response = await fetch(url, {
-        method: 'POST',
-        headers: {
-          'Content-type': 'application/json',
-        },
-        body: JSON.stringify({
-          requestedBill: true
-        })
-      })
-  
-      const data = await response.json();
-
-      if (response.status === 201) {
-        toast.success('Requesting Bill');
-      }
-    } catch (error) {
-      console.error('There was an error fetching the menu items:', error.response?.data || error.message);
-    }
-  };
 
   useEffect(() => {
     fetchMenuCategories();
@@ -197,13 +174,6 @@ const CustomerMenuScreen = () => {
           sx={{margin: 1}}
           onClick={() => requestAssistance()} style={{ width: '25%', padding: 10}}>
           Request Assistance
-        </Button>}
-        {<Button 
-          variant='contained'
-          color='primary'
-          sx={{margin: 1}}
-          onClick={() => requestBill()} style={{ width: '25%', padding: 10}}>
-          Request Bill
         </Button>}
         {<Button 
           variant='contained'
