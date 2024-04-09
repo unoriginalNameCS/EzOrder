@@ -88,10 +88,44 @@ const requestPasswordReset = asyncHandler(async (req, res) => {
   });
 })
 
-// @desc    Reset password
-// @route   PUT /api/users/password/reset
+// @desc    Validate verification code
+// @route   POST /api/users/password/reset/verify
 // @access  Public
-const resetPassword = asyncHandler(async (req, res) => {
+const validateVerificationCode = asyncHandler(async (req, res) => {
+  const { email, verificationCode } = req.body
+  console.log(req.body, 'here')
+  // check if the email exists in the database
+  // search db for user by email
+  const userExists = await User.findOne({ email });
+  // if the user does not exist in the database
+  if (!userExists) {
+    res.status(400)
+    throw new Error('This email is not registered with EzOrder')
+  }
+
+  // get the previous password reset request
+  // there should only be one in the database for a user at a time, since everytime a new password reset is requested, the previous is deleted
+  const previousPasswordReset = await UserResetPassword.findOne({email: email})
+  // the user has not requested for password reset first
+  if (!previousPasswordReset) {
+    res.status(400)
+    throw new Error('You need to request a password reset first')
+  }
+
+  // check if the verification code provided is the same in the db
+  
+  if (verificationCode !== previousPasswordReset.verification_code) {
+    res.status(401) // unauthorised
+    throw new Error('The verification code you provided is incorrect')
+  }
+
+  res.status(200).json({message: "Verification success"})
+})
+
+// @desc    Reset the password of a user who has already been verified
+// @route   POST /api/users/password/reset
+// @access  Public
+const passwordReset = asyncHandler(async (req, res) => {
   const { email, verification_code, newPassword } = req.body
 
   // get the previous password reset request
@@ -375,5 +409,6 @@ export {
   updateUserProfile,
   deleteUser,
   requestPasswordReset,
-  resetPassword
+  validateVerificationCode,
+  passwordReset
 };

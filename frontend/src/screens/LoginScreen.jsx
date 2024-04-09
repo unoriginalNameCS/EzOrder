@@ -85,6 +85,13 @@ const Login = () => {
       onClick={() => {navigate('/register')}}>
         Register now
       </Button>
+      <Button
+      variant='contained'
+      color='primary'
+      sx={{margin: 1}}
+      onClick={() => {navigate('/password/forgot')}}>
+        Forgot your password?
+      </Button>
       </FormContainer>
     </>
   )

@@ -22,6 +22,7 @@ import TableScreen from './screens/TableScreen';
 import OrderScreen from './screens/OrderScreen';
 import KitchenScreen from './screens/KitchenScreen';
 import SettingsScreen from './screens/SettingsScreen';
+import ForgotPasswordScreen from './screens/ForgotPasswordScreen';
 
 const router = createBrowserRouter(createRoutesFromElements(
   <Route path='/' element={<App />}>
@@ -33,6 +34,7 @@ const router = createBrowserRouter(createRoutesFromElements(
     <Route path='/customerMenu' element={<CustomerMenuScreen />} />
     <Route path='cart' element={<CartScreen />} />
     <Route path='/orders' element={<OrderScreen/>}/>
+    <Route path='/password/forgot' element={<ForgotPasswordScreen/>} />
     { /* Private routes (user has to be logged in */}
     <Route path='' element={<PrivateRoute />}>
       <Route path='/profile' element={<ProfileScreen />} />
