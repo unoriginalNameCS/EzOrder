@@ -1,10 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 import Button from '@mui/material/Button';
-import Box from '@mui/material/Box';
-import Typography from '@mui/material/Typography';
-import Modal from '@mui/material/Modal';
-import TextField from '@mui/material/TextField';
 import Table from '@mui/material/Table';
 import TableBody from '@mui/material/TableBody';
 import TableCell from '@mui/material/TableCell';
@@ -15,84 +11,48 @@ import Paper from '@mui/material/Paper';
 import SideNav from '../components/SideNav';
 import { Grid } from '@mui/material';
 import { useTheme } from '@mui/material';
-import MenuItem from '@mui/material/MenuItem';
-import EditModal from '../components/EditModal';
-import DeleteStaffButton from '../components/DeleteStaffButton';
+// import EditModal from '../components/EditModal';
+import EditStaffModal from '../components/EditStaffModal';
+import NewStaffModal from '../components/NewStaffModal';
 
-const style = {
-  position: 'absolute',
-  top: '50%',
-  left: '50%',
-  transform: 'translate(-50%, -50%)',
-  width: 400,
-  bgcolor: 'background.paper',
-  boxShadow: 24,
-  p: 4,
-  marginTop: 8,
-  display: 'flex',
-  flexDirection: 'column',
-  justifyContent: 'space-between',
-};
-
-const columns = [
-  { field: 'id', headerName: 'ID', width: 70 },
-  { field: 'email', headerName: 'Email', width: 130 },
-  { field: 'name', headerName: 'Name', width: 130 },
-];
-
-export default function StaffScreen() {
+const StaffScreen = () => {
+  
   const [rows, setRows] = useState([]);
-  const [open1, setOpen1] = useState(false);
-  const [deleted, setDeleted] = useState(false);
-  const [name, setName] = useState('');
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
-  const [role, setRole] = useState('');
-  const restaurantId = JSON.parse(localStorage.getItem('userInfo')).restaurant;
+  const [selectedStaff, setSelectedStaff] = useState('');
+
+  const userInfo = JSON.parse(localStorage.getItem('userInfo'));
+  const restaurantId = userInfo.restaurant;
   const theme = useTheme();
 
-  const handleOpen1 = () => setOpen1(true);
-  const handleClose1 = () => setOpen1(false);
-  const handleDelete = () => setDeleted(true);
+  const [newStaffModaloOpen, setNewStaffModalOpen] = useState(false);
+  const [editStaffModalOpen, setEditStaffModalOpen] = useState(false);
 
-  const handleCreate = async () => {
-    try {
-      const res = await axios.post(
-        'http://localhost:5000/api/users/registerStaff',
-        {
-          name,
-          password,
-          email,
-          role,
-        },
-        {
-          headers: {
-            _id: JSON.parse(localStorage.getItem('userInfo'))._id,
-            Authorization: JSON.parse(localStorage.getItem('userInfo')).token,
-            restaurantId,
-          },
-        }
-      );
+  const handleOpenNewStaffModal = () => {
+    setNewStaffModalOpen(true);
+  };
 
-      if (res.status === 200) {
-        console.log('Success');
-        setEmail('');
-        setName('');
-        setRole('');
-        setPassword('');
-        setOpen1(false);
-      }
-    } catch (error) {
-      console.error('Error creating staff:', error.response?.data || error.message);
-    }
+  const handleCloseNewStaffModal = () => {
+    setNewStaffModalOpen(false);
+    refreshStaff();
+  };
+
+  const handleOpenEditStaffModal = (staffId) => {
+    setSelectedStaff(staffId)
+    setEditStaffModalOpen(true);
+  };
+
+  const handleCloseEditStaffModal = () => {
+    setSelectedStaff('');
+    setEditStaffModalOpen(false);
+    refreshStaff();
   };
 
   const fetchProfiles = async () => {
     try {
       const res = await axios.get(`http://localhost:5000/api/users/profiles`, {
         headers: {
-          _id: JSON.parse(localStorage.getItem('userInfo'))._id,
-          Authorization: JSON.parse(localStorage.getItem('userInfo')).token,
+          _id: userInfo._id,
+          Authorization: userInfo.token,
           restaurantId,
         },
       });
@@ -103,15 +63,30 @@ export default function StaffScreen() {
     }
   };
 
+  const handleRemove = async (staffId) => {
+    try {
+      await axios.delete(`http://localhost:5000/api/users/delete/${staffId}`, 
+      {
+        headers: {
+          _id: userInfo._id,
+          Authorization: userInfo.token,
+          restaurantId,
+        },
+      });
+      refreshStaff();
+    } catch (error) {
+      console.error('There was an error deleting the item:', error.response?.data || error.message);
+    }
+  };
+
+  const refreshStaff = () => {
+    fetchProfiles();
+  }
+
   useEffect(() => {
     fetchProfiles();
   }, []);
 
-  useEffect(() => {
-    if (!open1) {
-      fetchProfiles();
-    }
-  }, [open1]);
 
   return (
     <>
@@ -130,6 +105,7 @@ export default function StaffScreen() {
                   <TableCell align='right'>Email&nbsp;</TableCell>
                   <TableCell align='right'>Role&nbsp;</TableCell>
                   <TableCell align='right'>Edit&nbsp;</TableCell>
+                  <TableCell align='right'>Remove&nbsp;</TableCell>
                 </TableRow>
               </TableHead>
               <TableBody>
@@ -145,89 +121,38 @@ export default function StaffScreen() {
                     <TableCell align='right'>{row.email}</TableCell>
                     <TableCell align='right'>{row.role}</TableCell>
                     <TableCell align='right'>
-                      <EditModal id={row.id}></EditModal>
+                      <Button variant='text' color='primary' onClick={() => handleOpenEditStaffModal(row.id)}>
+                          Edit
+                      </Button>
                     </TableCell>
-                    <TableCell align='right'>
-                      <DeleteStaffButton id={row.id} setDeleted = {handleDelete}></DeleteStaffButton>
+                    <TableCell>
+                      <Button variant='text' color='primary' onClick={() => handleRemove(row.id)}>
+                        Remove
+                      </Button>
                     </TableCell>
                   </TableRow>
                 ))}
               </TableBody>
             </Table>
           </TableContainer>
-          <Button variant='text' color='primary' onClick={handleOpen1}>
+          <Button variant='text' color='primary' onClick={handleOpenNewStaffModal}>
             Add New Staff
           </Button>
-          <Modal
-            open={open1}
-            onClose={handleClose1}
-            aria-labelledby='modal-modal-title'
-            aria-describedby='modal-modal-description'
-          >
-            <Box sx={style}>
-              <Typography variant='h6' color='initial' sx={{ margin: 1 }}>
-                Add New Staff
-              </Typography>
-              <TextField
-                required
-                id='outlined-required'
-                label='name'
-                value={name}
-                onChange={(e) => setName(e.target.value)}
-                sx={{ margin: 1 }}
-              />
-              <TextField
-                required
-                id='outlined-required'
-                label='email'
-                value={email}
-                onChange={(e) => setEmail(e.target.value)}
-                sx={{ margin: 1 }}
-              />
-              <TextField
-                required
-                id='outlined-required'
-                label='password'
-                value={password}
-                onChange={(e) => setPassword(e.target.value)}
-                sx={{ margin: 1 }}
-              />
-              <TextField
-                required
-                id='outlined-required'
-                select
-                label='role'
-                value={role}
-                sx={{ margin: 1 }}
-              >
-                <MenuItem
-                  value='kitchen staff'
-                  onClick={() => setRole('kitchen staff')}
-                >
-                  Kitchen Staff
-                </MenuItem>
-                <MenuItem
-                  value='wait staff'
-                  onClick={() => setRole('wait staff')}
-                >
-                  Wait Staff
-                </MenuItem>
-                <MenuItem value='manager' onClick={() => setRole('manager')}>
-                  Manager
-                </MenuItem>
-              </TextField>
-              <Button
-                variant='contained'
-                color='primary'
-                sx={{ margin: 1 }}
-                onClick={handleCreate}
-              >
-                Create
-              </Button>
-            </Box>
-          </Modal>
         </div>
       </Grid>
+      <NewStaffModal
+        open={newStaffModaloOpen}
+        handleClose={handleCloseNewStaffModal}
+        restaurantId={restaurantId}
+      />
+      <EditStaffModal
+        open={editStaffModalOpen}
+        handleClose={handleCloseEditStaffModal}
+        staffId={selectedStaff}
+        restaurantId={restaurantId}
+      />
     </>
   );
 }
+
+export default StaffScreen;

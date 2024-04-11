@@ -35,6 +35,7 @@ const CustomerMenuScreen = () => {
   };
 
   const handleCloseItemModal = () => {
+    setSelectedItemId('');
     setItemModalOpen(false);
   };
 
