@@ -9,9 +9,7 @@ import { useNavigate } from "react-router-dom";
 const CustomerSelectScreen = () => {
   const [restaurants, setRestaurants] = useState([]);
   const [tables, setTables] = useState([]);
-  const [selectedRestaurant, setSelectedRestaurant] = useState(
-    "Select a restaurant"
-  );
+  const [selectedRestaurant, setSelectedRestaurant] = useState("Select a restaurant");
   const [selectedTable, setSelectedTable] = useState("Select a table");
   const navigate = useNavigate();
 
@@ -24,7 +22,7 @@ const CustomerSelectScreen = () => {
       },
     });
     const data = await response.json();
-
+    console.log(data);
     // if successfully fetched all restaurants
     if (response.status === 200) {
       setRestaurants(data);
