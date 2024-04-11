@@ -98,7 +98,7 @@ const SideNav = () => {
           },
         }}
       >
-        {isKitchenStaff && (<MenuItem component={<Link to="/kitchen" />}> 
+        {(isKitchenStaff || isManager) && (<MenuItem component={<Link to="/kitchen" />}> 
           <HiOutlineClipboardList style={iconStyle}/>
           <span style={textStyle}>KITCHEN</span>
         </MenuItem>)}
