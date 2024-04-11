@@ -22,8 +22,6 @@ const CartScreen = () => {
       const { data } = await axios.get(url);
             
       setCartItems(data);
-
-      console.log(data.length);
     } catch (error) {
       console.error('There was an error fetching the cart items:', error.response?.data || error.message);
     }
@@ -31,7 +29,6 @@ const CartScreen = () => {
 
   const handleRemove = async (cartItemId) => {
     try {
-      console.log(cartItemId);
       await axios.delete(`http://localhost:5000/tables/${restaurantId}/${tableId}/${cartItemId}/removeItem`);
       refreshCartItems();
     } catch (error) {

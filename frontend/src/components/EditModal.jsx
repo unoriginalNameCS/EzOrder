@@ -24,12 +24,13 @@ export default function EditModal(props) {
   const handleEdit = () => {
     axios
       .put(
-        'http://localhost:5000/api/users/profile',
+        'http://localhost:5000/api/users/editStaff',
         {
           id: props.id,
           name,
           password,
           email,
+          role,
         },
         {
           headers: {
