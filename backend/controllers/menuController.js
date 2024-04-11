@@ -41,9 +41,10 @@ const addCategory = asyncHandler(async (req, res) => {
       res.status(400);
       throw new Error('Category already exists');
   }
-  
+
   // Find category with highest position (at the end)
   const highestPosCategory = await MenuCategory.findOne({ restaurant: restaurantId }).sort({ position: -1 }).limit(1);
+
   // If there are no categories start with 1 otherwise increment the highest pos by 1
   const position = highestPosCategory ? highestPosCategory.position + 1 : 1;
   
@@ -52,6 +53,8 @@ const addCategory = asyncHandler(async (req, res) => {
       position,
       restaurant: restaurantId
   });
+
+  console.log(category);
 
   // if category name valid
   if (category) {

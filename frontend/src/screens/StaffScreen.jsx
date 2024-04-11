@@ -40,26 +40,24 @@ const columns = [
   { field: 'name', headerName: 'Name', width: 130 },
 ];
 
-function getCookie(name) {
-  const value = `; ${document.cookie}`;
-  const parts = value.split(`; ${name}=`);
-  if (parts.length === 2) return parts.pop().split(';').shift();
-}
-
-export default function StaffScrren() {
+export default function StaffScreen() {
   const [rows, setRows] = useState([]);
   const [open1, setOpen1] = useState(false);
+  const [deleted, setDeleted] = useState(false);
   const [name, setName] = useState('');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [role, setRole] = useState('');
-  const handleOpen1 = () => setOpen1(true);
-  const handleClose1 = () => setOpen1(false);
   const restaurantId = JSON.parse(localStorage.getItem('userInfo')).restaurant;
   const theme = useTheme();
-  const handleCreate = () => {
-    axios
-      .post(
+
+  const handleOpen1 = () => setOpen1(true);
+  const handleClose1 = () => setOpen1(false);
+  const handleDelete = () => setDeleted(true);
+
+  const handleCreate = async () => {
+    try {
+      const res = await axios.post(
         'http://localhost:5000/api/users/registerStaff',
         {
           name,
@@ -74,49 +72,45 @@ export default function StaffScrren() {
             restaurantId,
           },
         }
-      )
-      .then((res) => {
-        console.log(res.status);
-        if (res.status === 200) {
-          console.log('success');
-          setEmail('');
-          setName('');
-          setRole('');
-          setPassword('');
-          setOpen1(false);
-        }
-      });
+      );
+
+      if (res.status === 200) {
+        console.log('Success');
+        setEmail('');
+        setName('');
+        setRole('');
+        setPassword('');
+        setOpen1(false);
+      }
+    } catch (error) {
+      console.error('Error creating staff:', error.response?.data || error.message);
+    }
   };
 
-  
-  useEffect(() => {
-    axios
-      .get(`http://localhost:5000/api/users/profiles`, {
+  const fetchProfiles = async () => {
+    try {
+      const res = await axios.get(`http://localhost:5000/api/users/profiles`, {
         headers: {
           _id: JSON.parse(localStorage.getItem('userInfo'))._id,
           Authorization: JSON.parse(localStorage.getItem('userInfo')).token,
           restaurantId,
         },
-      })
-      .then((res) => {
-        console.log(res);
-        setRows(res.data);
       });
+
+      setRows(res.data);
+    } catch (error) {
+      console.error('Error fetching profiles:', error.response?.data || error.message);
+    }
+  };
+
+  useEffect(() => {
+    fetchProfiles();
   }, []);
 
   useEffect(() => {
-    axios
-      .get(`http://localhost:5000/api/users/profiles`, {
-        headers: {
-          _id: JSON.parse(localStorage.getItem('userInfo'))._id,
-          Authorization: JSON.parse(localStorage.getItem('userInfo')).token,
-          restaurantId,
-        },
-      })
-      .then((res) => {
-        console.log(res);
-        setRows(res.data);
-      });
+    if (!open1) {
+      fetchProfiles();
+    }
   }, [open1]);
 
   return (
@@ -154,7 +148,7 @@ export default function StaffScrren() {
                       <EditModal id={row.id}></EditModal>
                     </TableCell>
                     <TableCell align='right'>
-                      <DeleteStaffButton id={row.id}></DeleteStaffButton>
+                      <DeleteStaffButton id={row.id} setDeleted = {handleDelete}></DeleteStaffButton>
                     </TableCell>
                   </TableRow>
                 ))}
