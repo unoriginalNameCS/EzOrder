@@ -5,9 +5,15 @@ import generateToken from '../utils/generateToken.js';
 import nodemailer from 'nodemailer';
 import UserResetPassword from '../models/userResetPasswordModel.js';
 
-// @desc    Auth user & get token
-// @route   POST /api/users/auth
-// @access  Public
+
+/**
+ * @desc    Auth user & generate a token
+ * @route   POST /api/users/auth
+ * @access  Public
+ * @param req.body.email - email of the user
+ * @param req.body.password - password of the user
+ * @returns {token: String, _id: String, email: String, role: String, restaurant: String}
+ */
 const authUser = asyncHandler(async (req, res) => {
   const { email, password } = req.body;
 
@@ -30,9 +36,13 @@ const authUser = asyncHandler(async (req, res) => {
   }
 });
 
-// @desc    Request a password reset
-// @route   POST /api/users/password/reset
-// @access  Public
+/**
+ * @desc    Request a password reset
+ * @route   POST /api/users/password/reset
+ * @access  Public
+ * @param   req.body.email - email of the user
+ * @returns {message: String, requestReset: {Object}}}
+ */
 const requestPasswordReset = asyncHandler(async (req, res) => {
   const { email } = req.body
 
@@ -88,9 +98,14 @@ const requestPasswordReset = asyncHandler(async (req, res) => {
   });
 })
 
-// @desc    Validate verification code
-// @route   POST /api/users/password/reset/verify
-// @access  Public
+/**
+ * @desc   Validate verification code
+ * @route  POST /api/users/password/reset/verify
+ * @access Public
+ * @param  req.body.email - email of the user
+ * @param  req.body.verificationCode - verification code sent to the user's email
+ * @returns {message: String}
+ */
 const validateVerificationCode = asyncHandler(async (req, res) => {
   const { email, verificationCode } = req.body
   console.log(req.body, 'here')
@@ -113,7 +128,6 @@ const validateVerificationCode = asyncHandler(async (req, res) => {
   }
 
   // check if the verification code provided is the same in the db
-  
   if (verificationCode !== previousPasswordReset.verification_code) {
     res.status(401) // unauthorised
     throw new Error('The verification code you provided is incorrect')
@@ -122,9 +136,15 @@ const validateVerificationCode = asyncHandler(async (req, res) => {
   res.status(200).json({message: "Verification success"})
 })
 
-// @desc    Reset the password of a user who has already been verified
-// @route   POST /api/users/password/reset
-// @access  Public
+/**
+ * @desc    Reset the password of a user who has already been verified
+ * @route   POST /api/users/password/reset
+ * @access  Public
+ * @param   req.body.email - email of the user
+ * @param   req.body.verification_code - verification code sent to user's email
+ * @param   req.body.newPassword - user's new requested password
+ * @returns {message: String}
+ */
 const passwordReset = asyncHandler(async (req, res) => {
   const { email, verification_code, newPassword } = req.body
 
@@ -165,9 +185,16 @@ const passwordReset = asyncHandler(async (req, res) => {
   res.status(200).json({message: "Successfully reset password"})
 })
 
-// @desc    Register a new user
-// @route   POST /api/users
-// @access  Public
+/**
+ * @desc    Register a new user
+ * @route   POST /api/users
+ * @access  Public
+ * @param   req.body.name - the name of the user
+ * @param   req.body.email - the email of the user
+ * @param   req.body.email - password of the user
+ * @param   req.body.restaurantName - name of restaurant of the user
+ * @returns {_id: String, name: String, email: String, role: String, restaurant: String}
+*/
 const registerUser = asyncHandler(async (req, res) => {
   const { name, email, password, restaurantName } = req.body;
 
@@ -218,22 +245,23 @@ const registerUser = asyncHandler(async (req, res) => {
   }
 });
 
-// @desc    Logout user / clear cookie
-// @route   POST /api/users/logout
-// @access  Public
+/**
+ * @desc    Logout user / clear cookie
+ * @route   POST /api/users/logout
+ * @access  Public
+ * @returns {message: String}
+ */
 const logoutUser = (req, res) => {
-  /* res.cookie('jwt', '', {
-      httpOnly: true,
-      expires: new Date(0),
-    }); */
   // Frontend should remove userInfo from localStorage
   res.status(200).json({ message: 'Logged out successfully' });
 };
 
-// @desc    Get user details
-// @route   GET /api/users/profile
-// @access  Private
-// since @access is Private, req body contains user._Id from protect method in userRoutes.js
+/**
+ * @desc    Get user details
+ * @route   GET /api/users/profile
+ * @access  Private
+ * @returns {_id: String, name: String, email: String}
+ */
 const getUserProfile = asyncHandler(async (req, res) => {
   const user = await User.findById(req.user._id);
 
@@ -249,10 +277,13 @@ const getUserProfile = asyncHandler(async (req, res) => {
   }
 });
 
-// @desc    Get user details
-// @route   GET /api/users/:/restaurantId/profiles
-// @access  Private
-// since @access is Private, req body contains restaurant._Id from protect method in userRoutes.js
+/**
+ * @desc    Get the user details of all users from a specific restaurant
+ * @route   GET /api/users/:/restaurantId/profiles
+ * @access  Private
+ * @param   req.headers.restaurantId - restaurantId of the user
+ * @returns {List: [{id: String, name: String, email: String, role: String}]}
+ */
 const getUserProfiles = asyncHandler(async (req, res) => {
   // const restaurantId = req.params.restaurantId
   const { restaurantid } = req.headers;
@@ -277,9 +308,16 @@ const getUserProfiles = asyncHandler(async (req, res) => {
   }
 });
 
-// @desc  Update user profile
-// @route  PUT /api/users/profile
-// @access Private
+/**
+ * @desc    Update user profile
+ * @route   PUT /api/users/profile
+ * @access  Private
+ * @param   req.body.id - object id of the user
+ * @param   req.body.name - name of the user
+ * @param   req.body.email - email of the user
+ * @param   req.body.password - password of the user
+ * @returns {_id: String, name: String, email: String}
+ */
 const updateUserProfile = asyncHandler(async (req, res) => {
   const user = await User.findById(req.body.id);
   const { name, email, password } = req.body;
@@ -313,9 +351,17 @@ const updateUserProfile = asyncHandler(async (req, res) => {
   }
 });
 
-// @desc  Update user profile
-// @route  PUT /api/users/editStaff
-// @access Private
+/**
+ * @desc    Update user profile of a staff member
+ * @route   PUT /api/users/editStaff
+ * @access  Private
+ * @param   req.body.id - id of the user
+ * @param   req.body.name - name of the user
+ * @param   req.body.email - email of the user
+ * @param   req.body.role - role of the user
+ * @param   req.body.password - password of the user
+ * @returns {_id: String, name: String, email: String, role: String}
+ */
 const updateStaffProfile = asyncHandler(async (req, res) => {
   const user = await User.findById(req.body.id);
 
@@ -342,9 +388,13 @@ const updateStaffProfile = asyncHandler(async (req, res) => {
   }
 });
 
-// @desc  Update user profile
-// @route  DELETE /api/users/profile
-// @access Private
+/**
+ * @desc    Delete a user
+ * @route   DELETE /api/users/:id
+ * @access  Private
+ * @param   req.params.id - id of the user to delete
+ * @returns 200 status code
+ */
 const deleteUser = asyncHandler(async (req, res) => {
   const id = req.params.id;
   if (!id) {
@@ -364,9 +414,16 @@ const deleteUser = asyncHandler(async (req, res) => {
   }
 });
 
-// @desc    Register a new user (automatically a manager)
-// @route   POST /api/users/registerStaff
-// @access  Public
+/**
+ * @desc    Register a new user (automatically a manager)
+ * @route   POST /api/users/registerStaff
+ * @access  Public
+ * @param   req.body.name - name of the user
+ * @param   req.body.email - email of the user
+ * @param   req.body.password - password of the user
+ * @param   req.body.role - role of the user
+ * @returns {_id: String, name: String, email: String, role: String, restaurant: String}
+ */
 const registerStaff = asyncHandler(async (req, res) => {
   const { name, email, password, role } = req.body;
   const managerId = req.user._id; // Assuming manager's ID is in req.user._id
@@ -423,9 +480,12 @@ const registerStaff = asyncHandler(async (req, res) => {
   }
 });
 
-// @desc    Get restaurant details
-// @route   GET /api/users/restaurant
-// @access  Private
+/**
+ * @desc    Get restaurant details
+ * @route   GET /api/users/restaurant
+ * @access  Private
+ * @returns {{_id: String, name: String, __v: number}}
+ */
 const getRestaurant = asyncHandler(async (req, res) => {
   const restaurant = await Restaurant.findById(req.user.restaurant._id);
   if (restaurant) {
