@@ -130,7 +130,7 @@ const StaffScreen = () => {
                           Edit
                       </Button>
                     </TableCell>
-                    <TableCell>
+                    <TableCell align="right">
                       <Button variant='text' color='primary' onClick={() => handleRemove(row.id)}>
                         Remove
                       </Button>

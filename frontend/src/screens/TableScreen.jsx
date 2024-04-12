@@ -49,6 +49,16 @@ const TableScreen = () => {
     }
   };
 
+  const handleRemove = async () => {
+    try {
+      const url = `http://localhost:5000/tables/${restaurantId}/remove`
+      await axios.delete(url);
+      fetchTables();
+    } catch (error) {
+      console.error('There was an error adding the table:', error.response?.data || error.message);
+    }
+  }
+
   useEffect(() => {
     fetchTables()
   }, []);
@@ -86,6 +96,9 @@ const TableScreen = () => {
           </TableContainer>
           <Button variant='text' color='primary' onClick={handleAddTable}>
             Add Table
+          </Button>
+          <Button variant='text' color='primary' onClick={() => handleRemove()}>
+            Delete table
           </Button>
         </div>
       </Grid>

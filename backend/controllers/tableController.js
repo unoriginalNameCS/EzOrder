@@ -119,7 +119,7 @@ const removeTable = asyncHandler(async (req, res) => {
   }
 
   // Remove the last table
-  await Table.findByIdAndRemove(lastTable._id);
+  await Table.findByIdAndDelete(lastTable._id);
 
   // Send a response back
   res.status(200).json({ message: 'Last table removed successfully.' });
