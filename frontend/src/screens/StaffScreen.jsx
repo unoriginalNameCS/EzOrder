@@ -63,7 +63,7 @@ const StaffScreen = () => {
     }
   };
 
-  const handleRemove = async (staffId) => {
+  const deleteStaff = async (staffId) => {
     try {
       await axios.delete(`http://localhost:5000/api/users/delete/${staffId}`, 
       {
@@ -78,6 +78,11 @@ const StaffScreen = () => {
       console.error('There was an error deleting the item:', error.response?.data || error.message);
     }
   };
+
+  const handleRemove = async (staffId) => {
+    deleteStaff(staffId)
+    refreshStaff();
+  }
 
   const refreshStaff = () => {
     fetchProfiles();
@@ -125,7 +130,7 @@ const StaffScreen = () => {
                           Edit
                       </Button>
                     </TableCell>
-                    <TableCell>
+                    <TableCell align="right">
                       <Button variant='text' color='primary' onClick={() => handleRemove(row.id)}>
                         Remove
                       </Button>
