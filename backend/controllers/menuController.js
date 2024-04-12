@@ -241,15 +241,14 @@ const getMenuItemDetails = asyncHandler(async (req, res) => {
 // @access Private
 const updateMenuItemDetails = asyncHandler(async (req, res) => {
     const { restaurantId, categoryId, itemId } = req.params;
-    const {name, price, description, ingredients, imageUrl } = req.body;
+    const { price, description, ingredients, imageUrl } = req.body;
 
     const item = await MenuItem.findOne({_id: itemId, category: categoryId});
     if (!item) {
         res.status(404);
         throw new Error('Menu item not found');
     }
-
-    item.name = name || item.name;
+    
     item.price = price || item.price;
     item.description = description || item.description
     item.ingredients = ingredients || item.ingredients

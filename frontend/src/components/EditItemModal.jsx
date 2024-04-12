@@ -35,7 +35,7 @@ const VisuallyHiddenInput = styled('input')({
   width: 1,
 });
 
-const EditCategoryModal = ({ open, handleClose, restaurantId, categoryId, menuItems }) => {
+const EditItemModal = ({ open, handleClose, restaurantId, categoryId, menuItems }) => {
   const [selectedItem, setSelectedItem] = useState('');
   const [itemDetails, setItemDetails] = useState({});
   const [newDescription, setNewDescription] = useState('');
@@ -284,4 +284,4 @@ const EditCategoryModal = ({ open, handleClose, restaurantId, categoryId, menuIt
   );
 };
 
-export default EditCategoryModal;
+export default EditItemModal;

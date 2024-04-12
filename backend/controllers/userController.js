@@ -282,6 +282,15 @@ const getUserProfiles = asyncHandler(async (req, res) => {
 // @access Private
 const updateUserProfile = asyncHandler(async (req, res) => {
   const user = await User.findById(req.body.id);
+  const { name, email, password } = req.body;
+
+  if (email != '' && email != user.email) {
+    const userExists = await User.findOne({ email });
+    if (userExists) {
+      res.status(400);
+      throw new Error('Email address already used');
+    }
+  }
 
   if (user) {
     user.name = req.body.name || user.name;
