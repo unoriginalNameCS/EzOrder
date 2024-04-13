@@ -5,7 +5,7 @@ import Restaurant from '../models/restaurantModel.js';
 
 /**
  * @desc    View menu
- * @route   GET /:restaurantId/menu
+ * @route   GET /menus/:restaurantId/menu
  * @access  Private
  * @param req.params.restaurantId - id of restaurant
  * @param req.params.tableId - id of the table
@@ -25,7 +25,7 @@ const getMenu = asyncHandler(async (req, res) => {
 
 /**
  * @desc    View categories
- * @route   GET /:restaurantId/menu/categories
+ * @route   GET /menus/:restaurantId/menu/categories
  * @access  Private
  * @param req.params.restaurantId - id of restaurant
  * @param req.params.tableId - id of the table
@@ -40,7 +40,7 @@ const getCategories = asyncHandler(async (req, res) => {
 
 /**
  * @desc    Add category
- * @route   POST /:restaurantId/menu/categories/add
+ * @route   POST /menus/:restaurantId/menu/categories/add
  * @access  Private
  * @param req.params.restaurantId - id of restaurant
  * @param req.body.name - name of category to be added
@@ -80,7 +80,7 @@ const addCategory = asyncHandler(async (req, res) => {
 
 /**
  * @desc    View items
- * @route   GET /:restaurantId/menu/categories/:categoryId/items
+ * @route   GET /menus/:restaurantId/menu/categories/:categoryId/items
  * @access  Private
  * @param req.params.categoryId - id of the category to be viewed
  * @returns {List: [MenuItem]}
@@ -94,7 +94,7 @@ const getMenuItems = asyncHandler(async (req, res) => {
 
 /**
  * @desc    Add item
- * @route   POST /:restaurantId/menu/categories/:categoryId/items/add
+ * @route   POST /menus/:restaurantId/menu/categories/:categoryId/items/add
  * @access  Private
  * @param req.params.restaurantId - id of restaurant
  * @param req.params.categoryId - id of the category to be viewed
@@ -150,7 +150,7 @@ const addItem = asyncHandler(async (req, res) => {
 
 /**
  * @desc    Update the order of categories
- * @route   PUT /:restaurantId/menu/categories/order
+ * @route   PUT /menus/:restaurantId/menu/categories/order
  * @access  Private
  * @param req.params.restaurantId - id of restaurant
  * @param req.body.categoryName - name of the category to be moved
@@ -192,7 +192,7 @@ const updateCategoriesOrder = asyncHandler(async (req, res) => {
 
 /**
  * @desc    Update the order of menu items within a category
- * @route   PUT /:restaurantId/menu/categories/:categoryId/items/order
+ * @route   PUT /menus/:restaurantId/menu/categories/:categoryId/items/order
  * @access  Private
  * @param req.params.restaurantId - id of restaurant
  * @param req.params.categoryId - name of the category where the items are located
@@ -240,7 +240,7 @@ const updateMenuItemsOrder = asyncHandler(async (req, res) => {
 
 /**
  * @desc    Get a menu category
- * @route   GET /:restaurantId/menu/categories/:categoryId
+ * @route   GET /menus/:restaurantId/menu/categories/:categoryId
  * @access  Private
  * @param req.params.categoryId - id of the category
  * @returns {MenuCategory}
@@ -258,7 +258,7 @@ const getMenuCategory = asyncHandler(async (req, res) => {
 
 /**
  * @desc    Get menu item details
- * @route   GET /:restaurantId/menu/categories/:categoryId/items/:itemId
+ * @route   GET /menus/:restaurantId/menu/categories/:categoryId/items/:itemId
  * @access  Private
  * @param req.params.categoryId - id of the category where the item is located
  * @param req.params.itemId - id of the item
@@ -277,7 +277,7 @@ const getMenuItemDetails = asyncHandler(async (req, res) => {
 
 /**
  * @desc    Update menu item details
- * @route   PATCH /:restaurantId/menu/categories/:categoryId/items/:itemId/update
+ * @route   PATCH /menus/:restaurantId/menu/categories/:categoryId/items/:itemId/update
  * @access  Private
  * @param req.params.categoryId - id of the category where the item is located
  * @param req.params.itemId - id of the item to be updated
@@ -308,7 +308,7 @@ const updateMenuItemDetails = asyncHandler(async (req, res) => {
 
 /**
  * @desc    Remove menu item
- * @route   DELETE /:restaurantId/menu/categories/:categoryId/items/:itemId/remove
+ * @route   DELETE /menus/:restaurantId/menu/categories/:categoryId/items/:itemId/remove
  * @access  Private
  * @param req.params.restaurantId - id of the restaurant
  * @param req.params.categoryId - id of the category where the item is located
@@ -347,7 +347,7 @@ const removeMenuItem = asyncHandler(async (req, res) => {
 
 /**
  * @desc    Remove menu category
- * @route   DELETE /:restaurantId/menu/categories/:categoryId/remove
+ * @route   DELETE /menus/:restaurantId/menu/categories/:categoryId/remove
  * @access  Private
  * @param req.params.restaurantId - id of the restaurant where the category is located
  * @param req.params.categoryId - id of the category to be deleted

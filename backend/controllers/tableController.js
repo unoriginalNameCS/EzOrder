@@ -188,7 +188,7 @@ const requestAssistance = asyncHandler(async (req, res) => {
 
 /**
  * @desc    Send the items in the cart as an order to the restaurant
- * @route   POST /orders/:restaurantId/:tableId/sendOrder
+ * @route   POST /tables/:restaurantId/:tableId/sendOrder
  * @access  Public
  * @param req.params.restaurantId - id of the restaurant
  * @param req.params.tableId - id of the table sending order
@@ -240,7 +240,7 @@ const sendOrder = asyncHandler(async (req, res) => {
 })
 
 /**
- * @desc    Adds item to cart
+ * @desc    Adds item to table cart
  * @route   POST /tables/:restaurantId/:tableId/:itemId/addItem
  * @access  Public
  * @param req.params.restaurantId - id of the restaurant

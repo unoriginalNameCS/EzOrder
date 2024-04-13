@@ -24,7 +24,7 @@ const getRequests = asyncHandler(async (req, res) => {
   
 /**
  * @desc    Change state of request from waiting to assisting
- * @route   PUT /tables/:restaurantId/:requestId/assisting
+ * @route   PUT /requests/:restaurantId/:requestId/assisting
  * @access  Private
  * @param req.params.requestId - id of the request
  * @returns {Request}
@@ -50,7 +50,7 @@ const setRequestAssisting = asyncHandler(async (req, res) => {
   
 /**
  * @desc    Change state of request from assisting to complete
- * @route   PUT /tables/:restaurantId/:requestId/complete
+ * @route   PUT /requests/:restaurantId/:requestId/complete
  * @access  Private
  * @param req.params.requestId - id of the request
  * @returns {Request}
