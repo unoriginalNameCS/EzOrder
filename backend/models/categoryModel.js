@@ -23,12 +23,8 @@ const menuCategorySchema = mongoose.Schema(
   }
 );
   
-// Pre-save middleware: Hash the password (similar to what you did for users)
+// Pre-save middleware
 menuCategorySchema.pre('save', async function (next) {
-    // You can add any additional logic here if needed
-    // For example, validation or data transformation
-
-    // Call next() to proceed with saving the menu item
     next();
 });
 

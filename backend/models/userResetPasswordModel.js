@@ -19,7 +19,6 @@ const UserResetPasswordSchema = mongoose.Schema(
 
 UserResetPasswordSchema.pre('save', async function (next) {
     next();
-
 });
 
 const UserResetPassword = mongoose.model('UserResetPassword', UserResetPasswordSchema);

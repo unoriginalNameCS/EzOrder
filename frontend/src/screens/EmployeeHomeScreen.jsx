@@ -27,7 +27,7 @@ const EmployeeHomeScreen = () => {
       localStorage.setItem('userInfo', JSON.stringify(updatedUserInfo))
   }
 
-  // atm this is fetching restaurantInfo whenever user goes to homepage, when logged in
+  // This is fetching restaurantInfo whenever user goes to homepage, when logged in
   useEffect(() => {
     getRestaurantInfo()
   }, [])

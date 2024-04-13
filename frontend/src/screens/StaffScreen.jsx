@@ -11,7 +11,6 @@ import Paper from '@mui/material/Paper';
 import SideNav from '../components/SideNav';
 import { Grid } from '@mui/material';
 import { useTheme } from '@mui/material';
-// import EditModal from '../components/EditModal';
 import EditStaffModal from '../components/EditStaffModal';
 import NewStaffModal from '../components/NewStaffModal';
 

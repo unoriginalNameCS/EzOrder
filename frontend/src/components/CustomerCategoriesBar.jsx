@@ -38,11 +38,7 @@ const CategoryButton = styled(Button)(({ theme, selected }) => ({
       try {
         const url = `http://localhost:5000/menus/${restaurantId}/${tableId}/menu/categories`;
   
-        const { data } = await axios.get(url, {
-          // headers: {
-          //   Authorization: `${userInfo.token}`, 
-          // },
-        });
+        const { data } = await axios.get(url);
   
         setMenuCategories(data); 
       } catch (error) {

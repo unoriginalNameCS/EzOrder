@@ -1,11 +1,17 @@
 import asyncHandler from 'express-async-handler';
 import Order from '../models/orderModel.js';
 
-// @desc    gets all orders
-// @route   GET /orders/:restaurantId/orders
-// @access  Public
+/**
+ * @desc    Gets all orders in a certain state
+ * @route   GET /orders/:restaurantId/orders
+ * @access  Public
+ * @param req.params.restaurantId - id of the restaurant
+ * @param req.query.state - state of orders to return
+ * @param req.query.isWaiter - is the user a waiter
+ * @returns {List: [Order]}
+ */
 const getOrders = asyncHandler(async (req, res) => {
-  const { restaurantId} = req.params;
+  const { restaurantId } = req.params;
   const { state, isWaiter } = req.query;
 
   const timeType = isWaiter ? 'serveTime' : '-time';
@@ -35,9 +41,14 @@ const getOrders = asyncHandler(async (req, res) => {
   }
 })
 
-// @desc    gets all orders
-// @route   GET /orders/:restaurantId/orders/:orderId
-// @access  Public
+/**
+ * @desc    Gets the order and the total number of items in the order
+ * @route   GET /orders/:restaurantId/orders/:orderId
+ * @access  Public
+ * @param req.params.restaurantId - id of the restaurant
+ * @param req.params.orderId - id of the order
+ * @returns {{order: Order, totalQuantity: Number}}
+ */
 const getOrder = asyncHandler(async (req, res) => {
   const { restaurantId, orderId } = req.params
 
@@ -57,11 +68,15 @@ const getOrder = asyncHandler(async (req, res) => {
   }
 })
 
-// @desc    set order in progress
-// @route   PUT /:restaurantId/:orderId/inProgress
-// @access  Public
+/**
+ * @desc    Set the order to preparing from pending
+ * @route   PUT /orders/:restaurantId/:orderId/inProgress
+ * @access  Public
+ * @param req.params.orderId - id of the order
+ * @returns {Order}
+ */
 const setOrderInProgress = asyncHandler(async (req, res) => {
-  const { restaurantId, orderId } = req.params;
+  const { orderId } = req.params;
 
   const order = await Order.findOne({_id: orderId});
   if (!order) {
@@ -77,12 +92,15 @@ const setOrderInProgress = asyncHandler(async (req, res) => {
   res.status(201).json(order);
 })
 
-
-// @desc    set order prepared
-// @route   PUT /:restaurantId/:orderId/prepared
-// @access  Public
+/**
+ * @desc    Set the order to serve from preparing
+ * @route   PUT /orders/:restaurantId/:orderId/prepared
+ * @access  Public
+ * @param req.params.orderId - id of the order
+ * @returns {Order}
+ */
 const setOrderPrepared = asyncHandler(async (req, res) => {
-  const { restaurantId, orderId } = req.params;
+  const { orderId } = req.params;
 
   const order = await Order.findOne({_id: orderId});
   if (!order) {
@@ -99,11 +117,15 @@ const setOrderPrepared = asyncHandler(async (req, res) => {
   res.status(201).json(order);
 })
 
-// @desc    set order prepared
-// @route   PUT /:restaurantId/:orderId/prepared
-// @access  Public
+/**
+ * @desc    Set the order to serving from serve
+ * @route   PUT /orders/:restaurantId/:orderId/serving
+ * @access  Public
+ * @param req.params.orderId - id of the order
+ * @returns {Order}
+ */
 const setOrderServing = asyncHandler(async (req, res) => {
-  const { restaurantId, orderId } = req.params;
+  const { orderId } = req.params;
 
   const order = await Order.findOne({_id: orderId});
   if (!order) {
@@ -119,11 +141,15 @@ const setOrderServing = asyncHandler(async (req, res) => {
   res.status(201).json(order);
 })
 
-// @desc    set order prepared
-// @route   PUT /:restaurantId/:orderId/prepared
-// @access  Public
+/**
+ * @desc    Set the order to served from serving
+ * @route   PUT /orders/:restaurantId/:orderId/served
+ * @access  Public
+ * @param req.params.orderId - id of the order
+ * @returns {Order}
+ */
 const setOrderServed = asyncHandler(async (req, res) => {
-  const { restaurantId, orderId } = req.params;
+  const { orderId } = req.params;
 
   const order = await Order.findOne({_id: orderId});
   if (!order) {
@@ -139,21 +165,13 @@ const setOrderServed = asyncHandler(async (req, res) => {
   res.status(201).json(order);
 })
 
-// This function is pointless, do not use, delete after DemoB
-const viewOrderNotes = asyncHandler(async (req, res) => {
-  const { restaurantId, orderId } = req.params;
-
-  const order = await Order.findOne({_id: orderId});
-  if (!order) {
-    res.status(404);
-    throw new Error('No order found');
-  }
-  res.status(200).json(order.notes);
-})
-
-// @desc    gets all completed orders
-// @route   GET /orders/:restaurantId/completedOrders
-// @access  Public
+/**
+ * @desc    Gets all completed orders (orders in 'serve' state)
+ * @route   GET /orders/:restaurantId/completedOrders
+ * @access  Public
+ * @param req.params.restaurantId - id of the restaurant
+ * @returns {List: [Order]}
+ */
 const getCompletedOrders = asyncHandler(async (req, res) => {
   const { restaurantId } = req.params;
 
@@ -165,9 +183,13 @@ const getCompletedOrders = asyncHandler(async (req, res) => {
   }
 })
 
-// @desc    gets all completed orders
-// @route   GET /orders/:restaurantId/preparingOrders
-// @access  Public
+/**
+ * @desc    Gets all preparing orders (orders in 'preparing' state)
+ * @route   GET /orders/:restaurantId/preparingOrders
+ * @access  Public
+ * @param req.params.restaurantId - id of the restaurant
+ * @returns {List: [Order]}
+ */
 const getPreparingOrders = asyncHandler(async (req, res) => {
   const { restaurantId } = req.params;
 
@@ -179,9 +201,13 @@ const getPreparingOrders = asyncHandler(async (req, res) => {
   }
 })
 
-// @desc    gets all completed orders
-// @route   GET /orders/:restaurantId/pendingOrders
-// @access  Public
+/**
+ * @desc    Gets all pending orders (orders in 'pending' state)
+ * @route   GET /orders/:restaurantId/pendingOrders
+ * @access  Public
+ * @param req.params.restaurantId - id of the restaurant
+ * @returns {List: [Order]}
+ */
 const getPendingOrders = asyncHandler(async (req, res) => {
   const { restaurantId } = req.params;
 
@@ -193,5 +219,5 @@ const getPendingOrders = asyncHandler(async (req, res) => {
   }
 })
 
-export { getCompletedOrders, getOrder, getOrders, getPendingOrders, getPreparingOrders, setOrderInProgress, setOrderPrepared, setOrderServed, setOrderServing, viewOrderNotes };
+export { getCompletedOrders, getOrder, getOrders, getPendingOrders, getPreparingOrders, setOrderInProgress, setOrderPrepared, setOrderServed, setOrderServing };
 

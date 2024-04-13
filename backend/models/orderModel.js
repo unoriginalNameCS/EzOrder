@@ -34,9 +34,8 @@ const orderSchema = mongoose.Schema(
   }
 );
   
-// Pre-save middleware: Hash the password (similar to what you did for users)
+// Pre-save middleware
 orderSchema.pre('save', async function (next) {
-    
     next();
 });
 

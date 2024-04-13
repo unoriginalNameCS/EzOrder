@@ -5,16 +5,21 @@ import Request from '../models/requestModel.js';
 import Restaurant from '../models/restaurantModel.js';
 import Table from '../models/tableModel.js';
 import CartItem from '../models/cartItemModel.js';
-// @desc    Sets a table status to occupied
-// @route   PUT /tables/:restaurantId/select
-// @access  Public
+
+/**
+ * @desc    Sets the table status to occupied
+ * @route   PUT /tables/:restaurantId/select
+ * @access  Public
+ * @param req.params.restaurantId - id of the restaurant
+ * @param req.body.tableNumber - table number of the table to be selected
+ * @returns {Table}
+ */
 const tableSelect = asyncHandler(async (req, res) => {
   const { restaurantId } = req.params;
   const { tableNumber } = req.body;
   
   const table = await Table.findOne({ number:tableNumber, restaurant : restaurantId });
-  //check if table is occupied
-  // changed error code to 400 from 401 as 401 is unauthorised
+  // check if table is occupied
   if (table.occupied) {
     res.status(400);
     throw new Error('Table is occupied');
@@ -27,21 +32,24 @@ const tableSelect = asyncHandler(async (req, res) => {
   }
 });
 
-// @desc    Sets a table status to unoccupied
-// @route   PUT /tables/:restaurantId/deselect
-// @access  Public
+/**
+ * @desc    Sets the table status to unoccupied
+ * @route   PUT /tables/:restaurantId/deselect
+ * @access  Public
+ * @param req.params.restaurantId - id of the restaurant
+ * @param req.body.tableNumber - table number of the table to be selected
+ * @returns {Table}
+ */
 const tableDeselect = asyncHandler(async (req, res) => {
   const { restaurantId } = req.params;
   const { tableNumber } = req.body;
   
   const table = await Table.findOne({ number:tableNumber, restaurant : restaurantId });
-  //check if table is occupied
-  // changed error code to 400 from 401 as 401 is unauthorised
+  // check if table is occupied
   if (!table.occupied) {
     res.status(400);
     throw new Error('Table is already unoccupied');
   } else {
-    // set table occupied to true now that its being selected
     table.occupied = false
     // save the updated table in the database
     const updatedTable = await table.save();
@@ -49,19 +57,19 @@ const tableDeselect = asyncHandler(async (req, res) => {
   }
 })
 
-// @desc    gets all table numbers
-// @route   GET /tables/:restaurantId/numbers
-// @access  Public
+/**
+ * @desc    Gets all table numbers
+ * @route   GET /tables/:restaurantId/numbers
+ * @access  Public
+ * @param req.params.restaurantId - id of the restaurant
+ * @returns {List: [{number: String, occupied: Boolean}]}
+ */
 const getTableNumbers = asyncHandler(async (req, res) => {
   const { restaurantId } = req.params
 
-  // changed query to include occupied field as well
   const tableNumbers = await Table.find({ restaurant : restaurantId }).select('number occupied')
   if (tableNumbers) {
-    // changed status code from 201 to 200
-    // removed unecessary object encapsulating tableNumbers
-    res.status(200).json(
-      tableNumbers);
+    res.status(200).json(tableNumbers);
   } else {
     res.status(404);
     throw new Error('Tables not found')
@@ -69,9 +77,13 @@ const getTableNumbers = asyncHandler(async (req, res) => {
   
 })
 
-// @desc  add table
-// @route  POST /tables/:restaurantId/add
-// @access Public
+/**
+ * @desc    Add table to the restaurant
+ * @route   POST /tables/:restaurantId/add
+ * @access  Public
+ * @param req.params.restaurantId - id of the restaurant
+ * @returns {Table}
+ */
 const addTable = asyncHandler(async (req, res) => {  
   // search db for restaurant
   const { restaurantId } = req.params;
@@ -100,9 +112,13 @@ const addTable = asyncHandler(async (req, res) => {
   }
 })
 
-// @desc  Remove last table
-// @route  DELETE /tables/:restaurantId/remove
-// @access Public
+/**
+ * @desc    Remove last table in the restaurant
+ * @route   DELETE /tables/:restaurantId/remove
+ * @access  Public
+ * @param req.params.restaurantId - id of the restaurant
+ * @returns {message: String}
+ */
 const removeTable = asyncHandler(async (req, res) => {
   const { restaurantId } = req.params;
   const restaurant = await Restaurant.findOne({ _id: restaurantId });
@@ -125,9 +141,15 @@ const removeTable = asyncHandler(async (req, res) => {
   res.status(200).json({ message: 'Last table removed successfully.' });
 });
 
-// @desc    adds request to database for assistance
-// @route   POST /tables/:restaurantId/:tableId/assistance
-// @access  Public
+/**
+ * @desc    Adds request to database for assistance
+ * @route   POST /tables/:restaurantId/:tableId/assistance
+ * @access  Public
+ * @param req.params.restaurantId - id of the restaurant
+ * @param req.params.tableId - id of the table requesting assistance
+ * @param req.body.requestedBill - true if customer is requesting bill
+ * @returns {Request}
+ */
 const requestAssistance = asyncHandler(async (req, res) => {
   const { restaurantId, tableId } = req.params
   const { requestedBill } = req.body
@@ -164,9 +186,14 @@ const requestAssistance = asyncHandler(async (req, res) => {
   }
 })
 
-// @desc    sendOrder
-// @route   POST /orders/:restaurantId/:tableId/sendOrder
-// @access  Public
+/**
+ * @desc    Send the items in the cart as an order to the restaurant
+ * @route   POST /tables/:restaurantId/:tableId/sendOrder
+ * @access  Public
+ * @param req.params.restaurantId - id of the restaurant
+ * @param req.params.tableId - id of the table sending order
+ * @returns {Order}
+ */
 const sendOrder = asyncHandler(async (req, res) => {
   const { restaurantId, tableId } = req.params
   
@@ -212,9 +239,17 @@ const sendOrder = asyncHandler(async (req, res) => {
   }
 })
 
-// @desc    adds item to table cart
-// @route   POST /tables/:restaurantId/:tableId/:itemId/addItem
-// @access  Public
+/**
+ * @desc    Adds item to table cart
+ * @route   POST /tables/:restaurantId/:tableId/:itemId/addItem
+ * @access  Public
+ * @param req.params.restaurantId - id of the restaurant
+ * @param req.params.tableId - id of the table adding the item into the cart
+ * @param req.params.itemId - id of the item being added to the cart
+ * @param req.body.notes - notes for the item
+ * @param req.body.quantity - quantity to the item being added to the cart
+ * @returns {message: String}
+ */
 const addItem = asyncHandler(async (req, res) => {
   const { restaurantId, tableId, itemId } = req.params;
   const { notes, quantity } = req.body; // Assuming these are passed in the request body
@@ -229,7 +264,6 @@ const addItem = asyncHandler(async (req, res) => {
     }
 
     // Check if the item already exists in the cart
-    // const existingCartItem = table.cart.find(item => String(item) === String(itemId) && item.notes === notes);
     const tableCart = await Table.findOne({ _id: tableId, restaurant: restaurantId }).populate('cart');
 
     var existingCartItem = "";
@@ -274,9 +308,15 @@ const addItem = asyncHandler(async (req, res) => {
   }
 });
 
-// @desc    Removes an item from the table cart
-// @route   DELETE /tables/:restaurantId/:tableId/:cartItemId/removeItem
-// @access  Public
+/**
+ * @desc    Removes an item from the table cart
+ * @route   DELETE /tables/:restaurantId/:tableId/:cartItemId/removeItem
+ * @access  Public
+ * @param req.params.restaurantId - id of the restaurant
+ * @param req.params.tableId - id of the table removing the item from their cart
+ * @param req.params.cartItemId - id of the item being removed from the cart
+ * @returns {message: String}
+ */
 const removeItem = asyncHandler(async (req, res) => {
   const { restaurantId, tableId, cartItemId } = req.params;
 
@@ -290,7 +330,6 @@ const removeItem = asyncHandler(async (req, res) => {
     }
 
     // Remove the item from the cart based on cart_item_id
-
     table.cart = table.cart.filter((cartItem) => cartItem._id.toString() != cartItemId);
 
     // Save the updated table
@@ -302,9 +341,14 @@ const removeItem = asyncHandler(async (req, res) => {
   }
 });
 
-// @desc    Get the cart for a specific table
-// @route   GET /tables/:restaurantId/:tableId/cart
-// @access  Public
+/**
+ * @desc    Get the cart for a specific table
+ * @route   GET /tables/:restaurantId/:tableId/cart
+ * @access  Public
+ * @param req.params.restaurantId - id of the restaurant
+ * @param req.params.tableId - id of the table with the cart
+ * @returns {List: [{_id: String, menuItem: MenuItem, notes: String, quantity: Number}]}
+ */
 const getCart = asyncHandler(async (req, res) => {
   const { restaurantId, tableId } = req.params;
 
@@ -333,10 +377,15 @@ const getCart = asyncHandler(async (req, res) => {
   }
 });
 
-// @desc    Get the order_list for a specific table
-// @route   GET /tables/:restaurantId/:tableId/orders
-// @access  Public
-const  getOrders = asyncHandler(async (req, res) => {
+/**
+ * @desc    Get the order_list for a specific table
+ * @route   GET /tables/:restaurantId/:tableId/orders
+ * @access  Public
+ * @param req.params.restaurantId - id of the restaurant
+ * @param req.params.tableId - id of the table with the orders
+ * @returns {List: [Order]}
+ */
+const getOrders = asyncHandler(async (req, res) => {
   const { restaurantId, tableId } = req.params;
   // Find the table by ID and restaurant
   const table = await Table.findOne({ _id: tableId, restaurant: restaurantId })
@@ -356,9 +405,14 @@ const  getOrders = asyncHandler(async (req, res) => {
   
 });
 
-// @desc    Get all ordered items for a table
-// @route   GET /tables/:restaurantId/:tableId/orders/items
-// @access  Public
+/**
+ * @desc    Get all ordered items for a table
+ * @route   GET /tables/:restaurantId/:tableId/orders/items
+ * @access  Public
+ * @param req.params.restaurantId - id of the restaurant
+ * @param req.params.tableId - id of the table with the ordered items
+ * @returns {List: [{menuItem: MenuItem, quantity: Number, notes: String}]}
+ */
 const getOrdersItems = asyncHandler(async (req, res) => {
   const { restaurantId, tableId } = req.params;
   // Find the table by ID and restaurant
@@ -396,7 +450,7 @@ const getOrdersItems = asyncHandler(async (req, res) => {
     if (orderedItems.length > 0) {
       res.status(200).json(populatedItemsArray);  
     } else {
-      // Retuern empty list
+      // Return empty list
       res.status(204).json(orderedItems);   
     }
   } catch (error) {
@@ -405,9 +459,13 @@ const getOrdersItems = asyncHandler(async (req, res) => {
   
 });
 
-// @desc    Get the order_list for a specific table
-// @route   GET /tables/:restaurantId/tables
-// @access  Public
+/**
+* @desc    Get all tables in the restaurant
+* @route   GET /tables/:restaurantId/tables
+* @access  Public
+* @param req.params.restaurantId - id of the restaurant
+* @returns {List: [Table]}
+*/
 const getTables = asyncHandler(async (req, res) => {
   const { restaurantId } = req.params;
   // Find the table by ID and restaurant
@@ -427,9 +485,12 @@ const getTables = asyncHandler(async (req, res) => {
   }
 });
 
-// @desc  Get a list of all restaurants
-// @route GET /tables/restaurants
-// @access Public
+/**
+* @desc    Get a list of all restaurants
+* @route   GET /tables/restaurants
+* @access  Public
+* @returns {List: [Restaurant]}
+*/
 const getAllRestaurants = asyncHandler(async (req, res) => {
   // Find all restaurants within Restaurant collection in MongoDB
   const allRestaurants = await Restaurant.find({});

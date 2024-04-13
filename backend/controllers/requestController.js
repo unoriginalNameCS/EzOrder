@@ -1,11 +1,16 @@
 import asyncHandler from 'express-async-handler';
 import Request from '../models/requestModel.js';
   
-// @desc    gets all orders
-// @route   GET /requests/:restaurantId/requests
-// @access  Public
+/**
+ * @desc    Gets all requests in a certain state
+ * @route   GET /requests/:restaurantId/requests
+ * @access  Public
+ * @param req.params.restaurantId - id of the restaurant
+ * @param req.query.state - state of requests to return
+ * @returns {List: [Request]}
+ */
 const getRequests = asyncHandler(async (req, res) => {
-  const { restaurantId} = req.params;
+  const { restaurantId } = req.params;
   const { state } = req.query;
 
   const requests = await Request.find({ restaurant : restaurantId, state: state }).sort('time');
@@ -17,11 +22,15 @@ const getRequests = asyncHandler(async (req, res) => {
   }
 })
   
-// @desc    Change state of request
-// @route   PUT /tables/:restaurantId/:requestId/assisting
-// @access  Private
+/**
+ * @desc    Change state of request from waiting to assisting
+ * @route   PUT /requests/:restaurantId/:requestId/assisting
+ * @access  Private
+ * @param req.params.requestId - id of the request
+ * @returns {Request}
+ */
 const setRequestAssisting = asyncHandler(async (req, res) => {
-  const { restaurantId, requestId } = req.params;
+  const { requestId } = req.params;
   // search db for particular request with _id
   const request = await Request.findOne({_id: requestId})
   if (!request) {
@@ -39,11 +48,15 @@ const setRequestAssisting = asyncHandler(async (req, res) => {
   res.status(200).json(request)
 })
   
-// @desc    Change state of request
-// @route   PUT /tables/:restaurantId/:requestId/complete
-// @access  Private
-const setRequestComplete= asyncHandler(async (req, res) => {
-  const { restaurantId, requestId } = req.params;
+/**
+ * @desc    Change state of request from assisting to complete
+ * @route   PUT /requests/:restaurantId/:requestId/complete
+ * @access  Private
+ * @param req.params.requestId - id of the request
+ * @returns {Request}
+ */
+const setRequestComplete = asyncHandler(async (req, res) => {
+  const { requestId } = req.params;
   // search db for particular request with _id
   const request = await Request.findOne({_id: requestId})
   if (!request) {

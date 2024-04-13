@@ -37,8 +37,6 @@ const Login = () => {
       setLoggedIn(!loggedIn)
     } else {
       toast.error(data?.message)
-      console.log(data?.message);
-
     }
 
   }

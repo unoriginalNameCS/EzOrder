@@ -24,7 +24,6 @@ const KitchenScreen = () => {
         axios.get(baseUrl, { params: { state: 'preparing', isWaiter: false} }),
         axios.get(baseUrl, { params: { state: 'serve', isWaiter: false } }),
       ]);
-      console.log(pendingResponse.data);
       setOrderList([...pendingResponse.data, ...preparingResponse.data, ...completedResponse.data]);
 
     } catch (error) {

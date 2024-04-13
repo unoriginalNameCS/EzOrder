@@ -94,7 +94,6 @@ const NewItemModal = ({ open, handleClose, restaurantId, categoryId }) => {
           },
         }
       );
-      console.log('Item added:', response.data); 
       handleClose(); 
     } catch (error) {
       console.error('There was an error adding the item:', error.response?.data || error.message);
@@ -178,21 +177,7 @@ const NewItemModal = ({ open, handleClose, restaurantId, categoryId }) => {
             helperText="Separate ingredients with commas"
             sx={{ mb: 3 }}
           />
-          {/* <TextField
-            margin="normal"
-            required
-            fullWidth
-            label="Position"
-            name="position"
-            value={formData.position}
-            onChange={handleChange}
-            type="number"
-            InputProps={{
-              inputProps: { min: 0, max: 10}
-              
-            }}
-            sx={{ mb: 3 }}
-          /> */}
+          {}
             <Button
             component="label"
             role={undefined}

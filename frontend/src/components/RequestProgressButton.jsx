@@ -16,7 +16,6 @@ const RequestProgressButton = ({requestId, state, onRequestUpdate}) => {
     const url = `http://localhost:5000/requests/${restaurantId}/${requestId}/${route}`;
 
     try {
-      console.log(url);
       await axios.put(url);
       onRequestUpdate();
     } catch (error) {

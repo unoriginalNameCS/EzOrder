@@ -31,9 +31,8 @@ const requestSchema = mongoose.Schema(
   }
 );
   
-// Pre-save middleware: Hash the password (similar to what you did for users)
+// Pre-save middleware
 requestSchema.pre('save', async function (next) {
-    
     next();
 });
 

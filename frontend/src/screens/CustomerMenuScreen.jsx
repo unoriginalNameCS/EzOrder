@@ -191,7 +191,6 @@ const CustomerMenuScreen = () => {
         customerInfo={customerInfo}
         categoryId={selectedCategoryId}
         itemId={selectedItemId}
-        // onItemSelected={onItemSelected}
       />
     </div>
   );

@@ -84,10 +84,8 @@ const requestPasswordReset = asyncHandler(async (req, res) => {
   
   transporter.sendMail(mailOptions, async (error, info) => {
     if (error) {
-      console.log(error);
       res.status(400).json(error);
     } else {
-      console.log("Email sent: " + info.response);
       // if we get here, then store the verification code with the user email in the database so we can check it when it is used
       const requestReset = await UserResetPassword.create({
           email: userExists.email,
@@ -108,7 +106,6 @@ const requestPasswordReset = asyncHandler(async (req, res) => {
  */
 const validateVerificationCode = asyncHandler(async (req, res) => {
   const { email, verificationCode } = req.body
-  console.log(req.body, 'here')
   // check if the email exists in the database
   // search db for user by email
   const userExists = await User.findOne({ email });
@@ -285,7 +282,6 @@ const getUserProfile = asyncHandler(async (req, res) => {
  * @returns {List: [{id: String, name: String, email: String, role: String}]}
  */
 const getUserProfiles = asyncHandler(async (req, res) => {
-  // const restaurantId = req.params.restaurantId
   const { restaurantid } = req.headers;
   try {
     const users = await User.find({ restaurant: restaurantid });
@@ -304,7 +300,6 @@ const getUserProfiles = asyncHandler(async (req, res) => {
       throw new Error('No users found');
     }
   } catch (error) {
-    console.log(error);
   }
 });
 
@@ -331,11 +326,11 @@ const updateUserProfile = asyncHandler(async (req, res) => {
   }
 
   if (user) {
-    user.name = req.body.name || user.name;
-    user.email = req.body.email || user.email;
+    user.name = name || user.name;
+    user.email = email || user.email;
 
-    if (req.body.password) {
-      user.password = req.body.password;
+    if (password) {
+      user.password = password;
     }
 
     const updatedUser = await user.save();
@@ -392,6 +387,7 @@ const updateStaffProfile = asyncHandler(async (req, res) => {
  * @desc    Delete a user
  * @route   DELETE /api/users/:id
  * @access  Private
+ * @param   req.headers._id - id of user deleting
  * @param   req.params.id - id of the user to delete
  * @returns 200 status code
  */
@@ -402,15 +398,18 @@ const deleteUser = asyncHandler(async (req, res) => {
     throw new Error('Did not receive id in params');
   }
 
+  if (req.headers._id == id) {
+    res.status(400);
+    throw new Error('Cannot delete user');
+  }
+
   try {
     const user = await User.findByIdAndDelete(id);
     if (!user) {
-      console.log('Document not found.');
       return; // or throw an error
     }
     res.status(200);
   } catch (error) {
-    console.log(error);
   }
 });
 
@@ -451,8 +450,6 @@ const registerStaff = asyncHandler(async (req, res) => {
       );
     }
 
-    console.log('creating staff');
-
     // create staff user
     const user = await User.create({
       name,
@@ -476,7 +473,6 @@ const registerStaff = asyncHandler(async (req, res) => {
       throw new Error('Invalid user data');
     }
   } catch (error) {
-    console.log(error);
   }
 });
 

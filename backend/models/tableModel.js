@@ -27,9 +27,8 @@ const tableSchema = mongoose.Schema(
   }
 );
   
-// Pre-save middleware: Hash the password (similar to what you did for users)
+// Pre-save middleware
 tableSchema.pre('save', async function (next) {
-    
     next();
 });
 
