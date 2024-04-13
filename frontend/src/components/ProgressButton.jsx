@@ -16,7 +16,6 @@ const ProgressButton = ({orderId, state, onOrderUpdate, isWaiter}) => {
     const url = `http://localhost:5000/orders/${restaurantId}/${orderId}/${route}`;
 
     try {
-      console.log(url);
       await axios.put(url);
       onOrderUpdate();
     } catch (error) {

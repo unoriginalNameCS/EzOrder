@@ -41,7 +41,6 @@ const Header = () => {
         axios.get(baseUrl, { params: { state: 'waiting' } }),
         axios.get(baseUrl, { params: { state: 'assisting' } }),
       ]);
-      console.log(pendingResponse.data);
       setRequestList([...pendingResponse.data, ...inProgressResponse.data]);
 
     } catch (error) {
@@ -58,7 +57,6 @@ const Header = () => {
         axios.get(baseUrl, { params: { state: 'serve' } }),
         axios.get(baseUrl, { params: { state: 'serving' } }),
       ]);
-      console.log(pendingResponse.data);
       setOrderList([...pendingResponse.data, ...preparingResponse.data]);
 
     } catch (error) {

@@ -35,7 +35,6 @@ const NewCategoryModal = ({ open, handleClose, restaurantId }) => {
     const userInfo = JSON.parse(localStorage.getItem('userInfo')); 
 
     try {
-      console.log('Sending the following data:', formData);
       const response = await axios.post(
         `http://localhost:5000/menus/${restaurantId}/menu/categories/add`, 
         {
@@ -47,7 +46,6 @@ const NewCategoryModal = ({ open, handleClose, restaurantId }) => {
           },
         }
       );
-      console.log('Category added:', response.data); 
       handleClose(); 
     } catch (error) {
       console.error('There was an error adding the category:', error.response?.data || error.message);

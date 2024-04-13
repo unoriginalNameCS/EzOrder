@@ -91,7 +91,6 @@ const EditItemModal = ({ open, handleClose, restaurantId, categoryId, menuItems 
 
     try {
       const dataUrl = await convertFileToDataUrl(file);
-      console.log(dataUrl)
       setNewImageUrl(dataUrl);
       setItemDetails(prevDetails => ({
         ...prevDetails,
@@ -119,7 +118,6 @@ const EditItemModal = ({ open, handleClose, restaurantId, categoryId, menuItems 
     e.preventDefault();
     const userInfo = JSON.parse(localStorage.getItem('userInfo')); 
     try {
-      console.log('Updating the following item:', selectedItem);
       const response = await axios.patch(
         `http://localhost:5000/menus/${restaurantId}/menu/categories/${categoryId}/items/${itemDetails._id}/update`, 
         {
@@ -131,7 +129,6 @@ const EditItemModal = ({ open, handleClose, restaurantId, categoryId, menuItems 
           },
         }
       );
-      console.log('Item updated:', response.data);
        
       setSelectedItem('');
       setItemDetails({});
@@ -148,7 +145,6 @@ const EditItemModal = ({ open, handleClose, restaurantId, categoryId, menuItems 
 
     if (newPosition) {
       try {
-        console.log('Moving the following item:', selectedItem, newPosition);
         const response = await axios.put(
           `http://localhost:5000/menus/${restaurantId}/menu/categories/${categoryId}/items/order`, 
           {
@@ -161,7 +157,6 @@ const EditItemModal = ({ open, handleClose, restaurantId, categoryId, menuItems 
             },
           }
         );
-        console.log('Item moved:', response.data); 
         handleClose(); 
       } catch (error) {
         console.error('There was an error moving the item:', error.response?.data || error.message);

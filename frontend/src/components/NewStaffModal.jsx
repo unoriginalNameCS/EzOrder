@@ -60,9 +60,7 @@ const EditStaffModal = ({open, handleClose, restaurantId}) => {
 
   return (
     <>
-      {/* <Button variant="text" color="primary" onClick={handleOpen}>
-        Edit
-      </Button> */}
+      {}
       <Modal
         open={open}
         onClose={handleClose}

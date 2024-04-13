@@ -23,7 +23,6 @@ export default function OrderScreen() {
   }, [restaurantId, tableId]);
   let totalPrice = 0;
   for (let item of items) {
-    // console.log(item)
     totalPrice += item.menuItem.price * item.quantity;
   }
   const requestBill = async () => {

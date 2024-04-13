@@ -80,7 +80,6 @@ const CustomerItemModal = ({ open, handleClose, customerInfo, categoryId, itemId
     e.preventDefault();
 
     try {
-      console.log(notes);
       const response = await axios.post(
         `http://localhost:5000/tables/${restaurantId}/${tableId}/${itemId}/addItem`,
         {
@@ -88,14 +87,10 @@ const CustomerItemModal = ({ open, handleClose, customerInfo, categoryId, itemId
           quantity: quantity
         }
       );
-      console.log('Item added:', response.data); 
       handleClose(); 
     } catch (error) {
       console.error('There was an error adding the item:', error.response?.data || error.message);
     }
-
-    // Handle adding the item to the cart here
-    console.log('Item added to cart:', menuItem);
   };
 
   return (

@@ -23,7 +23,7 @@ const RegisterScreen = () => {
         name,
         email,
         restaurantName,
-        password, // might have to swap restaurant and password
+        password,
       })
     })
 
@@ -36,8 +36,6 @@ const RegisterScreen = () => {
       navigate('/')
     } else {
       toast.error(data?.message)
-      console.log(data)
-      console.log('res', response)
     }
   }
 

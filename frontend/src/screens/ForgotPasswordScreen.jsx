@@ -39,7 +39,6 @@ const ForgotPasswordScreen = () => {
       setSuccessSubmit(!successSubmit);
     } else {
       toast.error(data?.message);
-      console.log(data?.message);
     }
   }
 
@@ -65,7 +64,6 @@ const ForgotPasswordScreen = () => {
       setValidatedRequest(!validatedRequest);
     } else {
       toast.error(data?.message);
-      console.log(data?.message);
     }
   }
 
@@ -92,7 +90,6 @@ const ForgotPasswordScreen = () => {
       navigate('/login')
     } else {
       toast.error(data?.message);
-      console.log(data?.message);
     }
   }
 

@@ -22,17 +22,15 @@ const CustomerSelectScreen = () => {
       },
     });
     const data = await response.json();
-    console.log(data);
     // if successfully fetched all restaurants
     if (response.status === 200) {
       setRestaurants(data);
     } else if (response.status === 204) {
       // list of restaurants returned is empty
-      setRestaurants(data); // Not sure if I need to do anything
+      setRestaurants(data);
     } else {
       // Something went wrong
       toast.error(data?.message);
-      console.log(data?.message);
     }
   }
 
@@ -55,12 +53,10 @@ const CustomerSelectScreen = () => {
     } else {
       // Something went wrong, most likely that restaurant has no tables (i.e manager has to add tables to their restaurant)
       toast.error(data?.message);
-      console.log(data?.message);
     }
   }
 
   // Select the table that the customer has chosen
-  //
   async function selectTable(selectedRestaurant, selectedTable) {
     // get the restaurantId of the selected restaurant
     const restaurant = restaurants.find(
@@ -104,14 +100,12 @@ const CustomerSelectScreen = () => {
       };
 
       // Store customerInfo in localStorage
-      localStorage.setItem('customerInfo', JSON.stringify(customerInfo))
-      console.log(customerInfo)
+      localStorage.setItem('customerInfo', JSON.stringify(customerInfo));
 
       navigate(`/customerMenu`);
 
     } else {
       toast.error(data?.message);
-      console.log(data?.message);
     }
   }
 

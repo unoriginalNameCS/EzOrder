@@ -13,7 +13,6 @@ import ReorderIcon from '@mui/icons-material/Reorder';
 
   const CategoryButton = styled(Button)(({ theme, selected }) => ({
     backgroundColor: selected ? '#83AE0B' : '#FBFBF2',
-    // backgroundColor: '#FBFBF2',
     color: selected ? '#FBFBF2': '#83AE0B',
     borderRadius: '0.5rem',
     borderColor: '#83AE0B',
