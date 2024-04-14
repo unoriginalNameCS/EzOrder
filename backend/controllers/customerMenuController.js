@@ -3,25 +3,6 @@ import MenuCategory from '../models/categoryModel.js';
 import MenuItem from '../models/itemModel.js';
 
 /**
- * @desc    View menu
- * @route   GET /menus/:restaurantId/:tableId/menu
- * @access  Public
- * @param req.params.restaurantId - id of restaurant
- * @returns {List: [MenuCategory]}
- */
-const getCustomerMenu = asyncHandler(async (req, res) => {
-  const { restaurantId } = req.params;
-  const categories = await MenuCategory.find({ restaurant : restaurantId }).sort('position');
-  const populatedCategories = await MenuCategory.populate(categories, {path: 'menuItems', options: { sort: { position: 1}}});
-
-  if (populatedCategories.length > 0) {
-    res.status(200).json(categories);
-  } else {
-    res.status(404).json({ populatedCategories: 'Menu not found' })
-  }
-});
-
-/**
  * @desc    View categories
  * @route   GET /menus/:restaurantId/:tableId/menu/categories
  * @access  Public
@@ -95,7 +76,6 @@ const getCustomerMenuItemDetails = asyncHandler(async (req, res) => {
 });
 
 export {
-  getCustomerMenu,
   getCustomerCategories,
   getCustomerMenuItems,
   getCustomerMenuCategory,

@@ -8,15 +8,15 @@ const router = express.Router();
 router.post('/register', registerUser);
 router.post('/auth', authUser);
 router.post('/logout', logoutUser);
-router.delete('/delete/:id', deleteUser)
+router.delete('/delete/:id', deleteUser);
 router.get('/profile', protect, getUserProfile);
 router.put('/profile', protect, updateUserProfile);
 router.post('/registerStaff', protect, registerStaff);
 router.get('/profiles', protect, getUserProfiles);
-router.put('/editStaff', protect, updateStaffProfile)
+router.put('/editStaff', protect, updateStaffProfile);
 router.get('/restaurant', protect, getRestaurant);
 router.post('/password/reset', requestPasswordReset);
-router.put('/password/reset', passwordReset)
+router.put('/password/reset', passwordReset);
 router.post('/password/reset/verify', validateVerificationCode);
 
 export default router;

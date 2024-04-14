@@ -4,26 +4,6 @@ import MenuItem from '../models/itemModel.js';
 import Restaurant from '../models/restaurantModel.js';
 
 /**
- * @desc    View menu
- * @route   GET /menus/:restaurantId/menu
- * @access  Private
- * @param req.params.restaurantId - id of restaurant
- * @param req.params.tableId - id of the table
- * @returns {List: [MenuCategory]}
- */
-const getMenu = asyncHandler(async (req, res) => {
-  const { restaurantId } = req.params;
-  const categories = await MenuCategory.find({ restaurant : restaurantId }).sort('position');
-  const populatedCategories = await MenuCategory.populate(categories, {path: 'menuItems', options: { sort: { position: 1}}});
-
-  if (populatedCategories.length > 0) {
-    res.status(200).json(categories);
-  } else {
-    res.status(404).json({ populatedCategories: 'Menu not found' })
-  }
-});
-
-/**
  * @desc    View categories
  * @route   GET /menus/:restaurantId/menu/categories
  * @access  Private
@@ -383,7 +363,7 @@ const removeMenuCategory = asyncHandler(async (req, res) => {
 });
 
 export {
-  addCategory, addItem, getCategories, getMenu, getMenuItemDetails, getMenuItems, 
+  addCategory, addItem, getCategories, getMenuItemDetails, getMenuItems, 
   updateCategoriesOrder, updateMenuItemDetails, updateMenuItemsOrder, getMenuCategory,
   removeMenuItem, removeMenuCategory
 };
