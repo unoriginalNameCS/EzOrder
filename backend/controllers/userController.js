@@ -135,7 +135,7 @@ const validateVerificationCode = asyncHandler(async (req, res) => {
 
 /**
  * @desc    Reset the password of a user who has already been verified
- * @route   POST /api/users/password/reset
+ * @route   PUT /api/users/password/reset
  * @access  Public
  * @param   req.body.email - email of the user
  * @param   req.body.verification_code - verification code sent to user's email
@@ -184,7 +184,7 @@ const passwordReset = asyncHandler(async (req, res) => {
 
 /**
  * @desc    Register a new user
- * @route   POST /api/users
+ * @route   POST /api/users/register
  * @access  Public
  * @param   req.body.name - the name of the user
  * @param   req.body.email - the email of the user
@@ -276,7 +276,7 @@ const getUserProfile = asyncHandler(async (req, res) => {
 
 /**
  * @desc    Get the user details of all users from a specific restaurant
- * @route   GET /api/users/:/restaurantId/profiles
+ * @route   GET /api/users/profiles
  * @access  Private
  * @param   req.headers.restaurantId - restaurantId of the user
  * @returns {List: [{id: String, name: String, email: String, role: String}]}

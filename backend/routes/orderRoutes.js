@@ -3,14 +3,19 @@ import { getCompletedOrders, getOrders, getPendingOrders, getPreparingOrders, se
 
 const router = express.Router();
 
+// Used in Header.jsx, KitchenScreen.jsx and waiterRedayOrdScreen.jsx
 router.get('/:restaurantId/orders', getOrders);
+
+// Used in ProgressButton.jsx
 router.put('/:restaurantId/:orderId/inProgress', setOrderInProgress);
 router.put('/:restaurantId/:orderId/prepared', setOrderPrepared);
 router.put('/:restaurantId/:orderId/serving', setOrderServing);
 router.put('/:restaurantId/:orderId/served', setOrderServed);
+
+// Unused ///////////
 router.get('/:restaurantId/pendingOrders', getPendingOrders);
 router.get('/:restaurantId/preparingOrders', getPreparingOrders);
 router.get('/:restaurantId/completedOrders', getCompletedOrders);
-router.get('/:restaurantId/orders/:orderId', getOrder)
+router.get('/:restaurantId/orders/:orderId', getOrder);
 
 export default router;
