@@ -4,7 +4,6 @@ import { protect } from '../middleware/authMiddleware.js';
 
 const router = express.Router();
 
-// Used in SettingsScreen.jsx
 router.get('/:restaurantId/details', protect, getRestaurantDetails);
 router.put('/:restaurantId/name', protect, updateRestaurantName);
 router.put('/:restaurantId/logoUrl', protect, updateRestaurantLogoUrl);

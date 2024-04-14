@@ -378,34 +378,6 @@ const getCart = asyncHandler(async (req, res) => {
 });
 
 /**
- * @desc    Get the order_list for a specific table
- * @route   GET /tables/:restaurantId/:tableId/orders
- * @access  Public
- * @param req.params.restaurantId - id of the restaurant
- * @param req.params.tableId - id of the table with the orders
- * @returns {List: [Order]}
- */
-const getOrders = asyncHandler(async (req, res) => {
-  const { restaurantId, tableId } = req.params;
-  // Find the table by ID and restaurant
-  const table = await Table.findOne({ _id: tableId, restaurant: restaurantId })
-
-  if (!table) {
-    res.status(404).json({ message: 'Table not found' });
-    return;
-  }
-
-  // Return the order_list
-  if (table.order_list.length > 0) {
-    res.status(200).json(table.order_list);  
-  } else {
-    // Retuern empty list
-    res.status(204).json(table.order_list);   
-  }
-  
-});
-
-/**
  * @desc    Get all ordered items for a table
  * @route   GET /tables/:restaurantId/:tableId/orders/items
  * @access  Public
@@ -506,7 +478,7 @@ const getAllRestaurants = asyncHandler(async (req, res) => {
 });
 
   export {
-  addItem, addTable, getAllRestaurants, getCart, getOrders, getTableNumbers, removeItem, 
+  addItem, addTable, getAllRestaurants, getCart, getTableNumbers, removeItem, 
   requestAssistance, sendOrder, tableSelect, tableDeselect, getTables, getOrdersItems,
   removeTable
 };
