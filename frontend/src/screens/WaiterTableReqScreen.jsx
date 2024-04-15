@@ -16,7 +16,7 @@ const TableRequestsScreen = () => {
 
   const fetchRequestList = async () => {
     try {
-      const baseUrl = `http://localhost:5000/requests/${restaurantId}/requests`;
+      const baseUrl = `http://localhost:3001/requests/${restaurantId}/requests`;
   
       // Fetch all requests concurrently with different query parameters
       const [pendingResponse, assistingResponse] = await Promise.all([

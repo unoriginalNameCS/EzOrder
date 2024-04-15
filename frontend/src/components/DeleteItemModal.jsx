@@ -34,7 +34,7 @@ const DeleteItemModal = ({ open, handleClose, restaurantId, categoryId, menuItem
     const userInfo = JSON.parse(localStorage.getItem('userInfo')); 
 
     try {
-      await axios.delete(`http://localhost:5000/menus/${restaurantId}/menu/categories/${categoryId}/items/${itemId}/remove`, 
+      await axios.delete(`http://localhost:3001/menus/${restaurantId}/menu/categories/${categoryId}/items/${itemId}/remove`, 
       {
         headers: {
           Authorization: `${userInfo.token}`,

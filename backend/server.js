@@ -4,6 +4,7 @@ import cors from "cors";
 import connectDB from './config/db.js';
 import userRoutes from './routes/userRoutes.js';
 import tableRoutes from './routes/tableRoutes.js';
+import customerMenuRoutes from './routes/customerMenuRoutes.js';
 import menuRoutes from './routes/menuRoutes.js';
 import orderRoutes from './routes/orderRoutes.js';
 import requestRoutes from './routes/requestRoutes.js'
@@ -30,6 +31,7 @@ app.get('/', (req, res) => res.status(200).json({message: "Success"}))
 
 app.use('/api/users', userRoutes);
 app.use('/menus', menuRoutes);
+app.use('/customermenus', customerMenuRoutes);
 app.use('/tables', tableRoutes);
 app.use('/orders', orderRoutes);
 app.use('/requests', requestRoutes);

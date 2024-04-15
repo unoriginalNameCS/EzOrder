@@ -75,7 +75,7 @@ const MenuScreen = () => {
 
   const fetchMenuCategories = async () => {
     try {
-      const url = `http://localhost:5000/menus/${restaurantId}/menu/categories`;
+      const url = `http://localhost:3001/menus/${restaurantId}/menu/categories`;
       const { data } = await axios.get(url, {
         headers: {
           Authorization: `${userInfo.token}`, 
@@ -95,7 +95,7 @@ const MenuScreen = () => {
 
   const fetchMenuItems = async () => {
     try {
-      const url = `http://localhost:5000/menus/${restaurantId}/menu/categories/${selectedCategoryId}/items`;
+      const url = `http://localhost:3001/menus/${restaurantId}/menu/categories/${selectedCategoryId}/items`;
 
       const { data } = await axios.get(url, {
         headers: {

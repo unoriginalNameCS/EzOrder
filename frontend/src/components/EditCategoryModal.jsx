@@ -41,7 +41,7 @@ const EditCategoryModal = ({ open, handleClose, restaurantId, categories }) => {
 
     try {
       const response = await axios.put(
-        `http://localhost:5000/menus/${restaurantId}/menu/categories/order`, 
+        `http://localhost:3001/menus/${restaurantId}/menu/categories/order`, 
         {
           categoryName: selectedCategory,
           newPosition: newPosition

@@ -166,6 +166,13 @@ const requestAssistance = asyncHandler(async (req, res) => {
     throw new Error('Restaurant not found')
   }
 
+  const requestCheck = await Request.findOne({ restaurant: restaurantId, requestedBill: requestedBill, tableNum: table.number, state: 'waiting' });
+  // Request already made
+  if (requestCheck) {
+    res.status(400);
+    throw new Error('Request already made');
+  }
+
   const lastRequest = await Request.findOne({ restaurant : restaurantId }).sort({requestNum: -1})
   const number = lastRequest ? lastRequest.requestNum + 1 : 1;
 

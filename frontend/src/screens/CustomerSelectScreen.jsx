@@ -15,7 +15,7 @@ const CustomerSelectScreen = () => {
 
   // Get a list of current restaurants
   async function getRestaurants() {
-    const response = await fetch("http://localhost:5000/tables/restaurants", {
+    const response = await fetch("http://localhost:3001/tables/restaurants", {
       method: "GET",
       headers: {
         "Content-type": "application/json",
@@ -37,7 +37,7 @@ const CustomerSelectScreen = () => {
   // Get a list of current unoccupied tables for that restaurant
   async function getTables(restaurantId) {
     const response = await fetch(
-      `http://localhost:5000/tables/${restaurantId}/numbers`,
+      `http://localhost:3001/tables/${restaurantId}/numbers`,
       {
         method: "GET",
         headers: {
@@ -64,7 +64,7 @@ const CustomerSelectScreen = () => {
     );
 
     const response = await fetch(
-      `http://localhost:5000/tables/${restaurant._id}/select`,
+      `http://localhost:3001/tables/${restaurant._id}/select`,
       {
         method: "PUT",
         headers: {

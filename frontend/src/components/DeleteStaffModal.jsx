@@ -26,7 +26,7 @@ const DeleteStaffModal = ({ open, handleClose, staffId, restaurantId}) => {
     e.preventDefault();
     const userInfo = JSON.parse(localStorage.getItem('userInfo')); 
     try {
-      const response = await axios.delete(`http://localhost:5000/api/users/delete/${staffId}`, {
+      const response = await axios.delete(`http://localhost:3001/api/users/delete/${staffId}`, {
         headers: {
           _id: userInfo._id,
           Authorization: userInfo.token,
