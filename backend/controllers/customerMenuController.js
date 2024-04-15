@@ -4,7 +4,7 @@ import MenuItem from '../models/itemModel.js';
 
 /**
  * @desc    View categories
- * @route   GET /menus/:restaurantId/:tableId/menu/categories
+ * @route   GET /customermenus/:restaurantId/:tableId/menu/categories
  * @access  Public
  * @param req.params.restaurantId - id of restaurant
  * @returns {List: [MenuCategory]}
@@ -22,7 +22,7 @@ const getCustomerCategories = asyncHandler(async (req, res) => {
 
 /**
  * @desc    View items
- * @route   GET /menus/:restaurantId/:tableId/menu/categories/:categoryId/items
+ * @route   GET /customermenus/:restaurantId/:tableId/menu/categories/:categoryId/items
  * @access  Public
  * @param req.params.categoryId - id of the category
  * @returns {List: [MenuItem]}
@@ -40,7 +40,7 @@ const getCustomerMenuItems = asyncHandler(async (req, res) => {
 
 /**
  * @desc    Get Category
- * @route   GET /menus/:restaurantId/:tableId/menu/categories/:categoryId
+ * @route   GET /customermenus/:restaurantId/:tableId/menu/categories/:categoryId
  * @access  Public
  * @param req.params.categoryId - id of the category
  * @returns {MenuCategory}
@@ -58,7 +58,7 @@ const getCustomerMenuCategory = asyncHandler(async (req, res) => {
 
 /**
  * @desc    Get item
- * @route   GET /menus/:restaurantId/:tableId/menu/categories/:categoryId/items/:itemId
+ * @route   GET /customermenus/:restaurantId/:tableId/menu/categories/:categoryId/items/:itemId
  * @access  Public
  * @param req.params.categoryId - id of category the item is in
  * @param req.params.itemId - id of the item
