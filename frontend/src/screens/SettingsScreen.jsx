@@ -100,7 +100,7 @@ const SettingsScreen = () => {
 
   const updateRestaurantDetail = async (urlDetail, bodyDetail, value) => {
     try {
-      const url = `http://localhost:3001/restaurants/${restaurantId}/${urlDetail}`;
+      const url = `http://localhost:5000/restaurants/${restaurantId}/${urlDetail}`;
       const body = { [bodyDetail]: value };
       const response = await axios.put(url, body, { headers: { Authorization: `${userInfo.token}` } });
       toast.success(response.data.message)
@@ -147,7 +147,7 @@ const SettingsScreen = () => {
 
   const fetchRestaurantDetails = async () => {
     try {
-      const url = `http://localhost:3001/restaurants/${restaurantId}/details`;
+      const url = `http://localhost:5000/restaurants/${restaurantId}/details`;
       const { data } = await axios.get(url, { headers: { Authorization: `${userInfo.token}` } });
       setRestaurantDetails(data);
       setNewName(data.name);

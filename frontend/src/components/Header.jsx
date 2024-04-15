@@ -15,7 +15,7 @@ const Header = () => {
   const [orderList, setOrderList] = useState([]);
 
   const logoutHandler = async () => {
-    const response = await fetch("http://localhost:3001/api/users/logout", {
+    const response = await fetch("http://localhost:5000/api/users/logout", {
       method: "POST",
       headers: {
         "Content-type": "application/json",
@@ -34,7 +34,7 @@ const Header = () => {
 
   async function getTableRequests() {
     try {
-      const baseUrl = `http://localhost:3001/requests/${userInfo.restaurant}/requests`;
+      const baseUrl = `http://localhost:5000/requests/${userInfo.restaurant}/requests`;
   
       // Fetch all orders concurrently with different query parameters
       const [pendingResponse, inProgressResponse] = await Promise.all([
@@ -50,7 +50,7 @@ const Header = () => {
 
   async function getOrdersToServe() {
     try {
-      const baseUrl = `http://localhost:3001/orders/${userInfo.restaurant}/orders`;
+      const baseUrl = `http://localhost:5000/orders/${userInfo.restaurant}/orders`;
   
       // Fetch all orders concurrently with different query parameters
       const [pendingResponse, preparingResponse] = await Promise.all([
@@ -73,7 +73,7 @@ const Header = () => {
         const interval = setInterval(() => {
           getTableRequests();
           getOrdersToServe();
-        }, 3001);
+        }, 5000);
         return () => {
           clearInterval(interval);
         };

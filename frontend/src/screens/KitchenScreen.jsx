@@ -16,7 +16,7 @@ const KitchenScreen = () => {
 
   const fetchOrderList = async () => {
     try {
-      const baseUrl = `http://localhost:3001/orders/${restaurantId}/orders`;
+      const baseUrl = `http://localhost:5000/orders/${restaurantId}/orders`;
   
       // Fetch all orders concurrently with different query parameters
       const [pendingResponse, preparingResponse, completedResponse] = await Promise.all([

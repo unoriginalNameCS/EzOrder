@@ -102,7 +102,7 @@ import ReorderIcon from '@mui/icons-material/Reorder';
 
     const fetchMenuCategories = useCallback(async () => {
       try {
-        const url = `http://localhost:3001/menus/${restaurantId}/menu/categories`;
+        const url = `http://localhost:5000/menus/${restaurantId}/menu/categories`;
   
         const { data } = await axios.get(url, {
           headers: {

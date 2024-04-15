@@ -119,7 +119,7 @@ const EditItemModal = ({ open, handleClose, restaurantId, categoryId, menuItems 
     const userInfo = JSON.parse(localStorage.getItem('userInfo')); 
     try {
       const response = await axios.patch(
-        `http://localhost:3001/menus/${restaurantId}/menu/categories/${categoryId}/items/${itemDetails._id}/update`, 
+        `http://localhost:5000/menus/${restaurantId}/menu/categories/${categoryId}/items/${itemDetails._id}/update`, 
         {
           ...itemDetails, price: parseInt(itemDetails.price)
         },
@@ -146,7 +146,7 @@ const EditItemModal = ({ open, handleClose, restaurantId, categoryId, menuItems 
     if (newPosition) {
       try {
         const response = await axios.put(
-          `http://localhost:3001/menus/${restaurantId}/menu/categories/${categoryId}/items/order`, 
+          `http://localhost:5000/menus/${restaurantId}/menu/categories/${categoryId}/items/order`, 
           {
             itemName: selectedItem,
             newPosition: newPosition

@@ -55,7 +55,7 @@ const CustomerItemModal = ({ open, handleClose, customerInfo, categoryId, itemId
   
   const fetchMenuItem = useCallback(async () => {
     try {
-      const url = `http://localhost:3001/customermenus/${restaurantId}/${tableId}/menu/categories/${categoryId}/items/${itemId}`;
+      const url = `http://localhost:5000/customermenus/${restaurantId}/${tableId}/menu/categories/${categoryId}/items/${itemId}`;
 
       const { data } = await axios.get(url, {
         
@@ -81,7 +81,7 @@ const CustomerItemModal = ({ open, handleClose, customerInfo, categoryId, itemId
 
     try {
       const response = await axios.post(
-        `http://localhost:3001/tables/${restaurantId}/${tableId}/${itemId}/addItem`,
+        `http://localhost:5000/tables/${restaurantId}/${tableId}/${itemId}/addItem`,
         {
           notes: notes,
           quantity: quantity

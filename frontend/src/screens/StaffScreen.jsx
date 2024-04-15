@@ -48,7 +48,7 @@ const StaffScreen = () => {
 
   const fetchProfiles = async () => {
     try {
-      const res = await axios.get(`http://localhost:3001/api/users/profiles`, {
+      const res = await axios.get(`http://localhost:5000/api/users/profiles`, {
         headers: {
           _id: userInfo._id,
           Authorization: userInfo.token,
@@ -64,7 +64,7 @@ const StaffScreen = () => {
 
   const deleteStaff = async (staffId) => {
     try {
-      await axios.delete(`http://localhost:3001/api/users/delete/${staffId}`, 
+      await axios.delete(`http://localhost:5000/api/users/delete/${staffId}`, 
       {
         headers: {
           _id: userInfo._id,

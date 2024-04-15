@@ -8,7 +8,7 @@ const TasksScreen = () => {
     const navigate = useNavigate()
     const userInfo = JSON.parse(localStorage.getItem('userInfo'))
     async function getTableRequests () {
-      const response = await fetch(`http://localhost:3001/tables/${userInfo.restaurant}/assistance`, {
+      const response = await fetch(`http://localhost:5000/tables/${userInfo.restaurant}/assistance`, {
         method: 'GET',
         headers: {
           'Content-type': 'application/json',

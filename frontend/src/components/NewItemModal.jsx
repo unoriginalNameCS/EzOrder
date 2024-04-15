@@ -80,7 +80,7 @@ const NewItemModal = ({ open, handleClose, restaurantId, categoryId }) => {
 
     try {
       const response = await axios.post(
-        `http://localhost:3001/menus/${restaurantId}/menu/categories/${categoryId}/items/add`, 
+        `http://localhost:5000/menus/${restaurantId}/menu/categories/${categoryId}/items/add`, 
         {
           itemName: formData.name,
           description: formData.description,

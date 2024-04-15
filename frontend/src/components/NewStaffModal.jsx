@@ -32,7 +32,7 @@ const EditStaffModal = ({open, handleClose, restaurantId}) => {
     const userInfo = JSON.parse(localStorage.getItem('userInfo')); 
     try {
       const res = await axios.post(
-        'http://localhost:3001/api/users/registerStaff',
+        'http://localhost:5000/api/users/registerStaff',
         {
           name,
           password,

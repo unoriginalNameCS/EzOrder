@@ -15,7 +15,7 @@ export default function OrderScreen() {
   useEffect(() => {
     axios
       .get(
-        `http://localhost:3001/tables/${restaurantId}/${tableId}/orders/items`
+        `http://localhost:5000/tables/${restaurantId}/${tableId}/orders/items`
       )
       .then((res) => {
         setItems(res.data);
@@ -27,7 +27,7 @@ export default function OrderScreen() {
   }
   const requestBill = async () => {
     try {
-      const url = `http://localhost:3001/tables/${restaurantId}/${tableId}/assistance`;
+      const url = `http://localhost:5000/tables/${restaurantId}/${tableId}/assistance`;
 
       const response = await fetch(url, {
         method: 'POST',

@@ -12,7 +12,7 @@ const EmployeeHomeScreen = () => {
   const [restaurantName, setRestaurantName] = React.useState('')
 
   async function getRestaurantInfo () {
-    const response = await fetch('http://localhost:3001/api/users/restaurant', {
+    const response = await fetch('http://localhost:5000/api/users/restaurant', {
       method: 'GET',
       headers: {
         'Content-type': 'application/json',

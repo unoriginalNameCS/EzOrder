@@ -27,7 +27,7 @@ const TableScreen = () => {
 
   const fetchTables = async () => {
     try {
-      const url = `http://localhost:3001/tables/${restaurantId}/tables`
+      const url = `http://localhost:5000/tables/${restaurantId}/tables`
       const { data } = await axios.get(url, {
         headers: {
           Authorization: `${userInfo.token}`
@@ -41,7 +41,7 @@ const TableScreen = () => {
 
   const handleAddTable = async () => {
     try {
-      const url = `http://localhost:3001/tables/${restaurantId}/add`
+      const url = `http://localhost:5000/tables/${restaurantId}/add`
       await axios.post(url);
       fetchTables();
     } catch (error) {
@@ -51,7 +51,7 @@ const TableScreen = () => {
 
   const handleRemove = async () => {
     try {
-      const url = `http://localhost:3001/tables/${restaurantId}/remove`
+      const url = `http://localhost:5000/tables/${restaurantId}/remove`
       await axios.delete(url);
       fetchTables();
     } catch (error) {

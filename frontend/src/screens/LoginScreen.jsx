@@ -16,7 +16,7 @@ const Login = () => {
 
 
   async function signin (email, password) {
-    const response = await fetch('http://localhost:3001/api/users/auth', {
+    const response = await fetch('http://localhost:5000/api/users/auth', {
       method: 'POST',
       headers: {
         'Content-type': 'application/json',

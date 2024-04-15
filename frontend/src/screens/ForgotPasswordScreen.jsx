@@ -18,7 +18,7 @@ const ForgotPasswordScreen = () => {
 
   async function requestPasswordReset(email) {
     const response = await fetch(
-      "http://localhost:3001/api/users/password/reset",
+      "http://localhost:5000/api/users/password/reset",
       {
         method: "POST",
         headers: {
@@ -44,7 +44,7 @@ const ForgotPasswordScreen = () => {
 
   async function validateVerificationCode(email, verificationCode) {
     const response = await fetch(
-      "http://localhost:3001/api/users/password/reset/verify",
+      "http://localhost:5000/api/users/password/reset/verify",
       {
         method: "POST",
         headers: {
@@ -69,7 +69,7 @@ const ForgotPasswordScreen = () => {
 
   async function resetPassword(email, verificationCode, newPassword) {
     const response = await fetch(
-      "http://localhost:3001/api/users/password/reset",
+      "http://localhost:5000/api/users/password/reset",
       {
         method: "PUT",
         headers: {

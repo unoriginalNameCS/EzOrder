@@ -36,7 +36,7 @@ const NewCategoryModal = ({ open, handleClose, restaurantId }) => {
 
     try {
       const response = await axios.post(
-        `http://localhost:3001/menus/${restaurantId}/menu/categories/add`, 
+        `http://localhost:5000/menus/${restaurantId}/menu/categories/add`, 
         {
           name: formData.name,
         },

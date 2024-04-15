@@ -34,7 +34,7 @@ const EditStaffModal = ({open, handleClose, staffId, restaurantId}) => {
     const userInfo = JSON.parse(localStorage.getItem('userInfo')); 
     try {
       const response = await axios.put(
-        'http://localhost:3001/api/users/editStaff',
+        'http://localhost:5000/api/users/editStaff',
         {
           id: staffId,
           name,

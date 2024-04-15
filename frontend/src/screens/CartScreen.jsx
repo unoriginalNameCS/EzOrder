@@ -18,7 +18,7 @@ const CartScreen = () => {
 
   const fetchCartItems = useCallback(async () => {
     try {
-      const url = `http://localhost:3001/tables/${restaurantId}/${tableId}/cart`;
+      const url = `http://localhost:5000/tables/${restaurantId}/${tableId}/cart`;
       const { data } = await axios.get(url);
             
       setCartItems(data);
@@ -29,7 +29,7 @@ const CartScreen = () => {
 
   const handleRemove = async (cartItemId) => {
     try {
-      await axios.delete(`http://localhost:3001/tables/${restaurantId}/${tableId}/${cartItemId}/removeItem`);
+      await axios.delete(`http://localhost:5000/tables/${restaurantId}/${tableId}/${cartItemId}/removeItem`);
       refreshCartItems();
     } catch (error) {
       console.error('Error removing item:', error.response?.data || error.message);
@@ -38,7 +38,7 @@ const CartScreen = () => {
 
   const handleSendOrder = async () => {
     try {
-      await axios.post(`http://localhost:3001/tables/${restaurantId}/${tableId}/sendOrder`, {
+      await axios.post(`http://localhost:5000/tables/${restaurantId}/${tableId}/sendOrder`, {
         
       });
       refreshCartItems();

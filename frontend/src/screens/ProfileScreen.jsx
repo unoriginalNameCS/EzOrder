@@ -16,7 +16,7 @@ const ProfileScreen = () => {
   const userInfo = JSON.parse(localStorage.getItem('userInfo'))
 
   async function update (name, email, password) {
-    const response = await fetch('http://localhost:3001/api/users/profile', {
+    const response = await fetch('http://localhost:5000/api/users/profile', {
       method: 'PUT',
       headers: {
         'Content-type': 'application/json',

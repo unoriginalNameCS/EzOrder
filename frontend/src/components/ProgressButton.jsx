@@ -13,7 +13,7 @@ const ProgressButton = ({orderId, state, onOrderUpdate, isWaiter}) => {
   const restaurantId = userInfo.restaurant;
 
   const setProgress = async (route) => {
-    const url = `http://localhost:3001/orders/${restaurantId}/${orderId}/${route}`;
+    const url = `http://localhost:5000/orders/${restaurantId}/${orderId}/${route}`;
 
     try {
       await axios.put(url);

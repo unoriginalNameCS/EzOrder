@@ -43,7 +43,7 @@ const CustomerMenuScreen = () => {
   // De-selects the table that the customer is at
   const clearTable = async () => {
     const response = await fetch(
-      `http://localhost:3001/tables/${customerInfo.restaurantId}/deselect`,
+      `http://localhost:5000/tables/${customerInfo.restaurantId}/deselect`,
       {
         method: "PUT",
         headers: {
@@ -81,7 +81,7 @@ const CustomerMenuScreen = () => {
 
   const fetchMenuCategories = async () => {
     try {
-      const url = `http://localhost:3001/customermenus/${restaurantId}/${tableId}/menu/categories`;
+      const url = `http://localhost:5000/customermenus/${restaurantId}/${tableId}/menu/categories`;
       const { data } = await axios.get(url, {
         // headers: {
         //   Authorization: `${userInfo.token}`, 
@@ -99,7 +99,7 @@ const CustomerMenuScreen = () => {
 
   const fetchMenuItems = async () => {
     try {
-      const url = `http://localhost:3001/customermenus/${restaurantId}/${tableId}/menu/categories/${selectedCategoryId}/items`;
+      const url = `http://localhost:5000/customermenus/${restaurantId}/${tableId}/menu/categories/${selectedCategoryId}/items`;
 
       const { data } = await axios.get(url, {
         // headers: {
@@ -116,7 +116,7 @@ const CustomerMenuScreen = () => {
 
   const requestAssistance = async () => {
     try {
-      const url = `http://localhost:3001/tables/${restaurantId}/${tableId}/assistance`;
+      const url = `http://localhost:5000/tables/${restaurantId}/${tableId}/assistance`;
 
       const response = await fetch(url, {
         method: 'POST',
