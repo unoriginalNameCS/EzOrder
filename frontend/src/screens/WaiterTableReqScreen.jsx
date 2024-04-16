@@ -31,6 +31,15 @@ const TableRequestsScreen = () => {
   };
 
   useEffect(() => {
+      const interval = setInterval(() => {
+        triggerRequestUpdate();
+      }, 5000);
+      return () => {
+        clearInterval(interval);
+      };
+  }, []);
+
+  useEffect(() => {
     fetchRequestList();
   }, []);
 
