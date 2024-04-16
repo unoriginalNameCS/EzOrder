@@ -1,3 +1,4 @@
+import React, { useState } from 'react';
 import Header from "./components/Header";
 import { Outlet, useLocation } from 'react-router-dom';
 import { Container } from 'react-bootstrap';
@@ -5,29 +6,32 @@ import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import './styles/main.css';
 import { UserContext } from './UserContext';
-import { useState } from 'react';
 
 function App() {
   const [loggedIn, setLoggedIn] = useState(false);
-  const location = useLocation(); // get the current location
+  const location = useLocation(); // Get the current location
 
-  // Check if the pathname is the root/home route
-  const isRootRoute = location.pathname === "/";
+  // Check for login/register routes or if the user is logged in
+  const showHeader = ['/login', '/register'].includes(location.pathname) || loggedIn;
+
+  // Check if the pathname is NOT the root/home or customer route
+  const showContainer = !['/', '/customer'].includes(location.pathname);
 
   return (
     <>
       <UserContext.Provider value={{ loggedIn, setLoggedIn }}>
-        {/* Conditionally render the Header */}
-        {location.pathname !== "/" && <Header />}
+        {/* Render Header based on condition */}
+        {showHeader && <Header />}
 
         <ToastContainer />
-        {/* Render Container only if it's not the root route */}
-        {isRootRoute ? (
-          <Outlet />
-        ) : (
+
+        {/* Render Container based on condition */}
+        {showContainer ? (
           <Container>
             <Outlet />
           </Container>
+        ) : (
+          <Outlet />
         )}
       </UserContext.Provider>
     </>

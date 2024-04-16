@@ -7,7 +7,7 @@ import Cards from 'react-credit-cards-2';
 import 'react-credit-cards-2/dist/es/styles-compiled.css';
 import TextField from '@mui/material/TextField';
 import Typography from '@mui/material/Typography'
-
+import StyledButton from './StyledButton';
 
 const style = {
   position: 'absolute',
@@ -33,7 +33,7 @@ export default function CheckOutModal(props) {
 
   return (
     <div>
-      <Button variant='contained' onClick={handleOpen}>Pay Online</Button>
+      <StyledButton onClick={handleOpen}>Pay Online</StyledButton>
       <Modal
         open={open}
         onClose={handleClose}

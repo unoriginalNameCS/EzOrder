@@ -5,7 +5,6 @@ import EmployeeHomeScreen from "./EmployeeHomeScreen.jsx";
 import Grid from "@mui/material/Grid";
 import Typography from "@mui/material/Typography";
 import Box from "@mui/material/Box";
-import LeafImg from "../components/assets/leaf.png";
 import HeroImg from "../components/assets/hero.png";
 import BackdropImg from "../components/assets/Backdrop.png";
 import EzOrderLogo from "../components/assets/EzOrder.png";

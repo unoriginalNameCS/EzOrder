@@ -3,25 +3,12 @@ import axios from 'axios';
 import Grid from '@mui/material/Grid';
 import SideNav from '../components/SideNav';
 import MenuCard from '../components/MenuCard';
-import { Button } from '@mui/material';
-import { styled, useTheme } from '@mui/material/styles';
+import { useTheme } from '@mui/material/styles';
 import NewItemModal from '../components/NewItemModal';
 import EditItemModal from '../components/EditItemModal';
 import DeleteItemModal from '../components/DeleteItemModal';
 import CategoriesBar from '../components/CategoriesBar';
-
-const StyledButton = styled(Button)(({ theme }) => ({
-  backgroundColor: '#F19413',
-  color: theme.palette.common.white,
-  borderRadius: '0.5rem',
-  padding: theme.spacing(1.25, 3.25), 
-  textTransform: 'none',
-  boxShadow: 'none', 
-  '&:hover': {
-    backgroundColor: '#FFAD3C', 
-    boxShadow: 'none',
-  },
-}));
+import StyledButton from '../components/StyledButton';
 
 const MenuScreen = () => {
   const theme = useTheme();
