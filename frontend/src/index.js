@@ -23,6 +23,7 @@ import OrderScreen from './screens/OrderScreen';
 import KitchenScreen from './screens/KitchenScreen';
 import SettingsScreen from './screens/SettingsScreen';
 import ForgotPasswordScreen from './screens/ForgotPasswordScreen';
+import ManagerRoute from './components/ManagerRoute';
 
 const router = createBrowserRouter(createRoutesFromElements(
   <Route path='/' element={<App />}>
@@ -41,11 +42,14 @@ const router = createBrowserRouter(createRoutesFromElements(
       <Route path='/menu' element={<MenuScreen />} />
       <Route path='/kitchen' element={<KitchenScreen />} />
       <Route path='/tasks' element={<TasksScreen />}/>
-      <Route path='/staff' element={<StaffScreen/>}/>
-      <Route path='/settings' element={<SettingsScreen/>}/>
       <Route path='table/assistance' element={<WaiterTableReqScreen />} />
       <Route path='/readyToServeOrders' element = {<WaiterReadyOrderScreen />} />
-      <Route path='/tableEdits' element = {<TableScreen />} />
+      {/* Manager only routes */}
+      <Route path='' element={<ManagerRoute />}>
+       <Route path='/staff' element={<StaffScreen/>}/>
+       <Route path='/settings' element={<SettingsScreen/>}/>
+       <Route path='/tableEdits' element = {<TableScreen />} />
+      </Route>
     </Route>
   </Route>
 ))
