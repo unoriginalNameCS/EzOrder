@@ -138,5 +138,31 @@ const setOrderServed = asyncHandler(async (req, res) => {
   res.status(201).json(order);
 })
 
-export { getOrders, setOrderInProgress, setOrderPrepared, setOrderServed, setOrderServing };
+/**
+ * @desc    Clears all Orders
+ * @route   Delete /orders/:restaurantId/clearOrders
+ * @access  private
+ * @param   req.params.restaurantId - id of the restaurant
+ * @returns {List: [Order]}
+ */
+const clearOrders = asyncHandler(async (req, res) => {
+  const { restaurantId } = req.params;
+
+  try {
+    // Delete all orders associated with the restaurant ID
+    const deletedOrders = await Order.deleteMany({ restaurant: restaurantId });
+
+    // Check if any orders were deleted
+    if (deletedOrders.deletedCount > 0) {
+      res.status(200).json({ message: 'All orders cleared successfully' });
+    } else {
+      res.status(404).json({ message: 'No orders found to clear' });
+    }
+  } catch (error) {
+    console.error('Error clearing orders:', error.message);
+    res.status(500).json({ message: 'Server Error' });
+  }
+});
+
+export { getOrders, setOrderInProgress, setOrderPrepared, setOrderServed, setOrderServing, clearOrders };
 

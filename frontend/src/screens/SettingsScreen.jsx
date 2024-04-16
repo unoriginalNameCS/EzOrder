@@ -3,7 +3,7 @@ import axios from 'axios';
 import SideNav from '../components/SideNav';
 import { styled, useTheme } from '@mui/material/styles';
 import { shouldForwardProp } from '@mui/system';
-import { Box, Typography, TextField, Button } from '@mui/material';
+import { Box, Typography, TextField, Button, Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle } from '@mui/material';
 import LoadingButton from '@mui/lab/LoadingButton';
 import CardMedia from '@mui/material/CardMedia';
 import CloudUploadIcon from '@mui/icons-material/CloudUpload';
@@ -82,6 +82,10 @@ const SettingsScreen = () => {
 
   const [logoTimeout, setLogoTimeout] = useState(null);
   const [bannerTimeout, setBannerTimeout] = useState(null);
+
+  const [openDialog, setOpenDialog] = useState(false);
+  const [openOrderDialog, setOpenOrderDialog] = useState(false);
+  const [openCartDialog, setOpenCartDialog] = useState(false);
   
   const userInfo = JSON.parse(localStorage.getItem('userInfo'));
   const restaurantId = userInfo.restaurant;
@@ -170,6 +174,77 @@ const SettingsScreen = () => {
     });
   }
 
+  const handleOpenDialog = () => {
+    setOpenDialog(true);
+  };
+
+  const handleCloseDialog = () => {
+    setOpenDialog(false);
+  };
+
+  const handleClearRequests = async () => {
+    try {
+      const response = await axios.delete(`http://localhost:5000/requests/${restaurantId}/clearRequests`, {
+        headers: {
+          Authorization: `${userInfo.token}`,
+        },
+      });
+      toast.success(response.data.message);
+      // Optionally, you can update the state or perform any other actions after clearing requests
+    } catch (error) {
+      console.error('Error clearing requests:', error.response?.data || error.message);
+      toast.error(error.response?.data || error.message);
+    }
+    // Close the confirmation dialog after clearing requests
+    handleCloseDialog();
+  };
+
+  const handleOpenOrderDialog = () => {
+    setOpenOrderDialog(true);
+  };
+
+  const handleCloseOrderDialog = () => {
+    setOpenOrderDialog(false);
+  };
+
+  const handleClearOrders = async () => {
+    try {
+      const response = await axios.delete(`http://localhost:5000/orders/${restaurantId}/clearOrders`, {
+        headers: {
+          Authorization: `${userInfo.token}`,
+        },
+      });
+      toast.success(response.data.message);
+      // Optionally, you can update the state or perform any other actions after clearing requests
+    } catch (error) {
+      console.error('Error clearing orders:', error.response?.data || error.message);
+      toast.error(error.response?.data || error.message);
+    }
+  };
+
+  const handleOpenCartDialog = () => {
+    setOpenCartDialog(true);
+  };
+
+  const handleCloseCartDialog = () => {
+    setOpenCartDialog(false);
+  };
+
+  const handleClearCartItems = async () => {
+    try {
+      const response = await axios.delete(`http://localhost:5000/tables/${restaurantId}/clearCarts`, {
+        headers: {
+          Authorization: `${userInfo.token}`,
+        },
+      });
+      toast.success(response.data.message);
+      // Optionally, you can update the state or perform any other actions after clearing requests
+    } catch (error) {
+      console.error('Error clearing cart:', error.response?.data || error.message);
+      toast.error(error.response?.data || error.message);
+    }
+  };
+
   return (
     <>
       <SideNav />
@@ -236,6 +311,75 @@ const SettingsScreen = () => {
             onChange={(e) => handleFileChange('bannerUrl', 'bannerUrl', e)}
           />
         </StyledButton>
+      </Box>
+      <Box component="form" sx={{ width: '100%' }} style={{ padding: theme.spacing(3), marginLeft: '160px' }}>
+      <Button onClick={handleOpenDialog} variant="contained" color="error" sx={{ mt: 2 }}>
+          Clear Requests
+        </Button>
+
+        {/* Button to clear orders */}
+        <Button onClick={handleOpenOrderDialog} variant="contained" color="error" sx={{ mt: 2 }}>
+          Clear Orders
+        </Button>
+
+        {/* Button to clear cart items */}
+        <Button onClick={handleOpenCartDialog} variant="contained" color="error" sx={{ mt: 2 }}>
+          Clear Cart Items
+        </Button>
+
+        {/* Confirmation dialog for clearing requests */}
+        <Dialog open={openDialog} onClose={handleCloseDialog}>
+          <DialogTitle>Confirm Clear Requests</DialogTitle>
+          <DialogContent>
+            <DialogContentText>
+              Are you sure you want to clear all requests?
+            </DialogContentText>
+          </DialogContent>
+          <DialogActions>
+            <Button onClick={handleCloseDialog} color="primary">
+              Cancel
+            </Button>
+            <Button onClick={handleClearRequests} color="error">
+              Clear Requests
+            </Button>
+          </DialogActions>
+        </Dialog>
+
+        {/* Confirmation dialog for clearing orders */}
+        <Dialog open={openOrderDialog} onClose={handleCloseOrderDialog}>
+          <DialogTitle>Confirm Clear Orders</DialogTitle>
+          <DialogContent>
+            <DialogContentText>
+              Are you sure you want to clear all orders?
+            </DialogContentText>
+          </DialogContent>
+          <DialogActions>
+            <Button onClick={handleCloseOrderDialog} color="primary">
+              Cancel
+            </Button>
+            <Button onClick={handleClearOrders} color="error">
+              Clear Orders
+            </Button>
+          </DialogActions>
+        </Dialog>
+
+        {/* Confirmation dialog for clearing cart items */}
+        <Dialog open={openCartDialog} onClose={handleCloseCartDialog}>
+          <DialogTitle>Confirm Clear Cart Items</DialogTitle>
+          <DialogContent>
+            <DialogContentText>
+              Are you sure you want to clear all cart items?
+            </DialogContentText>
+          </DialogContent>
+          <DialogActions>
+            <Button onClick={handleCloseCartDialog} color="primary">
+              Cancel
+            </Button>
+            <Button onClick={handleClearCartItems} color="error">
+              Clear Cart Items
+            </Button>
+          </DialogActions>
+        </Dialog>
       </Box>
     </>
   );

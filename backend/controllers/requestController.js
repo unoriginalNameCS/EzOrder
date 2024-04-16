@@ -74,4 +74,29 @@ const setRequestComplete = asyncHandler(async (req, res) => {
   res.status(200).json(request)
 })
 
-export { getRequests, setRequestAssisting, setRequestComplete };
+/**
+ * @desc    Clear all requests
+ * @route   DELETE /requests/:restaurantId/clearRequests
+ * @access  Private
+ * @param req.params.requestId - id of the request
+ * @returns {Request}
+ */
+const clearRequests = asyncHandler(async (req, res) => {
+  const { restaurantId } = req.params;
+
+  try {
+    // Delete all requests for the given restaurant
+    const result = await Request.deleteMany({ restaurant: restaurantId });
+
+    // Check if any requests were deleted
+    if (result.deletedCount > 0) {
+      res.status(200).json({ message: 'All requests deleted successfully' });
+    } else {
+      res.status(204).json({ message: 'No requests found to delete' });
+    }
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+});
+
+export { getRequests, setRequestAssisting, setRequestComplete, clearRequests };

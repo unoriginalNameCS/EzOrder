@@ -1,7 +1,7 @@
 import express from 'express';
 import {
     addItem, addTable, getAllRestaurants, getCart, getTableNumbers, removeItem,
-    requestAssistance, sendOrder, tableSelect, tableDeselect, getTables, getOrdersItems, removeTable
+    requestAssistance, sendOrder, tableSelect, tableDeselect, getTables, getOrdersItems, removeTable, clearCarts
 
 } from '../controllers/tableController.js';
 import { protect } from '../middleware/authMiddleware.js';
@@ -22,6 +22,7 @@ router.get('/:restaurantId/:tableId/cart', getCart);
 router.get('/:restaurantId/:tableId/orders/items', getOrdersItems);
 router.get('/restaurants', getAllRestaurants);
 router.post('/:restaurantId/:tableId/sendOrder', sendOrder);
+router.delete('/:restaurantId/clearCarts', clearCarts);
 
 
 export default router;

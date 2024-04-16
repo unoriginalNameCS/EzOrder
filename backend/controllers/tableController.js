@@ -484,8 +484,35 @@ const getAllRestaurants = asyncHandler(async (req, res) => {
   }
 });
 
+/**
+ * @desc    Clear carts for all tables in a restaurant
+ * @route   DELETE /tables/:restaurantId/clearCarts
+ * @access  Private
+ * @param   req.params.restaurantId - id of the restaurant
+ * @returns {List: [{_id: String, menuItem: MenuItem, notes: String, quantity: Number}]}
+ */
+const clearCarts = asyncHandler(async (req, res) => {
+  const { restaurantId } = req.params;
+
+  try {
+    // Find all tables in the restaurant
+    const tables = await Table.find({ restaurant: restaurantId });
+
+    // Iterate through each table and clear its cart
+    await Promise.all(tables.map(async (table) => {
+      table.cart = []; // Clear the cart
+      await table.save();
+    }));
+
+    res.status(200).json({ message: 'Carts cleared successfully' });
+  } catch (error) {
+    console.error('Error clearing carts:', error.message);
+    res.status(500).json({ message: 'Server Error' });
+  }
+});
+
   export {
   addItem, addTable, getAllRestaurants, getCart, getTableNumbers, removeItem, 
   requestAssistance, sendOrder, tableSelect, tableDeselect, getTables, getOrdersItems,
-  removeTable
+  removeTable, clearCarts
 };
