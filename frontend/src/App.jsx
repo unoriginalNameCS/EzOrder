@@ -12,17 +12,17 @@ function App() {
   const location = useLocation(); // get the current location
 
   // Check if the pathname is the root/home route
-  const isRootRoute = location.pathname === "/";
+  const isExcludedRoute = location.pathname === "/" || location.pathname === "/customer";
 
   return (
     <>
       <UserContext.Provider value={{ loggedIn, setLoggedIn }}>
         {/* Conditionally render the Header */}
-        {location.pathname !== "/" && <Header />}
+        {!isExcludedRoute && <Header />}
 
         <ToastContainer />
         {/* Render Container only if it's not the root route */}
-        {isRootRoute ? (
+        {isExcludedRoute ? (
           <Outlet />
         ) : (
           <Container>
