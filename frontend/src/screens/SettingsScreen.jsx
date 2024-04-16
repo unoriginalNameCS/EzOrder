@@ -85,7 +85,8 @@ const SettingsScreen = () => {
 
   const [openDialog, setOpenDialog] = useState(false);
   const [openOrderDialog, setOpenOrderDialog] = useState(false);
-  const [openCartDialog, setOpenCartDialog] = useState(false);
+  const [openCartDialog, setOpenCartDialog] = useState(false);  
+  const [openTableDialog, setOpenTableDialog] = useState(false);
   
   const userInfo = JSON.parse(localStorage.getItem('userInfo'));
   const restaurantId = userInfo.restaurant;
@@ -245,6 +246,29 @@ const SettingsScreen = () => {
     }
   };
 
+  const handleOpenTableDialog = () => {
+    setOpenTableDialog(true);
+  };
+
+  const handleCloseTableDialog = () => {
+    setOpenTableDialog(false);
+  };
+
+  const handleResetTable = async () => {
+    try {
+      const response = await axios.delete(`http://localhost:5000/tables/${restaurantId}/resetTables`, {
+        headers: {
+          Authorization: `${userInfo.token}`,
+        },
+      });
+      toast.success(response.data.message);
+      // Optionally, you can update the state or perform any other actions after clearing requests
+    } catch (error) {
+      console.error('Error resetting tables:', error.response?.data || error.message);
+      toast.error(error.response?.data || error.message);
+    }
+  };
+
   return (
     <>
       <SideNav />
@@ -327,6 +351,11 @@ const SettingsScreen = () => {
           Clear Cart Items
         </Button>
 
+        {/* Button to reset tables */}
+        <Button onClick={handleOpenTableDialog} variant="contained" color="error" sx={{ mt: 2 }}>
+          Reset Tables
+        </Button>
+
         {/* Confirmation dialog for clearing requests */}
         <Dialog open={openDialog} onClose={handleCloseDialog}>
           <DialogTitle>Confirm Clear Requests</DialogTitle>
@@ -377,6 +406,24 @@ const SettingsScreen = () => {
             </Button>
             <Button onClick={handleClearCartItems} color="error">
               Clear Cart Items
+            </Button>
+          </DialogActions>
+        </Dialog>
+        
+        {/* Confirmation dialog for resetting tables*/}
+        <Dialog open={openTableDialog} onClose={handleCloseTableDialog}>
+          <DialogTitle>Confirm Reset Tables</DialogTitle>
+          <DialogContent>
+            <DialogContentText>
+              Are you sure you want to reset all tables?
+            </DialogContentText>
+          </DialogContent>
+          <DialogActions>
+            <Button onClick={handleCloseTableDialog} color="primary">
+              Cancel
+            </Button>
+            <Button onClick={handleResetTable} color="error">
+              Reset Tables
             </Button>
           </DialogActions>
         </Dialog>
