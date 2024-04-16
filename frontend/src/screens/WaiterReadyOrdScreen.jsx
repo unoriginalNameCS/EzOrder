@@ -3,9 +3,11 @@ import { Typography } from '@mui/material';
 import Box from '@mui/material/Box';
 import { useTheme } from '@mui/material/styles';
 import axios from 'axios';
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useContext } from "react";
 import OrderCard from '../components/OrderCard';
 import SideNav from '../components/SideNav';
+import { UserContext } from "../UserContext";
+
 
 
 // This page is for wait staff to view their pending customer table requests
@@ -26,14 +28,18 @@ const ReadyToServeOrdersScreen = () => {
         axios.get(baseUrl, { params: { state: 'serving', isWaiter: true } }),
       ]);
       setOrderList([...pendingResponse.data, ...preparingResponse.data]);
-
     } catch (error) {
       console.error('There was an error fetching the orders:', error.response?.data || error.message);
     }
   };
 
   useEffect(() => {
-    fetchOrderList();
+      const interval = setInterval(() => {
+        triggerOrderUpdate();
+      }, 5000);
+      return () => {
+        clearInterval(interval);
+      };
   }, []);
 
   const triggerOrderUpdate = () => {
