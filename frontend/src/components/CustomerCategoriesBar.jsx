@@ -36,7 +36,7 @@ const CategoryButton = styled(Button)(({ theme, selected }) => ({
 
     const fetchMenuCategories = useCallback(async () => {
       try {
-        const url = `http://localhost:5000/menus/${restaurantId}/${tableId}/menu/categories`;
+        const url = `http://localhost:5000/customermenus/${restaurantId}/${tableId}/menu/categories`;
   
         const { data } = await axios.get(url);
   
