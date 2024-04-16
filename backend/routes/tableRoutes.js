@@ -1,6 +1,6 @@
 import express from 'express';
 import {
-    addItem, addTable, getAllRestaurants, getCart, getTableNumbers, removeItem,
+    addItem, addTable, getAllRestaurants, getCart, getTableNumbers, removeItem, resetTables,
     requestAssistance, sendOrder, tableSelect, tableDeselect, getTables, getOrdersItems, removeTable, clearCarts
 
 } from '../controllers/tableController.js';
@@ -23,6 +23,6 @@ router.get('/:restaurantId/:tableId/orders/items', getOrdersItems);
 router.get('/restaurants', getAllRestaurants);
 router.post('/:restaurantId/:tableId/sendOrder', sendOrder);
 router.delete('/:restaurantId/clearCarts', clearCarts);
-
+router.delete('/:restaurantId/resetTables', resetTables);
 
 export default router;

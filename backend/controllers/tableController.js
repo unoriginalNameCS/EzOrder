@@ -478,24 +478,18 @@ const getAllRestaurants = asyncHandler(async (req, res) => {
 });
 
 /**
- * @desc    Clear carts for all tables in a restaurant
+ * @desc    Clear all cart items for tables in a restaurant
  * @route   DELETE /tables/:restaurantId/clearCarts
  * @access  Private
  * @param   req.params.restaurantId - id of the restaurant
- * @returns {List: [{_id: String, menuItem: MenuItem, notes: String, quantity: Number}]}
+ * @returns { message: String }
  */
 const clearCarts = asyncHandler(async (req, res) => {
   const { restaurantId } = req.params;
 
   try {
-    // Find all tables in the restaurant
-    const tables = await Table.find({ restaurant: restaurantId });
-
-    // Iterate through each table and clear its cart
-    await Promise.all(tables.map(async (table) => {
-      table.cart = []; // Clear the cart
-      await table.save();
-    }));
+    // Clear all cart items for tables in the restaurant
+    await CartItem.deleteMany({ restaurant: restaurantId });
 
     res.status(200).json({ message: 'Carts cleared successfully' });
   } catch (error) {
@@ -504,8 +498,38 @@ const clearCarts = asyncHandler(async (req, res) => {
   }
 });
 
+/**
+ * @desc    Reset all tables in a restaurant
+ * @route   DELETE /tables/:restaurantId/resetTables
+ * @access  Private
+ * @param   req.params.restaurantId - id of the restaurant
+ * @returns { message: String }
+ */
+const resetTables = asyncHandler(async (req, res) => {
+  const { restaurantId } = req.params;
+
+  try {
+    // Find all tables in the restaurant
+    const tables = await Table.find({ restaurant: restaurantId });
+
+    // Iterate through each table
+    await Promise.all(tables.map(async (table) => {
+      // Clear the cart for the table
+      table.cart = [];
+      // Set the table to unoccupied
+      table.occupied = false;
+      await table.save();
+    }));
+
+    res.status(200).json({ message: 'Tables reset successfully' });
+  } catch (error) {
+    console.error('Error resetting tables:', error.message);
+    res.status(500).json({ message: 'Server Error' });
+  }
+});
+
   export {
   addItem, addTable, getAllRestaurants, getCart, getTableNumbers, removeItem, 
   requestAssistance, sendOrder, tableSelect, tableDeselect, getTables, getOrdersItems,
-  removeTable, clearCarts
+  removeTable, clearCarts, resetTables
 };
