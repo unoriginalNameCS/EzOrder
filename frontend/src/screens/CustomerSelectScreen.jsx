@@ -5,6 +5,7 @@ import EmployeeHomeScreen from "./EmployeeHomeScreen.jsx";
 import Grid from "@mui/material/Grid";
 import Menu from "@mui/material/Menu";
 import MenuItem from "@mui/material/MenuItem";
+import MenuList from '@mui/material/MenuList';
 import Typography from "@mui/material/Typography";
 import Box from "@mui/material/Box";
 import HeroImg from "../components/assets/hero.png";
@@ -15,8 +16,8 @@ import Typist from "react-typist-component";
 import { toast } from "react-toastify";
 import KeyboardArrowDownIcon from "@mui/icons-material/KeyboardArrowDown";
 
-const StyledButton = styled(Button)(({ theme }) => ({
-  backgroundColor: "#F19413",
+const StyledButton = styled(Button)(({ theme, bgColor, hoverColor }) => ({
+  backgroundColor: bgColor || "#F19413",
   color: theme.palette.common.white,
   fontFamily: "Fredoka, sans-serif",
   borderRadius: "0.5rem",
@@ -26,23 +27,7 @@ const StyledButton = styled(Button)(({ theme }) => ({
   fontSize: "1.25rem",
   width: 300,
   "&:hover": {
-    backgroundColor: "#FFAD3C",
-    boxShadow: "none",
-  },
-}));
-
-const SubmitButton = styled(Button)(({ theme }) => ({
-  backgroundColor: "#83AE0B",
-  color: theme.palette.common.white,
-  fontFamily: "Fredoka, sans-serif",
-  borderRadius: "0.5rem",
-  padding: theme.spacing(1.25, 3.25),
-  textTransform: "none",
-  boxShadow: "none",
-  fontSize: "1.25rem",
-  width: 300,
-  "&:hover": {
-    backgroundColor: "#9acd0d",
+    backgroundColor: hoverColor || "#FFAD3C",
     boxShadow: "none",
   },
 }));
@@ -161,33 +146,55 @@ function HeroSection() {
       toast.info("Please select both a restaurant and a table.");
       return;
     }
-
-    const response = await fetch(
-      `http://localhost:5000/tables/${selectedRestaurant._id}/select`,
-      {
-        method: "PUT",
-        headers: { "Content-type": "application/json" },
-        body: JSON.stringify({ tableNumber: selectedTable.number }),
-      }
-    );
-
-    const data = await response.json();
-    if (response.status === 200) {
-      toast.success(
-        `Successfully selected table number ${selectedTable.number}`
-      );
-      localStorage.setItem(
-        "customerInfo",
-        JSON.stringify({
+    console.log(selectedRestaurant);
+    try {
+      // Fetch restaurant details
+      const resDetails = await fetch(`http://localhost:5000/restaurants/${selectedRestaurant._id}/details`);
+      const restaurantDetails = await resDetails.json();
+  
+      if (resDetails.status === 200) {
+        // Save restaurant details separately in localStorage
+        const restaurantInfo = {
           restaurantName: selectedRestaurant.name,
           restaurantId: selectedRestaurant._id,
-          tableId: selectedTable._id,
-          tableNumber: selectedTable.number,
-        })
-      );
-      navigate(`/customerMenu`);
-    } else {
-      toast.error(data?.message || "Failed to select table");
+          logoUrl: restaurantDetails.logoUrl,
+          bannerUrl: restaurantDetails.bannerUrl
+        };
+        localStorage.setItem("restaurantInfo", JSON.stringify(restaurantInfo));
+  
+        // Fetch and process table selection
+        const tableSelectResponse = await fetch(
+          `http://localhost:5000/tables/${selectedRestaurant._id}/select`,
+          {
+            method: "PUT",
+            headers: { "Content-type": "application/json" },
+            body: JSON.stringify({ tableNumber: selectedTable.number }),
+          }
+        );
+  
+        const tableSelectData = await tableSelectResponse.json();
+        if (tableSelectResponse.status === 200) {
+          toast.success(`Successfully selected table number ${selectedTable.number}`);
+  
+          // Save table-related details
+          const customerInfo = {
+            restaurantId: selectedRestaurant._id,
+            tableId: selectedTable._id,
+            tableNumber: selectedTable.number,
+          };
+          localStorage.setItem("customerInfo", JSON.stringify(customerInfo));
+          
+          // Navigate to customer menu
+          navigate(`/customerMenu`);
+        } else {
+          toast.error(tableSelectData?.message || "Failed to select table");
+        }
+      } else {
+        throw new Error('Failed to fetch restaurant details');
+      }
+    } catch (error) {
+      console.error("Error during table selection", error);
+      toast.error(error.message || "An error occurred while selecting the table.");
     }
   };
 
@@ -255,15 +262,17 @@ function HeroSection() {
               onClose={() => setAnchorElRest(null)}
             >
               {restaurants.map((restaurant, index) => (
-                <>
+                <MenuList>
                   <MenuItem
-                    key={restaurant.id}
+                    key={restaurant._id}
                     onClick={() => handleRestaurantClose(restaurant)}
                   >
                     {restaurant.name}
                   </MenuItem>
-                  {restaurants.length - 1 !== index && <Divider sx={{ my: 0 }} />}
-                </>
+                  {restaurants.length - 1 !== index && (
+                    <Divider sx={{ my: 0 }} />
+                  )}
+                </MenuList>
               ))}
             </StyledMenu>
           </Stack>
@@ -294,22 +303,28 @@ function HeroSection() {
               onClose={() => setAnchorElTable(null)}
             >
               {tables.map((table, index) => (
-                <>
+                <MenuList>
                   <MenuItem
-                    key={table.id}
+                    key={table._id}
                     onClick={() => handleTableClose(table)}
                   >
                     {`${table.number}`}
                   </MenuItem>
                   {tables.length - 1 !== index && <Divider sx={{ my: 0 }} />}
-                </>
+                </MenuList>
               ))}
             </StyledMenu>
           </Stack>
         </Stack>
         {selectedRestaurant && selectedTable ? (
           <Stack direction="column" spacing={10}>
-            <SubmitButton onClick={selectTable}>Start Ordering</SubmitButton>
+            <StyledButton
+              onClick={selectTable}
+              bgColor="#83AE0B"
+              hoverColor="#9acd0d"
+            >
+              Start Ordering
+            </StyledButton>
           </Stack>
         ) : null}
       </Stack>
@@ -348,7 +363,7 @@ function HeroSection() {
   );
 }
 
-const HomeScreen = () => {
+const CustomerSelectScreen = () => {
   const userInfo = localStorage.getItem("userInfo");
   return (
     <>
@@ -379,4 +394,4 @@ const HomeScreen = () => {
   );
 };
 
-export default HomeScreen;
+export default CustomerSelectScreen;

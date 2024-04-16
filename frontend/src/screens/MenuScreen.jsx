@@ -9,19 +9,7 @@ import NewItemModal from '../components/NewItemModal';
 import EditItemModal from '../components/EditItemModal';
 import DeleteItemModal from '../components/DeleteItemModal';
 import CategoriesBar from '../components/CategoriesBar';
-
-const StyledButton = styled(Button)(({ theme }) => ({
-  backgroundColor: '#F19413',
-  color: theme.palette.common.white,
-  borderRadius: '0.5rem',
-  padding: theme.spacing(1.25, 3.25), 
-  textTransform: 'none',
-  boxShadow: 'none', 
-  '&:hover': {
-    backgroundColor: '#FFAD3C', 
-    boxShadow: 'none',
-  },
-}));
+import StyledButton from '../components/StyledButton';
 
 const MenuScreen = () => {
   const theme = useTheme();

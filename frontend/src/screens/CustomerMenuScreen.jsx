@@ -1,28 +1,38 @@
-import React, { useState, useEffect } from 'react';
-import axios from 'axios';
-import Grid from '@mui/material/Grid';
-import { toast } from 'react-toastify'
-import { Modal, Box, Typography, TextField, Button, IconButton } from '@mui/material';
-import CustomerSideNav from '../components/CustomerSideNav';
-import MenuCard from '../components/MenuCard';
-import { useTheme } from '@mui/material/styles';
-import { useNavigate } from 'react-router-dom';
+import React, { useState, useEffect } from "react";
+import axios from "axios";
+import Grid from "@mui/material/Grid";
+import { toast } from "react-toastify";
+import {
+  Modal,
+  Box,
+  Typography,
+  TextField,
+  Button,
+  IconButton,
+} from "@mui/material";
+import CustomerSideNav from "../components/CustomerSideNav";
+import MenuCard from "../components/MenuCard";
+import { useTheme } from "@mui/material/styles";
+import { useNavigate } from "react-router-dom";
+import { styled, alpha } from "@mui/material/styles";
 
-import CustomerCategoriesBar from '../components/CustomerCategoriesBar';
-import CustomerItemModal from '../components/CustomerItemModal'; // Import the CustomerItemModal component
+import CustomerCategoriesBar from "../components/CustomerCategoriesBar";
+import CustomerItemModal from "../components/CustomerItemModal";
+import StyledButton from "../components/StyledButton";
 
 const CustomerMenuScreen = () => {
   const theme = useTheme();
-  const [menuItems, setMenuItems] = useState([]); 
+  const [menuItems, setMenuItems] = useState([]);
   const [menuCategories, setMenuCategories] = useState([]);
-  const [selectedCategoryId, setSelectedCategoryId] = useState('');
+  const [selectedCategoryId, setSelectedCategoryId] = useState("");
   const [itemModalOpen, setItemModalOpen] = useState(false); // State for controlling the modal
   const navigate = useNavigate();
-  
-  const [selectedItemId, setSelectedItemId] = useState('');
 
-  const customerInfo = JSON.parse(localStorage.getItem('customerInfo'));
-  const restaurantId = customerInfo.restaurantId;
+  const [selectedItemId, setSelectedItemId] = useState("");
+
+  const customerInfo = JSON.parse(localStorage.getItem("customerInfo"));
+  const restaurantInfo = JSON.parse(localStorage.getItem('restaurantInfo'));
+  const restaurantId = restaurantInfo.restaurantId;
   const tableId = customerInfo.tableId;
 
   const onCategorySelected = (categoryId) => {
@@ -35,10 +45,9 @@ const CustomerMenuScreen = () => {
   };
 
   const handleCloseItemModal = () => {
-    setSelectedItemId('');
+    setSelectedItemId("");
     setItemModalOpen(false);
   };
-
 
   // De-selects the table that the customer is at
   const clearTable = async () => {
@@ -57,11 +66,11 @@ const CustomerMenuScreen = () => {
     const data = await response.json();
     if (response.status === 200) {
       // successfully deselected the table
-      toast.success('Bye for now')
+      toast.success("Bye for now");
     } else {
       toast.error(data?.message);
     }
-  }
+  };
 
   // remove customerInfo from localStorage and redirect back to home
   const handleExit = () => {
@@ -75,16 +84,17 @@ const CustomerMenuScreen = () => {
       */
     // de-select the table
     clearTable();
-    localStorage.removeItem('customerInfo')
-    navigate("/")
-  }
+    localStorage.removeItem("customerInfo");
+    localStorage.removeItem("restaurantInfo");
+    navigate("/");
+  };
 
   const fetchMenuCategories = async () => {
     try {
       const url = `http://localhost:5000/menus/${restaurantId}/${tableId}/menu/categories`;
       const { data } = await axios.get(url, {
         // headers: {
-        //   Authorization: `${userInfo.token}`, 
+        //   Authorization: `${userInfo.token}`,
         // },
         // Need to add authorization to check if tableId has restuarantId
       });
@@ -93,7 +103,10 @@ const CustomerMenuScreen = () => {
         setSelectedCategoryId(data[0]._id); // Set the first category as default
       }
     } catch (error) {
-      console.error('There was an error fetching the categories:', error.response?.data || error.message);
+      console.error(
+        "There was an error fetching the categories:",
+        error.response?.data || error.message
+      );
     }
   };
 
@@ -103,14 +116,17 @@ const CustomerMenuScreen = () => {
 
       const { data } = await axios.get(url, {
         // headers: {
-        //   Authorization: `${userInfo.token}`, 
+        //   Authorization: `${userInfo.token}`,
         // },
         // Need to add authorization to check if tableId has restuarantId
       });
 
-      setMenuItems(data); 
+      setMenuItems(data);
     } catch (error) {
-      console.error('There was an error fetching the menu items:', error.response?.data || error.message);
+      console.error(
+        "There was an error fetching the menu items:",
+        error.response?.data || error.message
+      );
     }
   };
 
@@ -119,25 +135,27 @@ const CustomerMenuScreen = () => {
       const url = `http://localhost:5000/tables/${restaurantId}/${tableId}/assistance`;
 
       const response = await fetch(url, {
-        method: 'POST',
+        method: "POST",
         headers: {
-          'Content-type': 'application/json',
+          "Content-type": "application/json",
         },
         body: JSON.stringify({
-          requestedBill: false
-        })
-      })
-  
+          requestedBill: false,
+        }),
+      });
+
       const data = await response.json();
 
       if (response.status === 201) {
-        toast.success('Requesting Assistance');
+        toast.success("Requesting Assistance");
       }
     } catch (error) {
-      console.error('There was an error fetching the menu items:', error.response?.data || error.message);
+      console.error(
+        "There was an error fetching the menu items:",
+        error.response?.data || error.message
+      );
     }
   };
-
 
   useEffect(() => {
     fetchMenuCategories();
@@ -150,40 +168,69 @@ const CustomerMenuScreen = () => {
   }, [selectedCategoryId]);
 
   return (
-    <div style={{ display: 'flex' }}>
+    <div style={{ display: "flex" }}>
       <CustomerSideNav />
-      <Grid container style={{ flexGrow: 1, padding: theme.spacing(3), marginLeft: '200px' }}>
+      <Grid
+        container
+        style={{ flexGrow: 1, padding: theme.spacing(3), marginLeft: "200px" }}
+      >
+        <Typography
+          variant="h5"
+          component="div"
+          sx={{ fontWeight: 800, m: 2, ml: 1 }}
+        >
+          {restaurantInfo.restaurantName}
+        </Typography>
         <Grid item xs={12} style={{ padding: theme.spacing(1) }}>
-          <CustomerCategoriesBar restaurantId={restaurantId} customerInfo={customerInfo} onCategorySelected={onCategorySelected}/>
-        </Grid>  
+          <CustomerCategoriesBar
+            restaurantId={restaurantId}
+            customerInfo={customerInfo}
+            onCategorySelected={onCategorySelected}
+          />
+        </Grid>
         {menuItems.map((item, index) => (
-          <Grid item xs={12} sm={12} md={12} lg={6} key={index} style={{ padding: theme.spacing(1) }}>
-            <Button onClick={() => handleOpenItemModal(item._id)} style={{ width: '100%', padding: 0, textTransform: "none", textAlign: "left"}}>
+          <Grid
+            item
+            xs={12}
+            sm={12}
+            md={12}
+            lg={6}
+            key={index}
+            style={{ padding: theme.spacing(1) }}
+          >
+            <Button
+              onClick={() => handleOpenItemModal(item._id)}
+              style={{
+                width: "100%",
+                padding: 0,
+                textTransform: "none",
+                textAlign: "left",
+              }}
+            >
               <MenuCard
                 title={item.name}
                 description={item.description}
                 price={item.price.toFixed(2)}
-                imageUrl={item.imageUrl || 'https://via.placeholder.com/140'} 
+                imageUrl={item.imageUrl || "https://via.placeholder.com/140"}
                 tags={item.ingredients}
               />
             </Button>
           </Grid>
         ))}
-        {<Button 
-          variant='contained'
-          color='primary'
-          sx={{margin: 1}}
-          onClick={() => requestAssistance()} style={{ width: '25%', padding: 10}}>
-          Request Assistance
-        </Button>}
-        {<Button 
-          variant='contained'
-          color='primary'
-          sx={{margin: 1}}
-          onClick={() => handleExit()} style={{ width: '25%', padding: 10}}>
-          Exit
-        </Button>}
-      </Grid>    
+        <Box width={"100%"}>
+          <StyledButton sx={{ margin: 1 }} onClick={() => requestAssistance()}>
+            Request Assistance
+          </StyledButton>
+          <StyledButton
+            sx={{ margin: 1 }}
+            onClick={() => handleExit()}
+            bgColor="#83AE0B"
+            hoverColor="#9acd0d"
+          >
+            Finish Ordering
+          </StyledButton>
+        </Box>
+      </Grid>
       {/* Render the modal */}
       <CustomerItemModal
         open={itemModalOpen}
