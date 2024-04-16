@@ -2,7 +2,6 @@ import React from "react";
 import { Link } from "react-router-dom";
 import { Sidebar, Menu, MenuItem } from "react-pro-sidebar";
 
-import { FiSettings } from "react-icons/fi";
 import { HiOutlineClipboardList } from "react-icons/hi";
 import { BiFoodMenu } from "react-icons/bi";
 import { AiOutlineUser } from "react-icons/ai";

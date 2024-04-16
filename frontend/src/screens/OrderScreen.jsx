@@ -41,8 +41,6 @@ export default function OrderScreen() {
         }),
       });
 
-      const data = await response.json();
-
       if (response.status === 201) {
         toast.success("Requesting Bill");
       }

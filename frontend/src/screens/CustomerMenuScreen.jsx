@@ -3,18 +3,14 @@ import axios from "axios";
 import Grid from "@mui/material/Grid";
 import { toast } from "react-toastify";
 import {
-  Modal,
   Box,
   Typography,
-  TextField,
   Button,
-  IconButton,
 } from "@mui/material";
 import CustomerSideNav from "../components/CustomerSideNav";
 import MenuCard from "../components/MenuCard";
 import { useTheme } from "@mui/material/styles";
 import { useNavigate } from "react-router-dom";
-import { styled, alpha } from "@mui/material/styles";
 
 import CustomerCategoriesBar from "../components/CustomerCategoriesBar";
 import CustomerItemModal from "../components/CustomerItemModal";
@@ -143,8 +139,6 @@ const CustomerMenuScreen = () => {
           requestedBill: false,
         }),
       });
-
-      const data = await response.json();
 
       if (response.status === 201) {
         toast.success("Requesting Assistance");
