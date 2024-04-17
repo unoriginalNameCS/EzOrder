@@ -80,12 +80,12 @@ const SideNav = () => {
           marginTop: '20rem',
         }}
       >
-        <img
-          src={restaurantInfo.bannerUrl ? restaurantInfo.bannerUrl : EzOrderLogo}
+        {restaurantInfo.bannerUrl ? <img
+          src={restaurantInfo.bannerUrl}
           alt="Banner"
           style={{ minWidth: "100%", objectFit: 'cover'}}
-        />
-      </div>
+        /> : ''}
+      </div> 
     </Sidebar>
   );
 };
