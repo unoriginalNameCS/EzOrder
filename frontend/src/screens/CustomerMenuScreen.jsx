@@ -142,6 +142,8 @@ const CustomerMenuScreen = () => {
 
       if (response.status === 201) {
         toast.success("Requesting Assistance");
+      } else if (response.status === 204) {
+        toast.error("Invalid, please wait untill current request is completed");
       }
     } catch (error) {
       console.error(

@@ -221,6 +221,7 @@ const SettingsScreen = () => {
       console.error('Error clearing orders:', error.response?.data || error.message);
       toast.error(error.response?.data || error.message);
     }
+    handleCloseOrderDialog();
   };
 
   const handleOpenCartDialog = () => {
@@ -244,6 +245,7 @@ const SettingsScreen = () => {
       console.error('Error clearing cart:', error.response?.data || error.message);
       toast.error(error.response?.data || error.message);
     }
+    handleCloseCartDialog();
   };
 
   const handleOpenTableDialog = () => {
@@ -267,6 +269,7 @@ const SettingsScreen = () => {
       console.error('Error resetting tables:', error.response?.data || error.message);
       toast.error(error.response?.data || error.message);
     }
+    handleCloseTableDialog();
   };
 
   return (
