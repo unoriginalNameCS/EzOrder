@@ -90,7 +90,6 @@ const Header = () => {
     }
   }, [loggedIn]);
 
-
   return (
     <header>
       <Navbar

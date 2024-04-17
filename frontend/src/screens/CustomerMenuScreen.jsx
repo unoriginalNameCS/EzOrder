@@ -221,8 +221,8 @@ const CustomerMenuScreen = () => {
           <StyledButton
             sx={{ margin: 1 }}
             onClick={() => handleExit()}
-            bgColor="#83AE0B"
-            hoverColor="#9acd0d"
+            bgcolor="#83AE0B"
+            hovercolor="#9acd0d"
           >
             Finish Ordering
           </StyledButton>

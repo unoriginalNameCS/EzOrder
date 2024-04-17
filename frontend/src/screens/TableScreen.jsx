@@ -70,13 +70,13 @@ const TableScreen = () => {
         container
         style={{ flexGrow: 1, padding: theme.spacing(3), marginLeft: '200px' }}
       >
-        <div style={{ height: 400, width: '100%' }}>
+        <div style={{ height: 400, width: 'auto' }}>
           <TableContainer component={Paper}>
-            <Table sx={{ minWidth: 650 }} aria-label='simple table'>
+            <Table sx={{ minWidth: 150 }} aria-label='simple table'>
               <TableHead>
                 <TableRow>
                   <TableCell>Number</TableCell>
-                  <TableCell align='right'>Occupied</TableCell>
+                  <TableCell align='left'>Occupied</TableCell>
                 </TableRow>
               </TableHead>
               {tables && (
@@ -87,7 +87,7 @@ const TableScreen = () => {
                       sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
                     >
                       <TableCell component='th' scope='row'>{table.number}</TableCell>
-                      <TableCell align='right'>{table.occupied.toString()}</TableCell>
+                      <TableCell align='left'>{table.occupied.toString()}</TableCell>
                     </TableRow>
                   ))}
                 </TableBody>  

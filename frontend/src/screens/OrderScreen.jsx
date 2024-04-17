@@ -101,8 +101,8 @@ export default function OrderScreen() {
         <Stack marginTop={2} spacing={theme.spacing(2)}>
           <CheckOutModal total={totalPrice.toFixed(2)}></CheckOutModal>
           <StyledButton
-            bgColor="#83AE0B"
-            hoverColor="#9acd0d"
+            bgcolor="#83AE0B"
+            hovercolor="#9acd0d"
             onClick={() => requestBill()}
           >
             Request Bill
