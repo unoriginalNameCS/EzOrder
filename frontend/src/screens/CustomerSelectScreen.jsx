@@ -146,7 +146,6 @@ function HeroSection() {
       toast.info("Please select both a restaurant and a table.");
       return;
     }
-    console.log(selectedRestaurant);
     try {
       // Fetch restaurant details
       const resDetails = await fetch(`http://localhost:5000/restaurants/${selectedRestaurant._id}/details`);

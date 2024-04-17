@@ -8,6 +8,8 @@ import 'react-credit-cards-2/dist/es/styles-compiled.css';
 import TextField from '@mui/material/TextField';
 import Typography from '@mui/material/Typography'
 import StyledButton from './StyledButton';
+import { toast } from "react-toastify";
+
 
 const style = {
   position: 'absolute',
@@ -24,13 +26,24 @@ const style = {
 export default function CheckOutModal(props) {
   const [open, setOpen] = useState(false);
   const handleOpen = () => setOpen(true);
-  const handleClose = () => setOpen(false);
+  const handleClose = () => {
+    setOpen(false);
+    setNum('');
+    setExpiry('');
+    setCvc('');
+    setName('');
+  }
   const [num, setNum] = useState('');
   const [expiry, setExpiry] = useState('');
   const [cvc, setCvc] = useState('');
   const [name, setName] = useState('');
   const [focused, setFocused] = useState('');
-
+  
+  const handlePay = () => {
+    toast.success("Dummy Payment Received!")
+    handleClose();
+  }
+  
   return (
     <div>
       <StyledButton onClick={handleOpen}>Pay Online</StyledButton>
@@ -75,7 +88,7 @@ export default function CheckOutModal(props) {
                 value={cvc}
                 onChange={(e) => setCvc(e.target.value)}
               />
-              <Button variant="contained" color="primary">
+              <Button onClick={handlePay} variant="contained" color="primary">
                 Pay
               </Button>
             </form>

@@ -3,8 +3,7 @@ import { Link } from "react-router-dom";
 import { Sidebar, Menu, MenuItem } from "react-pro-sidebar";
 
 import { HiOutlineClipboardList } from "react-icons/hi";
-import { BiFoodMenu } from "react-icons/bi";
-import { AiOutlineUser } from "react-icons/ai";
+import { BiFoodMenu, BiCartAlt } from "react-icons/bi";
 
 import EzOrderLogo from "./assets/EzOrder.svg";
 
@@ -68,7 +67,7 @@ const SideNav = () => {
           <span style={textStyle}>MENU</span>
         </MenuItem>
         <MenuItem component={<Link to="/cart" />}>
-          <AiOutlineUser style={iconStyle} />
+          <BiCartAlt style={iconStyle} />
           <span style={textStyle}>CART</span>
         </MenuItem>
       </Menu>

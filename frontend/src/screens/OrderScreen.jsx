@@ -43,6 +43,8 @@ export default function OrderScreen() {
 
       if (response.status === 201) {
         toast.success("Requesting Bill");
+      } else if (response.status === 204) {
+        toast.error("Already requested a bill")
       }
     } catch (error) {
       console.error(

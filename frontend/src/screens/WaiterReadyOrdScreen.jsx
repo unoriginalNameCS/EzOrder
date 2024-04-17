@@ -6,14 +6,11 @@ import axios from 'axios';
 import React, { useEffect, useState, useContext } from "react";
 import OrderCard from '../components/OrderCard';
 import SideNav from '../components/SideNav';
-import { UserContext } from "../UserContext";
-
-
 
 // This page is for wait staff to view their pending customer table requests
 const ReadyToServeOrdersScreen = () => {
   const theme = useTheme();
-  const [orderList, setOrderList] = useState([]); 
+  const [orderList, setOrderList] = useState([]);
 
   const userInfo = JSON.parse(localStorage.getItem('userInfo'));
   const restaurantId = userInfo.restaurant;
@@ -34,13 +31,17 @@ const ReadyToServeOrdersScreen = () => {
   };
 
   useEffect(() => {
-      const interval = setInterval(() => {
-        triggerOrderUpdate();
-      }, 5000);
-      return () => {
-        clearInterval(interval);
-      };
+    const interval = setInterval(() => {
+      triggerOrderUpdate();
+    }, 5000);
+    return () => {
+      clearInterval(interval);
+    };
   }, []);
+
+  useEffect(() => {
+    fetchOrderList();
+  }, [])
 
   const triggerOrderUpdate = () => {
     fetchOrderList();

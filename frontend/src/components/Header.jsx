@@ -80,6 +80,17 @@ const Header = () => {
     }
   }, [loggedIn]);
 
+  useEffect(() => {
+    if (!userInfo) {
+      return
+    }
+    if (userInfo.role === "wait staff") {
+      getTableRequests();
+      getOrdersToServe();
+    }
+  }, [loggedIn]);
+
+
   return (
     <header>
       <Navbar

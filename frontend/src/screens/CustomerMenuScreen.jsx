@@ -16,6 +16,7 @@ import CustomerCategoriesBar from "../components/CustomerCategoriesBar";
 import CustomerItemModal from "../components/CustomerItemModal";
 import StyledButton from "../components/StyledButton";
 
+// Screen for customer menu
 const CustomerMenuScreen = () => {
   const theme = useTheme();
   const [menuItems, setMenuItems] = useState([]);
