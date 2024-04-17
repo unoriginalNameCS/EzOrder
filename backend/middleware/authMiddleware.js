@@ -4,7 +4,6 @@ import User from '../models/userModel.js';
 
 const protect = asyncHandler(async (req, res, next) => {
   let token;
-  console.log(req.headers);
   token = req.headers.authorization;
   if (token) {
     try {

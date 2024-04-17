@@ -99,17 +99,17 @@ const StaffScreen = () => {
         container
         style={{ flexGrow: 1, padding: theme.spacing(3), marginLeft: '200px' }}
       >
-        <div style={{ height: 400, width: '100%' }}>
+        <div style={{ height: 400, width: 'auto' }}>
           <TableContainer component={Paper}>
             <Table sx={{ minWidth: 650 }} aria-label='simple table'>
               <TableHead>
                 <TableRow>
                   <TableCell>ID</TableCell>
-                  <TableCell align='right'>Name</TableCell>
-                  <TableCell align='right'>Email&nbsp;</TableCell>
-                  <TableCell align='right'>Role&nbsp;</TableCell>
-                  <TableCell align='right'>Edit&nbsp;</TableCell>
-                  <TableCell align='right'>Remove&nbsp;</TableCell>
+                  <TableCell align='left'>Name</TableCell>
+                  <TableCell align='left'>Email&nbsp;</TableCell>
+                  <TableCell align='left'>Role&nbsp;</TableCell>
+                  <TableCell align='left'>Edit&nbsp;</TableCell>
+                  <TableCell align='left'>Remove&nbsp;</TableCell>
                 </TableRow>
               </TableHead>
               <TableBody>
@@ -121,16 +121,16 @@ const StaffScreen = () => {
                     <TableCell component='th' scope='row'>
                       {row.id}
                     </TableCell>
-                    <TableCell align='right'>{row.name}</TableCell>
-                    <TableCell align='right'>{row.email}</TableCell>
-                    <TableCell align='right'>{row.role}</TableCell>
-                    <TableCell align='right'>
+                    <TableCell align='left'>{row.name}</TableCell>
+                    <TableCell align='left'>{row.email}</TableCell>
+                    <TableCell align='left'>{row.role}</TableCell>
+                    <TableCell align='left'>
                       <Button variant='text' color='primary' onClick={() => handleOpenEditStaffModal(row.id)}>
                           Edit
                       </Button>
                     </TableCell>
-                    <TableCell align="right">
-                      <Button variant='text' color='primary' onClick={() => handleRemove(row.id)}>
+                    <TableCell align='left'>
+                      <Button variant='text' color='primary' onClick={() => handleRemove(row.id)} disabled={userInfo._id === row.id}>
                         Remove
                       </Button>
                     </TableCell>

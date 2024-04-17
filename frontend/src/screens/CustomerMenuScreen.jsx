@@ -16,6 +16,7 @@ import CustomerCategoriesBar from "../components/CustomerCategoriesBar";
 import CustomerItemModal from "../components/CustomerItemModal";
 import StyledButton from "../components/StyledButton";
 
+// Screen for customer menu
 const CustomerMenuScreen = () => {
   const theme = useTheme();
   const [menuItems, setMenuItems] = useState([]);
@@ -142,6 +143,8 @@ const CustomerMenuScreen = () => {
 
       if (response.status === 201) {
         toast.success("Requesting Assistance");
+      } else if (response.status === 204) {
+        toast.error("Invalid, please wait untill current request is completed");
       }
     } catch (error) {
       console.error(
@@ -218,8 +221,8 @@ const CustomerMenuScreen = () => {
           <StyledButton
             sx={{ margin: 1 }}
             onClick={() => handleExit()}
-            bgColor="#83AE0B"
-            hoverColor="#9acd0d"
+            bgcolor="#83AE0B"
+            hovercolor="#9acd0d"
           >
             Finish Ordering
           </StyledButton>

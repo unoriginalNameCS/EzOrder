@@ -13,7 +13,7 @@ const Login = () => {
   const [password, setPassword] = React.useState('')
   const navigate = useNavigate();
   const {loggedIn, setLoggedIn} = useContext(UserContext)
-
+  const customerInfo = JSON.parse(localStorage.getItem("customerInfo"));
 
   async function signin (email, password) {
     const response = await fetch('http://localhost:5000/api/users/auth', {
@@ -31,6 +31,9 @@ const Login = () => {
 
     // if successful signIn then navigate to dashboard
     if (response.status === 200) {
+      if (customerInfo) {
+        localStorage.removeItem("customerInfo");
+      }
       localStorage.setItem('userInfo', JSON.stringify(data))
       toast.success('Successfully signed in')
       navigate('/')

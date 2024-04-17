@@ -16,8 +16,8 @@ import Typist from "react-typist-component";
 import { toast } from "react-toastify";
 import KeyboardArrowDownIcon from "@mui/icons-material/KeyboardArrowDown";
 
-const StyledButton = styled(Button)(({ theme, bgColor, hoverColor }) => ({
-  backgroundColor: bgColor || "#F19413",
+const StyledButton = styled(Button)(({ theme, bgcolor, hovercolor }) => ({
+  backgroundColor: bgcolor || "#F19413",
   color: theme.palette.common.white,
   fontFamily: "Fredoka, sans-serif",
   borderRadius: "0.5rem",
@@ -27,7 +27,7 @@ const StyledButton = styled(Button)(({ theme, bgColor, hoverColor }) => ({
   fontSize: "1.25rem",
   width: 300,
   "&:hover": {
-    backgroundColor: hoverColor || "#FFAD3C",
+    backgroundColor: hovercolor || "#FFAD3C",
     boxShadow: "none",
   },
 }));
@@ -146,7 +146,6 @@ function HeroSection() {
       toast.info("Please select both a restaurant and a table.");
       return;
     }
-    console.log(selectedRestaurant);
     try {
       // Fetch restaurant details
       const resDetails = await fetch(`http://localhost:5000/restaurants/${selectedRestaurant._id}/details`);
@@ -183,6 +182,12 @@ function HeroSection() {
             tableNumber: selectedTable.number,
           };
           localStorage.setItem("customerInfo", JSON.stringify(customerInfo));
+
+          // Just in case there is a user logged in
+          const userInfo = JSON.parse(localStorage.getItem("userInfo"));
+          if (userInfo) {
+            localStorage.removeItem("userInfo")
+          }
           
           // Navigate to customer menu
           navigate(`/customerMenu`);
@@ -262,7 +267,7 @@ function HeroSection() {
               onClose={() => setAnchorElRest(null)}
             >
               {restaurants.map((restaurant, index) => (
-                <MenuList>
+                <MenuList key={restaurant._id}>
                   <MenuItem
                     key={restaurant._id}
                     onClick={() => handleRestaurantClose(restaurant)}
@@ -303,7 +308,7 @@ function HeroSection() {
               onClose={() => setAnchorElTable(null)}
             >
               {tables.map((table, index) => (
-                <MenuList>
+                <MenuList key={table._id}>
                   <MenuItem
                     key={table._id}
                     onClick={() => handleTableClose(table)}
@@ -320,8 +325,8 @@ function HeroSection() {
           <Stack direction="column" spacing={10}>
             <StyledButton
               onClick={selectTable}
-              bgColor="#83AE0B"
-              hoverColor="#9acd0d"
+              bgcolor="#83AE0B"
+              hovercolor="#9acd0d"
             >
               Start Ordering
             </StyledButton>

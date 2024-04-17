@@ -43,6 +43,8 @@ export default function OrderScreen() {
 
       if (response.status === 201) {
         toast.success("Requesting Bill");
+      } else if (response.status === 204) {
+        toast.error("Already requested a bill")
       }
     } catch (error) {
       console.error(
@@ -99,8 +101,8 @@ export default function OrderScreen() {
         <Stack marginTop={2} spacing={theme.spacing(2)}>
           <CheckOutModal total={totalPrice.toFixed(2)}></CheckOutModal>
           <StyledButton
-            bgColor="#83AE0B"
-            hoverColor="#9acd0d"
+            bgcolor="#83AE0B"
+            hovercolor="#9acd0d"
             onClick={() => requestBill()}
           >
             Request Bill
