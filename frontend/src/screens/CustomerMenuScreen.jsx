@@ -71,14 +71,6 @@ const CustomerMenuScreen = () => {
 
   // remove customerInfo from localStorage and redirect back to home
   const handleExit = () => {
-    // can add some logic checks if we want such as
-    /* if hasNotRequestedBill & hasNotOrdered 
-        toast.error(Request the bill first) 
-        else {
-          removeItem
-          navigate()
-        }  
-      */
     // de-select the table
     clearTable();
     localStorage.removeItem("customerInfo");
@@ -89,12 +81,7 @@ const CustomerMenuScreen = () => {
   const fetchMenuCategories = async () => {
     try {
       const url = `http://localhost:5000/customermenus/${restaurantId}/${tableId}/menu/categories`;
-      const { data } = await axios.get(url, {
-        // headers: {
-        //   Authorization: `${userInfo.token}`,
-        // },
-        // Need to add authorization to check if tableId has restuarantId
-      });
+      const { data } = await axios.get(url);
       setMenuCategories(data);
       if (data.length > 0) {
         setSelectedCategoryId(data[0]._id); // Set the first category as default
@@ -110,14 +97,7 @@ const CustomerMenuScreen = () => {
   const fetchMenuItems = async () => {
     try {
       const url = `http://localhost:5000/customermenus/${restaurantId}/${tableId}/menu/categories/${selectedCategoryId}/items`;
-
-      const { data } = await axios.get(url, {
-        // headers: {
-        //   Authorization: `${userInfo.token}`,
-        // },
-        // Need to add authorization to check if tableId has restuarantId
-      });
-
+      const { data } = await axios.get(url);
       setMenuItems(data);
     } catch (error) {
       console.error(
