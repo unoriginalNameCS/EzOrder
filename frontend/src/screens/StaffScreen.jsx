@@ -13,6 +13,7 @@ import { Grid } from '@mui/material';
 import { useTheme } from '@mui/material';
 import EditStaffModal from '../components/EditStaffModal';
 import NewStaffModal from '../components/NewStaffModal';
+import StyledButton from '../components/StyledButton';
 
 const StaffScreen = () => {
   
@@ -139,9 +140,9 @@ const StaffScreen = () => {
               </TableBody>
             </Table>
           </TableContainer>
-          <Button variant='text' color='primary' onClick={handleOpenNewStaffModal}>
+          <StyledButton sx={{mt: 2}} onClick={handleOpenNewStaffModal}>
             Add New Staff
-          </Button>
+          </StyledButton>
         </div>
       </Grid>
       <NewStaffModal
