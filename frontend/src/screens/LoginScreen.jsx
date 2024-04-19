@@ -13,8 +13,13 @@ const Login = () => {
   const [password, setPassword] = React.useState('')
   const navigate = useNavigate();
   const {loggedIn, setLoggedIn} = useContext(UserContext)
-  const customerInfo = JSON.parse(localStorage.getItem("customerInfo"));
 
+  const customer = localStorage.getItem('customerInfo')
+  if (customer) {
+    localStorage.removeItem('customerInfo')
+    localStorage.removeItem('restaurantInfo')
+  }
+  
   async function signin (email, password) {
     const response = await fetch('http://localhost:5000/api/users/auth', {
       method: 'POST',
