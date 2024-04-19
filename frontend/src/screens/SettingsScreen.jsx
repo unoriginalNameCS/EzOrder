@@ -9,6 +9,7 @@ import CardMedia from '@mui/material/CardMedia';
 import CloudUploadIcon from '@mui/icons-material/CloudUpload';
 import CheckCircleIcon from '@mui/icons-material/CheckCircle';
 import { toast } from "react-toastify";
+import StyledButton from '../components/StyledButton';
 
 const ImageContainer = styled(CardMedia)(({ theme }) => ({
   width: '10rem',
@@ -42,7 +43,7 @@ const StyledBanner = styled('img')(({ theme }) => ({
   borderRadius: theme.shape.borderRadius,
 }));
 
-const StyledButton = styled(Button, {
+const UploadButton = styled(Button, {
   shouldForwardProp: (prop) => shouldForwardProp(prop) && prop !== 'imageuploaded',
 })(({ theme, imageuploaded }) => ({
   backgroundColor: imageuploaded ? '#83AE0B' : '#F19413',
@@ -298,7 +299,7 @@ const SettingsScreen = () => {
         <ImageContainer theme={theme}>
           <StyledImage src={restaurantDetails.logoUrl || 'https://placehold.co/256x256'} alt="Logo" />
         </ImageContainer>
-        <StyledButton 
+        <UploadButton 
           component="label" 
           role={undefined} 
           sx={{ mt: 1.5 }} 
@@ -314,14 +315,14 @@ const SettingsScreen = () => {
             accept=".jpeg, .png, .jpg" 
             onChange={(e) => handleFileChange('logoUrl', 'logoUrl', e)} 
           />
-        </StyledButton>
+        </UploadButton>
         <Typography variant="subtitle2" component="div" sx={{ fontWeight: 800, mt: 2 }}>
           Banner
         </Typography>
         <BannerContainer theme={theme}>
           <StyledBanner src={restaurantDetails.bannerUrl || 'https://placehold.co/512x256'} alt="Banner" />
         </BannerContainer>
-        <StyledButton 
+        <UploadButton 
           component="label" 
           role={undefined} 
           sx={{ mt: 1.5 }} 
@@ -337,28 +338,29 @@ const SettingsScreen = () => {
             accept=".jpeg, .png, .jpg" 
             onChange={(e) => handleFileChange('bannerUrl', 'bannerUrl', e)}
           />
-        </StyledButton>
+        </UploadButton>
       </Box>
-      <Box component="form" sx={{ width: '100%' }} style={{ padding: theme.spacing(3), marginLeft: '160px' }}>
-      <Button onClick={handleOpenDialog} variant="contained" color="error" sx={{ mt: 2 }}>
-          Clear Requests
-        </Button>
+      <Box component="form" sx={{ width: '100%', padding: theme.spacing(3), marginLeft: '160px', mt: -15 }}>
+        <Box sx={{ '& > *': { mr: 2 } }}>
+          <StyledButton bgcolor='#E60000' hovercolor='#FF3333' onClick={handleOpenDialog}>
+              Clear Requests
+          </StyledButton>
 
-        {/* Button to clear orders */}
-        <Button onClick={handleOpenOrderDialog} variant="contained" color="error" sx={{ mt: 2 }}>
-          Clear Orders
-        </Button>
+            {/* Button to clear orders */}
+            <StyledButton bgcolor='#E60000' hovercolor='#FF3333' onClick={handleOpenOrderDialog}>
+              Clear Orders
+            </StyledButton>
 
-        {/* Button to clear cart items */}
-        <Button onClick={handleOpenCartDialog} variant="contained" color="error" sx={{ mt: 2 }}>
-          Clear Cart Items
-        </Button>
+            {/* Button to clear cart items */}
+            <StyledButton bgcolor='#E60000' hovercolor='#FF3333' onClick={handleOpenCartDialog}>
+              Clear Cart Items
+            </StyledButton>
 
-        {/* Button to reset tables */}
-        <Button onClick={handleOpenTableDialog} variant="contained" color="error" sx={{ mt: 2 }}>
-          Reset Tables
-        </Button>
-
+            {/* Button to reset tables */}
+            <StyledButton bgcolor='#E60000' hovercolor='#FF3333' onClick={handleOpenTableDialog}>
+              Reset Tables
+            </StyledButton>
+        </Box>  
         {/* Confirmation dialog for clearing requests */}
         <Dialog open={openDialog} onClose={handleCloseDialog}>
           <DialogTitle>Confirm Clear Requests</DialogTitle>

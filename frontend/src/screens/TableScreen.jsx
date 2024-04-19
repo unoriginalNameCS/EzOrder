@@ -16,6 +16,7 @@ import Paper from '@mui/material/Paper';
 import SideNav from '../components/SideNav';
 import { Grid } from '@mui/material';
 import { useTheme } from '@mui/material';
+import StyledButton from '../components/StyledButton';
 
 const TableScreen = () => {
   const [tables, setTables] = useState([]);
@@ -94,12 +95,12 @@ const TableScreen = () => {
               )}
             </Table>
           </TableContainer>
-          <Button variant='text' color='primary' onClick={handleAddTable}>
+          <StyledButton sx={{mt: 2}} onClick={handleAddTable}>
             Add Table
-          </Button>
-          <Button variant='text' color='primary' onClick={() => handleRemove()}>
+          </StyledButton>
+          <StyledButton sx={{mt: 2, ml: 2}} bgcolor='#E60000' hovercolor='#FF3333' variant='text' color='primary' onClick={() => handleRemove()}>
             Delete table
-          </Button>
+          </StyledButton>
         </div>
       </Grid>
     </>

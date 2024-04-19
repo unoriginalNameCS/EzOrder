@@ -6,6 +6,7 @@ import Grid from '@mui/material/Grid';
 import { useTheme } from '@mui/material/styles';
 import { FaMinus } from 'react-icons/fa';
 import CartCard from '../components/CartCard';
+import StyledButton from '../components/StyledButton';
 
 // Screen for customer cart
 const CartScreen = () => {
@@ -90,9 +91,9 @@ const CartScreen = () => {
         )}
         {cartItems.length > 0 && (
           <Grid item xs={12} style={{ padding: theme.spacing(1) }}>
-            <Button variant="contained" onClick={handleSendOrder}>
+            <StyledButton bgcolor='#83AE0B' hovercolor='#9acd0d' onClick={handleSendOrder}>
               Checkout - ${total_price}
-            </Button>
+            </StyledButton>
           </Grid>
         )}
       </Grid>
