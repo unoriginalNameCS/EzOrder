@@ -2,6 +2,10 @@
 
 ## COMP3900 - aabanana
 
+### Dependencies
+To run this web application, you first need to have node.js installed on your machine.
+If not, download through this link https://nodejs.org/en
+
 ### Setup
 
 To setup the backend, enter the command in the root directory
