@@ -10,9 +10,10 @@ import { UserContext } from './UserContext';
 function App() {
   const [loggedIn, setLoggedIn] = useState(false);
   const location = useLocation(); // Get the current location
+  const userInfo = JSON.parse(localStorage.getItem('userInfo'));
 
   // Check for login/register routes or if the user is logged in
-  const showHeader = ['/login', '/register'].includes(location.pathname) || loggedIn;
+  const showHeader = ['/login', '/register'].includes(location.pathname) || loggedIn || userInfo;
 
   // Check if the pathname is NOT the root/home or customer route
   const showContainer = !['/', '/customer'].includes(location.pathname);

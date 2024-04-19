@@ -16,10 +16,6 @@ const TasksScreen = () => {
       })
       await response.json();
     }
-
-    // if role === staff, then get customer table requests
-    // @TODO will need to be adjusted to wait staff
-    
     
     useEffect(() => {
       getTableRequests()

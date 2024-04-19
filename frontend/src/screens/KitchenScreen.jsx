@@ -9,7 +9,7 @@ import SideNav from '../components/SideNav';
 
 const KitchenScreen = () => {
   const theme = useTheme();
-  const [orderList, setOrderList] = useState([]); 
+  const [orderList, setOrderList] = useState([]);
 
   const userInfo = JSON.parse(localStorage.getItem('userInfo'));
   const restaurantId = userInfo.restaurant;
@@ -32,8 +32,17 @@ const KitchenScreen = () => {
   };
 
   useEffect(() => {
-    fetchOrderList();
+    const interval = setInterval(() => {
+      triggerOrderUpdate();
+    }, 5000);
+    return () => {
+      clearInterval(interval);
+    };
   }, []);
+
+  useEffect(() => {
+    fetchOrderList();
+  }, [])
 
   const triggerOrderUpdate = () => {
     fetchOrderList();

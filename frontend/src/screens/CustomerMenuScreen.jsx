@@ -16,6 +16,7 @@ import CustomerCategoriesBar from "../components/CustomerCategoriesBar";
 import CustomerItemModal from "../components/CustomerItemModal";
 import StyledButton from "../components/StyledButton";
 
+// Screen for customer menu
 const CustomerMenuScreen = () => {
   const theme = useTheme();
   const [menuItems, setMenuItems] = useState([]);
@@ -70,14 +71,6 @@ const CustomerMenuScreen = () => {
 
   // remove customerInfo from localStorage and redirect back to home
   const handleExit = () => {
-    // can add some logic checks if we want such as
-    /* if hasNotRequestedBill & hasNotOrdered 
-        toast.error(Request the bill first) 
-        else {
-          removeItem
-          navigate()
-        }  
-      */
     // de-select the table
     clearTable();
     localStorage.removeItem("customerInfo");
@@ -88,12 +81,7 @@ const CustomerMenuScreen = () => {
   const fetchMenuCategories = async () => {
     try {
       const url = `http://localhost:5000/customermenus/${restaurantId}/${tableId}/menu/categories`;
-      const { data } = await axios.get(url, {
-        // headers: {
-        //   Authorization: `${userInfo.token}`,
-        // },
-        // Need to add authorization to check if tableId has restuarantId
-      });
+      const { data } = await axios.get(url);
       setMenuCategories(data);
       if (data.length > 0) {
         setSelectedCategoryId(data[0]._id); // Set the first category as default
@@ -109,14 +97,7 @@ const CustomerMenuScreen = () => {
   const fetchMenuItems = async () => {
     try {
       const url = `http://localhost:5000/customermenus/${restaurantId}/${tableId}/menu/categories/${selectedCategoryId}/items`;
-
-      const { data } = await axios.get(url, {
-        // headers: {
-        //   Authorization: `${userInfo.token}`,
-        // },
-        // Need to add authorization to check if tableId has restuarantId
-      });
-
+      const { data } = await axios.get(url);
       setMenuItems(data);
     } catch (error) {
       console.error(
@@ -142,6 +123,8 @@ const CustomerMenuScreen = () => {
 
       if (response.status === 201) {
         toast.success("Requesting Assistance");
+      } else if (response.status === 204) {
+        toast.error("Invalid, please wait untill current request is completed");
       }
     } catch (error) {
       console.error(
@@ -218,8 +201,8 @@ const CustomerMenuScreen = () => {
           <StyledButton
             sx={{ margin: 1 }}
             onClick={() => handleExit()}
-            bgColor="#83AE0B"
-            hoverColor="#9acd0d"
+            bgcolor="#83AE0B"
+            hovercolor="#9acd0d"
           >
             Finish Ordering
           </StyledButton>

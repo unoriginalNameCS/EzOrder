@@ -414,7 +414,7 @@ const deleteUser = asyncHandler(async (req, res) => {
 });
 
 /**
- * @desc    Register a new user (automatically a manager)
+ * @desc    Register a new staff to your restaurant
  * @route   POST /api/users/registerStaff
  * @access  Public
  * @param   req.body.name - name of the user

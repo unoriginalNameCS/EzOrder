@@ -7,7 +7,7 @@ import { useTheme } from '@mui/material/styles';
 import { FaMinus } from 'react-icons/fa';
 import CartCard from '../components/CartCard';
 
-
+// Screen for customer cart
 const CartScreen = () => {
   const theme = useTheme();
 

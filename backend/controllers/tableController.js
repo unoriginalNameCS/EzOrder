@@ -167,9 +167,11 @@ const requestAssistance = asyncHandler(async (req, res) => {
   }
 
   const requestCheck = await Request.findOne({ restaurant: restaurantId, requestedBill: requestedBill, tableNum: table.number, state: 'waiting' });
+  const requestCheck2 = await Request.findOne({ restaurant: restaurantId, requestedBill: requestedBill, tableNum: table.number, state: 'assisting' });
+
   // Request already made
-  if (requestCheck) {
-    res.status(400);
+  if (requestCheck || requestCheck2) {
+    res.status(204);
     throw new Error('Request already made');
   }
 
