@@ -36,9 +36,6 @@ const Login = () => {
 
     // if successful signIn then navigate to dashboard
     if (response.status === 200) {
-      if (customerInfo) {
-        localStorage.removeItem("customerInfo");
-      }
       localStorage.setItem('userInfo', JSON.stringify(data))
       toast.success('Successfully signed in')
       navigate('/')
